@@ -51,6 +51,11 @@ namespace CodeBuilder.T4
         {
             var storage = new TemplateStorage();
 
+            if (!Directory.Exists(WorkDir))
+            {
+                return storage;
+            }
+
             var pub = new TemplateDirectory("public");
 
             foreach (var f in Directory.GetFiles(Path.Combine(WorkDir, "public"), "*.tt"))

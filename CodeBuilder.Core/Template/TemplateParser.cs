@@ -64,6 +64,11 @@ namespace CodeBuilder.Core.Template
         {
             var templates = new List<TemplateDefinition>();
 
+            if (!Directory.Exists(path))
+            {
+                return templates;
+            }
+
             foreach (var fileName in Directory.GetFiles(path, "*.template"))
             {
                 var definition = TemplateParser.Parse(fileName);

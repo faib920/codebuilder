@@ -50,6 +50,11 @@ namespace CodeBuilder.Razor
         {
             var storage = new TemplateStorage();
 
+            if (!Directory.Exists(WorkDir))
+            {
+                return storage;
+            }
+
             var pub = new TemplateDirectory("public");
 
             foreach (var f in Directory.GetFiles(Path.Combine(WorkDir, "public"), "*.cshtml"))
