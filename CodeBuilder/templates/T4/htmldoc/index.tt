@@ -1,0 +1,105 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+        font-family:微软雅黑;
+    }
+    .navigate {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        border: 1px solid #dddddd;
+        overflow: auto;
+        height: 100%;
+    }
+    .navigate div {
+        padding: 2px 5px 2px 5px;
+        line-height: 150%;
+    }
+    .navigate a:link, a:visited {
+        color: blue;
+    }
+    .navigate a:hover {
+        color: red;
+    }
+    .container {
+        width:560px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+    table {
+        border:1px solid #888888;
+        border-spacing: 0;
+        border-collapse: collapse;
+        font-size:9pt;
+        width:100%;
+    }
+    td {
+        padding:5px;
+        border:1px solid #888888;
+        word-break:break-all;
+        word-wrap:break-word;
+    }
+    
+    th {
+        padding:5px;
+        border:1px solid #888888;
+        background:#eeeeee;
+    }
+  </style>
+</head>
+<body>
+    <div class="navigate">
+<#
+foreach (var table in host.Tables)
+{
+#>
+        <div><a href="#<#= table.Name #>"><#= table.Name #></a></div>
+<#
+}
+#>
+    </div>
+
+    <div class="container">
+        <h1 style="text-align:center">数据库设计说明书</h1>
+<#
+foreach (var table in host.Tables)
+{
+#>
+        <a name="<#= table.Name #>"></a><span style="font-size:10.5pt;font-family:等线"><#= table.Description #> (<#= table.Name #>)</span>
+        <table>
+            <tr>
+                <th class="text-center" style="width:140px">名称</th>
+                <th class="text-center" style="width:100px">数据类型</th>
+                <th class="text-center" style="width:50px">可空</th>
+                <th class="text-center">默认值</th>
+                <th class="text-center" style="width:160px">备注</th>
+            </tr>
+<#
+foreach (var column in table.Columns)
+{
+#>
+            <tr <#= column.IsPrimaryKey ? "style='font-weight:bold'" : "" #>>
+                <td><#= column.Name #></td>
+                <td><#= column.ColumnType #></td> 
+                <td style="text-align:center"><#= column.IsNullable ? "是" : "否" #></td>
+                <td style="text-align:center"><#= (column.DefaultValue ?? string.Empty) #></td>
+                <td><#= column.Description #></td>
+            </tr>
+<#
+}
+#>
+        </table>
+        &nbsp;&nbsp;
+        <br />
+<#
+}
+#>
+    </div>
+</body>

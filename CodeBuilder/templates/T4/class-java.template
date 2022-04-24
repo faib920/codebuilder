@@ -1,0 +1,17 @@
+{
+    "Name": "标准类 for Java",
+    "Author": "fireasy",
+    "Version": 1,
+    "Description": "Java 基本类。",
+    "Language": "Java",
+    "Partitions": [
+        {
+            "Name": "Java类",
+            "FileName": "class.tt",
+            "Output": "{ClassName}.cs",
+            "Loop": "Tables",
+            "Syntax": "Java"
+        }
+    ],
+    "Groups": []
+}

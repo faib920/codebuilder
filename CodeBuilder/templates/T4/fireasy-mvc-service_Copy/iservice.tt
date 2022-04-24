@@ -1,0 +1,68 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using Fireasy.Common.Extensions;
+using Fireasy.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using <#= host.Profile.Namespace #>.Models;
+
+namespace <#= host.Profile.Namespace #>.Services
+{
+    /// <summary>
+    /// <#= table.Description #> 服务接口。
+    /// </summary>
+    public interface I<#= table.ClassName #>Service
+    {
+        /// <summary>
+        /// 根据ID获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">信息ID。</param>
+        /// <returns></returns>
+        Task<<#= table.ClassName #>> GetAsync(<#= ptype #> id);
+
+        /// <summary>
+        /// 保存 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="info">要保存的数据。</param>
+        /// <returns>id</returns>
+        Task<int> SaveAsync(<#= table.ClassName #> info);
+        
+        /// <summary>
+        /// 批量保存 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="entities">要保存的数据。</param>
+        /// <returns>id</returns>
+        Task<bool> SaveAsync(List<<#= table.ClassName #>> entities);
+        
+        /// <summary>
+        /// 根据查询条件获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="keyword">关键字</param>
+        /// <param name="pager">分页参数</param>
+        /// <param name="sorting">排序定义</param>
+        /// <returns></returns>
+        Task<List<<#= table.ClassName #>>> QueryAsync(string keyword, DataPager pager, SortDefinition sorting);
+
+        /// <summary>
+        /// 删除 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        Task<bool> DeleteAsync(<#= ptype #> id);
+    }
+}

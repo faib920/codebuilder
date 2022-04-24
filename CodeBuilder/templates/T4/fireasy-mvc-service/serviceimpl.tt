@@ -1,0 +1,213 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using Fireasy.Common.Extensions;
+using Fireasy.Common.Ioc;
+using Fireasy.Common.Mapper;
+using Fireasy.Data.Entity;
+using Fireasy.Data.Entity.Linq;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using <#= host.Profile.Namespace #>.Data;
+using <#= host.Profile.Namespace #>.Dtos;
+using <#= host.Profile.Namespace #>.Models;
+
+namespace <#= host.Profile.Namespace #>.Services.Impls
+{
+    public partial class <#= table.ClassName #>Service : I<#= table.ClassName #>, ITransientService
+    {
+        private readonly DbContext _dbContext;
+        private readonky IObjectMapper _objectMapper;
+
+        public <#= table.ClassName #>Service(DbContext dbContext, IObjectMapper objectMapper)
+        {
+            _dbContext = dbContext;
+            _objectMapper = objectMapper;
+        }
+
+<#
+if (!host.Profile.Async)
+{
+#>
+        /// <summary>
+        /// 根据ID获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">信息ID。</param>
+        /// <returns></returns>
+        public <#= table.ClassName #>Dto Get(<#= ptype #> id)
+        {
+            var entity = _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.Get(id));
+            return _objectMapper.Map<<#= table.ClassName #>, <#= table.ClassName #>Dto>(entity);
+        }
+
+        /// <summary>
+        /// 保存 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="info">要保存的数据。</param>
+        /// <returns>id</returns>
+        public <#= table.ClassName #>Dto Save(<#= table.ClassName #>Dto info)
+        {
+            <#= table.ClassName #> entity;
+<#
+    if (ptype == "string")
+    {
+#>
+            if (string.IsNullOrEmpty(info.<#= pk #>))
+            {
+                entity = _objectMapper.Map<<#= table.ClassName #>Dto, <#= table.ClassName #>>(info);
+                entity.<#= pk #> = Guid.NewGuid().ToString();
+                _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.Insert(info);
+            }
+<#
+    }
+    else
+    {
+#>
+            if (info.<#= pk #> == 0)
+            {
+                entity = _objectMapper.Map<<#= table.ClassName #>Dto, <#= table.ClassName #>>(info);
+                _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.Insert(entity);
+            }
+<#
+    }
+#>
+            else
+            {
+                entity = await _dbContext.FirstOrDefaultAsync(s => s.<#= pk #> == info.<#= pk #>);
+                _objectMapper.Map(info, entity);
+                _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.Update(entity);
+            }
+
+            return _objectMapper.Map<<#= table.ClassName #>, <#= table.ClassName #>Dto>(entity);
+        }
+        
+        /// <summary>
+        /// 根据查询条件获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="keyword">关键字</param>
+        /// <param name="pager">分页参数</param>
+        /// <param name="sorting">排序定义</param>
+        /// <returns></returns>
+        public List<<#= table.ClassName #>Dto> Query(string keyword, DataPager pager, SortDefinition sorting)
+        {
+            var entities = _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>
+                .Segment(pager)
+                .OrderBy(sorting)
+                //.AssertWhere(!string.IsNullOrEmpty(keyword), s => s.Name.Contains(keyword))
+                .ToList();
+            return _objectMapper.Map<List<<#= table.ClassName #>>, List<<#= table.ClassName #>Dto>>(entities);
+        }
+
+        /// <summary>
+        /// 删除 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public bool Delete(<#= ptype #> id)
+        {
+            _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.Delete(new[] { id });
+            return true;
+        }
+<#
+}
+else
+{
+#>
+        /// <summary>
+        /// 根据ID获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">信息ID。</param>
+        /// <returns></returns>
+        public async Task<<#= table.ClassName #>Dto> GetAsync(<#= ptype #> id)
+        {
+            var entity = await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.GetAsync(id));
+            return _objectMapper.Map<<#= table.ClassName #>, <#= table.ClassName #>Dto>(entity);
+        }
+
+        /// <summary>
+        /// 保存 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="info">要保存的数据。</param>
+        /// <returns>id</returns>
+        public async Task<<#= table.ClassName #>Dto> SaveAsync(<#= table.ClassName #> info)
+        {
+            <#= table.ClassName #> entity;
+<#
+    if (ptype == "string")
+    {
+#>
+            if (string.IsNullOrEmpty(info.<#= pk #>))
+            {
+                entity = _objectMapper.Map<<#= table.ClassName #>Dto, <#= table.ClassName #>>(info);
+                entity.<#= pk #> = Guid.NewGuid().ToString();
+                await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.InsertAsync(info);
+            }
+<#
+    }
+    else
+    {
+#>
+            if (info.<#= pk #> == 0)
+            {
+                entity = _objectMapper.Map<<#= table.ClassName #>Dto, <#= table.ClassName #>>(info);
+                await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.InsertAsync(entity);
+            }
+<#
+    }
+#>
+            else
+            {
+                entity = await _dbContext.FirstOrDefaultAsync(s => s.<#= pk #> == info.<#= pk #>);
+                _objectMapper.Map(info, entity);
+                await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.UpdateAsync(entity);
+            }
+
+            return _objectMapper.Map<<#= table.ClassName #>, <#= table.ClassName #>Dto>(entity);
+        }
+        
+        /// <summary>
+        /// 根据查询条件获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="keyword">关键字</param>
+        /// <param name="pager">分页参数</param>
+        /// <param name="sorting">排序定义</param>
+        /// <returns></returns>
+        public async Task<List<<#= table.ClassName #>Dto>> QueryAsync(string keyword, DataPager pager, SortDefinition sorting)
+        {
+            var entities = await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>
+                .Segment(pager)
+                .OrderBy(sorting)
+                //.AssertWhere(!string.IsNullOrEmpty(keyword), s => s.Name.Contains(keyword))
+                .ToListAsync();
+            return _objectMapper.Map<List<<#= table.ClassName #>>, List<<#= table.ClassName #>Dto>>(entities);
+        }
+
+        /// <summary>
+        /// 删除 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<bool> DeleteAsync(<#= ptype #> id)
+        {
+            await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.DeleteAsync(new[] { id });
+            return true;
+        }
+<#
+}
+#>
+    }
+}

@@ -1,0 +1,35 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+#>
+using System;
+using System.Collections.Generic;
+
+namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Models
+{
+    /// <summary>
+    /// <#= table.Description #>SaveModel
+    /// </summary>
+    public class <#= table.ClassName #>SaveModel
+    {
+<#
+	foreach (dynamic column in table.Columns)
+	{
+	    if (column.Name == "RowVersion")
+	    {
+	        continue;
+	    }
+#>
+        /// <summary>
+        /// <#= column.Description #>
+        /// </summary>
+        public <#= column.PropertyType #> <#= column.PropertyName #> { get; set; }
+
+<#
+	}
+#>
+    }
+}

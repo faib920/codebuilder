@@ -1,0 +1,41 @@
+﻿// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：@Model.Profile.ProjectName
+// 版权：Copyright @Model.Profile.CompanyName
+// 作者：@Model.Profile.Author
+// 时间：@DateTime.Now
+// **************************************
+using System;
+using Microsoft.Data.Entity;
+using Microsoft.Data.Entity.Metadata;
+
+namespace @(Model.Profile.Namespace).Models
+{
+    /// <summary>
+    /// @(Model.Current.Description)实体类。
+    /// </summary>
+    public partial class @Model.Current.ClassName
+    {
+@foreach(var c in Model.Current.Columns)
+{
+@("        /// <summary>\r\n")
+@("        /// 获取或设置" + c.Description + "。\r\n")
+@("        /// </summary>\r\n")
+@("        public " + @c.PropertyType + " " + @c.PropertyName + "{ get; set; }\r\n\r\n")
+}
+@foreach(var r in Model.Current.ForeignKeys)
+{
+@("        /// <summary>\r\n")
+@("        /// 获取或设置关联 <see cref=\"" + r.PkTable.ClassName + "\"/> 对象。\r\n")
+@("        /// </summary>\r\n")
+@("        public virtual " + @r.PkTable.ClassName + " " + @r.PkTable.ClassName + "{ get; set; }\r\n\r\n")
+}
+@foreach(var r in Model.Current.SubKeys)
+{
+@("        /// <summary>\r\n")
+@("        /// 获取或设置 <see cref=\"" + r.FkTable.ClassName + "\"/> 的子实体集。\r\n")
+@("        /// </summary>\r\n")
+@("        public virtual ICollection<" + r.PkTable.ClassName + "> " + StringExtension.ToPlural(r.PkTable.ClassName) + "{ get; set; }\r\n\r\n")
+}
+    }
+}

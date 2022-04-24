@@ -1,0 +1,38 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+using System;
+using System.Collections.Generic;
+using Volo.Abp.Application.Dtos;
+
+namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Shared.Dtos.<#= host.Profile.SubNameSpace #>
+{
+    /// <summary>
+    /// <#= table.Description #>Dto
+    /// </summary>
+    public class <#= table.ClassName #>Dto : EntityDto<<#= ptype #>>
+    {
+<#
+	foreach (dynamic column in table.Columns)
+	{
+	    if (IsExcludeProperty(column, host.Profile.DTOExcludeProperties))
+	    {
+	        continue;
+	    }
+#>
+        /// <summary>
+        /// <#= column.Description #>
+        /// </summary>
+        public <#= column.PropertyType #> <#= column.PropertyName #> { get; set; }
+
+<#
+	}
+#>
+    }
+}

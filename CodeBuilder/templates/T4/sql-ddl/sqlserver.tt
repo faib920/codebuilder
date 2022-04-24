@@ -1,0 +1,123 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+<#
+foreach (var table in host.Tables)
+{
+#>
+
+create table <#= table.Name #>
+(
+<#
+    for (var i = 0; i < table.Columns.Count; i++)
+    {
+        var column = table.Columns[i];
+        var last = i == table.Columns.Count - 1;
+#>
+    <#= column.Name #> <#= GetDataType(column) #> <#= !column.IsNullable ? "not null" : "null" #> <#= column.AutoIncrement ? "identity ": string.Empty #><#= column.DefaultValue != null ? "default " + GetDefaultValue(column) + " " : string.Empty #><#= !last || table.PrimaryKeys.Count > 0 ? "," : string.Empty #>
+<#
+    }
+    if (table.PrimaryKeys.Count > 0)
+    {
+#>
+    constraint PK_<#= table.Name #> primary key (<#= OutPrimaryKeys(table) #>)
+<#
+    }
+#>
+)
+go
+
+<#
+    if (!string.IsNullOrEmpty(table.Description))
+    {
+#>
+execute sp_addextendedproperty 'MS_Description',  
+   '<#= table.Description #>', 
+   'user', 'dbo', 'table', '<#= table.Name #>'
+go
+<#
+    }
+	
+	for (var i = 0; i < table.Columns.Count; i++)
+    {
+        var column = table.Columns[i];
+#>
+execute sp_addextendedproperty 'MS_Description',  
+   '<#= column.Description #>', 
+   'user', 'dbo', 'table', '<#= table.Name #>', 'column', '<#= column.Name #>'
+go
+<#
+    }
+}
+foreach (var refer in host.References)
+{
+#>
+
+alter table <#= refer.FkTable.Name #> add constraint <#= refer.Name #> foreign key (<#= refer.FkColumn.Name #>)
+      references <#= refer.PkTable.Name #> (<#= refer.PkColumn.Name #>)
+go
+<#
+}
+#>
+
+<#+
+public static string GetDataType(Column column)
+{
+    switch (column.DbType)
+    {
+        case DbType.String:
+            if (column.Length == null)
+                return "ntext";
+            else if (column.Length > 8000)
+                return "ntext";
+            else
+                return string.Format("nvarchar({0})", column.Length);
+        case DbType.Int16:
+            return "smallint";
+        case DbType.Int32:
+            return "int";
+        case DbType.Int64:
+            return "long";
+        case DbType.Single:
+        case DbType.Double:
+            return "decimal";
+        case DbType.Decimal:
+            return string.Format("decimal({0},{1})", column.Precision, column.Scale);
+        case DbType.Boolean:
+            return "bit";
+        case DbType.DateTime:
+            return "datetime";
+    }
+    
+    return string.Empty;
+}
+
+public static string GetDefaultValue(Column column)
+{
+    switch (column.DbType)
+    {
+        case DbType.String:
+        case DbType.DateTime:
+            return string.Format("'{0}'", column.DefaultValue);
+        default:
+            return column.DefaultValue.ToString();
+    }
+}
+
+public static string OutPrimaryKeys(Table table)
+{
+    var sb = new StringBuilder();
+    foreach (var c in table.PrimaryKeys)
+    {
+        if (sb.Length > 0)
+        {
+            sb.Append(",");
+        }
+        sb.Append(c.Name);
+    }
+    
+    return sb.ToString();
+}
+#>

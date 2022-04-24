@@ -1,0 +1,30 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+#>
+using System;
+
+namespace <#= host.Profile.Namespace #>.Models
+{
+    /// <summary>
+    /// <#= table.Description #>。
+    /// </summary>
+    public class <#= table.ClassName #>
+    {
+<#
+	foreach (var column in table.Columns)
+	{
+#>
+        /// <summary>
+        /// <#= column.Description #>。
+        /// </summary>
+        public <#= column.PropertyType #> <#= column.PropertyName #> { get; set; }
+
+<#
+	}
+#>
+    }
+}

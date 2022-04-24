@@ -1,0 +1,241 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var pk = table.PrimaryKeys[0];
+    var ptype = GetPrimaryKeyPType(table);
+    var pkname = ToCamel(pk.PropertyName);
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Text;
+using System.Linq;
+using Fireasy.Data;
+using Fireasy.Data.Extensions;
+using <#= host.Profile.Namespace #>.Models;
+
+namespace <#= host.Profile.Namespace #>.DAL
+{
+    public class <#= table.ClassName #>DAL : IDisposable
+    {
+        private IDatabase db = DatabaseFactory.CreateDatabase();
+        
+<# 
+if (!host.Profile.Async) 
+{
+#>
+        /// <summary>
+        /// 通过主键值获取一个对象。
+        /// </summary>
+        /// <param name="<#= pkname #>">主键值。</param>
+        public <#= table.ClassName #> Get(<#= ptype #> <#= pkname #>)
+        {
+            var parameters = new ParameterCollection();
+            parameters.Add("<#= pk.Name #>", <#= pkname #>);
+            
+            var sql = "select * from <#= table.Name #> where <#= pk.Name #> = @<#= pk.Name #>";
+             
+            return db.ExecuteEnumerable<<#= table.ClassName #>>((SqlCommand)sql, parameters: parameters).FirstOrDefault();
+        }
+        
+        /// <summary>
+        /// 通过条件查询一组对象。
+        /// </summary>
+        /// <param name="condition">条件。</param>
+        /// <param name="orderby">排序。</param>
+        /// <param name="orderby">参数集合。</param>
+        /// <param name="pager">分页对象。</param>
+        public List<<#= table.ClassName #>> Query(string condition, string orderby, ParameterCollection parameters, DataPager pager = null)
+        {
+            var sql = new StringBuilder("select * from <#= table.Name #>");
+            
+            if (!string.IsNullOrEmpty(condition))
+            {
+                sql.AppendFormat(" where {0}", condition);
+            }
+            
+            if (!string.IsNullOrEmpty(orderby))
+            {
+                sql.AppendFormat(" order by {0}", orderby);
+            }
+            
+            return db.ExecuteEnumerable<<#= table.ClassName #>>((SqlCommand)sql.ToString(), pager, parameters).ToList();
+        }
+        
+        /// <summary>
+        /// 插入一个对象。
+        /// </summary>
+        /// <param name="model">要插入的对象。</param>       
+        public int Insert(<#= table.ClassName #> model)
+        {
+            var parameters = new ParameterCollection();
+<#
+    foreach (var column in table.Columns)
+    {
+#>
+            parameters.Add("<#= column.Name #>", model.<#= column.PropertyName #>);
+<#
+    }
+#>
+
+            var sql = "insert into <#= table.Name #>({0}) values({1})";
+            sql = parameters.FormatInsert(sql);
+            
+            return db.ExecuteNonQuery((SqlCommand)sql, parameters: parameters);
+        }
+        
+        /// <summary>
+        /// 更新指定的对象。
+        /// </summary>
+        /// <param name="model">要更新的对象。</param>   
+        public int Update(<#= table.ClassName #> model)
+        {
+            var parameters = new ParameterCollection();
+<#
+    foreach (var column in table.Columns)
+    {
+#>
+            parameters.Add("<#= column.Name #>", model.<#= column.PropertyName #>);
+<#
+    }
+#>
+
+            var sql = "insert into <#= table.Name #>({0}) values({1}) where <#= pk.Name #> = @<#= pk.Name #>";
+            sql = parameters.FormatUpdate(sql);
+            
+            return db.ExecuteNonQuery((SqlCommand)sql, parameters: parameters);
+        }
+        
+        /// <summary>
+        /// 通过主键值删除一个对象。
+        /// </summary>
+        /// <param name="<#= pkname #>">主键值。</param>
+        public int Delete(<#= ptype #> <#= pkname #>)
+        {
+            var parameters = new ParameterCollection();
+            parameters.Add("<#= pk.Name #>", <#= pkname #>);
+            
+            var sql = "delete from <#= table.Name #> where <#= pk.Name #> = @<#= pk.Name #>";
+             
+            return db.ExecuteNonQuery((SqlCommand)sql, parameters: parameters);
+        }
+<#
+}
+else
+{
+#>
+        /// <summary>
+        /// 通过主键值获取一个对象。
+        /// </summary>
+        /// <param name="<#= pkname #>">主键值。</param>
+        public async Task<<#= table.ClassName #>> GetAsync(<#= ptype #> <#= pkname #>)
+        {
+            var parameters = new ParameterCollection();
+            parameters.Add("<#= pk.Name #>", <#= pkname #>);
+            
+            var sql = "select * from <#= table.Name #> where <#= pk.Name #> = @<#= pk.Name #>";
+             
+            return (await db.ExecuteEnumerableAsync<<#= table.ClassName #>>((SqlCommand)sql, parameters: parameters)).FirstOrDefault();
+        }
+        
+        /// <summary>
+        /// 通过条件查询一组对象。
+        /// </summary>
+        /// <param name="condition">条件。</param>
+        /// <param name="orderby">排序。</param>
+        /// <param name="orderby">参数集合。</param>
+        /// <param name="pager">分页对象。</param>
+        public async Task<List<<#= table.ClassName #>>> QueryAsync(string condition, string orderby, ParameterCollection parameters, DataPager pager = null)
+        {
+            var sql = new StringBuilder("select * from <#= table.Name #>");
+            
+            if (!string.IsNullOrEmpty(condition))
+            {
+                sql.AppendFormat(" where {0}", condition);
+            }
+            
+            if (!string.IsNullOrEmpty(orderby))
+            {
+                sql.AppendFormat(" order by {0}", orderby);
+            }
+            
+            return (await db.ExecuteEnumerableAsync<<#= table.ClassName #>>((SqlCommand)sql.ToString(), pager, parameters)).ToList();
+        }
+        
+        /// <summary>
+        /// 插入一个对象。
+        /// </summary>
+        /// <param name="model">要插入的对象。</param>       
+        public async Task<int> InsertAsync(<#= table.ClassName #> model)
+        {
+            var parameters = new ParameterCollection();
+<#
+    foreach (var column in table.Columns)
+    {
+#>
+            parameters.Add("<#= column.Name #>", model.<#= column.PropertyName #>);
+<#
+    }
+#>
+
+            var sql = "insert into <#= table.Name #>({0}) values({1})";
+            sql = parameters.FormatInsert(sql);
+            
+            return await db.ExecuteNonQueryAsync((SqlCommand)sql, parameters: parameters);
+        }
+        
+        /// <summary>
+        /// 更新指定的对象。
+        /// </summary>
+        /// <param name="model">要更新的对象。</param>   
+        public async Task<int> UpdateAsync(<#= table.ClassName #> model)
+        {
+            var parameters = new ParameterCollection();
+<#
+    foreach (var column in table.Columns)
+    {
+#>
+            parameters.Add("<#= column.Name #>", model.<#= column.PropertyName #>);
+<#
+    }
+#>
+
+            var sql = "insert into <#= table.Name #>({0}) values({1}) where <#= pk.Name #> = @<#= pk.Name #>";
+            sql = parameters.FormatUpdate(sql);
+            
+            return await db.ExecuteNonQueryAsync((SqlCommand)sql, parameters: parameters);
+        }
+        
+        /// <summary>
+        /// 通过主键值删除一个对象。
+        /// </summary>
+        /// <param name="<#= pkname #>">主键值。</param>
+        public async Task<int> DeleteAsync(<#= ptype #> <#= pkname #>)
+        {
+            var parameters = new ParameterCollection();
+            parameters.Add("<#= pk.Name #>", <#= pkname #>);
+            
+            var sql = "delete from <#= table.Name #> where <#= pk.Name #> = @<#= pk.Name #>";
+             
+            return await db.ExecuteNonQueryAsync((SqlCommand)sql, parameters: parameters);
+        }
+<#
+}
+#>
+        
+        public void Dispose()
+        {
+            db.Dispose();
+        }
+    }
+}

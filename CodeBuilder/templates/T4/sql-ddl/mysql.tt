@@ -1,0 +1,112 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+<#
+foreach (var table in host.Tables)
+{
+#>
+
+-- Table: <#= table.Name #>
+alter table <#= table.Name #>
+   drop primary key;
+
+drop table if exists <#= table.Name #>;
+
+create table <#= table.Name #>
+(
+<#
+    for (var i = 0; i < table.Columns.Count; i++)
+    {
+        var column = table.Columns[i];
+        var last = i == table.Columns.Count - 1;
+#>
+    <#= column.Name #> <#= GetDataType(column) #> <#= !column.IsNullable ? "not null" : "null" #> <#= column.AutoIncrement ? "auto_increment ": string.Empty #><#= column.DefaultValue != null ? GetDefaultValue(column) + " " : string.Empty #>comment '<#= column.Description #>'<#= !last || table.PrimaryKeys.Count > 0 ? "," : string.Empty #>
+<#
+    }
+    if (table.PrimaryKeys.Count > 0)
+    {
+#>
+    primary key (<#= OutPrimaryKeys(table) #>)
+<#
+    }
+#>
+);
+
+<#
+    if (!string.IsNullOrEmpty(table.Description))
+    {
+#>
+alter table <#= table.Name #> comment '<#= table.Description #>';
+<#
+    }
+}
+
+foreach (var refer in host.References)
+{
+#>
+alter table <#= refer.FkTable.Name #> add constraint <#= refer.Name #> foreign key (<#= refer.FkColumn.Name #>)
+      references <#= refer.PkTable.Name #> (<#= refer.PkColumn.Name #>) on delete <#= refer.OnDelete.ToString().ToLower() #> on update <#= refer.OnUpdate.ToString().ToLower() #>;
+      
+<#
+}
+#>
+
+<#+
+public static string GetDataType(Column column)
+{
+    switch (column.DbType)
+    {
+        case DbType.String:
+            if (column.Length == null)
+                return "text";
+            else if (column.Length > 8000)
+                return "text";
+            else
+                return string.Format("varchar({0})", column.Length);
+        case DbType.Int32:
+            return "int";
+        case DbType.Int64:
+            return "long";
+        case DbType.Single:
+        case DbType.Double:
+            return "decimal";
+        case DbType.Decimal:
+            return string.Format("decimal({0},{1})", column.Precision, column.Scale);
+        case DbType.Boolean:
+            return "tinyint";
+        case DbType.DateTime:
+            return "datetime";
+    }
+    
+    return string.Empty;
+}
+
+public static string GetDefaultValue(Column column)
+{
+    switch (column.DbType)
+    {
+        case DbType.String:
+        case DbType.DateTime:
+            return string.Format("'{0}'", column.DefaultValue);
+        default:
+            return column.DefaultValue.ToString();
+    }
+}
+
+public static string OutPrimaryKeys(Table table)
+{
+    var sb = new StringBuilder();
+    foreach (var c in table.PrimaryKeys)
+    {
+        if (sb.Length > 0)
+        {
+            sb.Append(",");
+        }
+        sb.Append(c.Name);
+    }
+    
+    return sb.ToString();
+}
+#>

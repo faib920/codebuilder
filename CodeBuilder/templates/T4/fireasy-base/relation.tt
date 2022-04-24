@@ -1,0 +1,23 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using System;
+using Fireasy.Data.Entity;
+
+<#
+foreach (var refe in host.References)
+{
+#>
+[assembly: Relationship("<#= refe.Name #>", typeof(<#= host.Profile.Namespace + ".Models." + refe.PkTable.ClassName #>), typeof(<#= host.Profile.Namespace + ".Models." + refe.FkTable.ClassName #>), "<#= refe.PkColumn.PropertyName #>=><#= refe.FkColumn.PropertyName #>")]
+<#
+}
+#>

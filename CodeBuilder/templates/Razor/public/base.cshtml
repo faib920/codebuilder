@@ -1,0 +1,74 @@
+@functions {
+    public static bool CheckDelFlag(Column column)
+    {
+        switch (column.Name.ToLower())
+        {
+            case "del_flag":
+            case "delflag":
+            case "isdelete":
+                return true;
+        }
+
+        return false;
+    }
+    
+    //获取列可转换为属性的C#类型
+    public static string GetPropertyTypeForCsharp(Column column)
+    {
+        var propertyType = column.PropertyType;
+        if (column.DbType == null || !string.IsNullOrEmpty(propertyType))
+        {
+            return propertyType;
+        }
+    
+        switch ((DbType)column.DbType)
+        {
+            case DbType.String:
+            case DbType.StringFixedLength:
+            case DbType.AnsiString:
+            case DbType.AnsiStringFixedLength:
+                propertyType = "string";
+                break;
+            case DbType.Int16:
+                propertyType = "short";
+                break;
+            case DbType.Int32:
+                propertyType = "int";
+                break;
+            case DbType.Int64:
+                propertyType = "long";
+                break;
+            case DbType.Decimal:
+                propertyType = "decimal";
+                break;
+            case DbType.Single:
+                propertyType = "float";
+                break;
+            case DbType.Double:
+                propertyType = "double";
+                break;
+            case DbType.Boolean:
+                propertyType = "bool";
+                break;
+            case DbType.Byte:
+                propertyType = "byte";
+                break;
+            case DbType.Date:
+            case DbType.DateTime:
+            case DbType.DateTime2:
+            case DbType.DateTimeOffset:
+                propertyType = "DateTime";
+                break;
+            case DbType.Binary:
+                propertyType = "byte[]";
+                break;
+        }
+    
+        if (column.IsNullable && propertyType != "string" && column.DbType != DbType.Binary)
+        {
+            propertyType += "?";
+        }
+    
+        return propertyType;
+    }
+}

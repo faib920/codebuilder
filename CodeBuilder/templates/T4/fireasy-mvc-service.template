@@ -1,0 +1,111 @@
+﻿{
+    "Name": "Fireasy for Mvc+Service",
+    "Author": "fireasy",
+    "Version": 1,
+    "Description": "基于 Fireasy 框架的 MVC 项目代码，包括实体模型、服务层、数据传输对象、控制器、列表视图和编辑视图。",
+    "Language": "CSharp",
+    "Partitions": [],
+    "Groups": [
+        {
+            "Name": "Service",
+            "Groups": [],
+            "Partitions": [
+                {
+                    "Name": "服务类接口",
+                    "FileName": "iservice.tt",
+                    "Output": "Services\\I{ClassName}Service.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "服务类实现",
+                    "FileName": "serviceimpl.tt",
+                    "Output": "Services\\Imps\\{ClassName}Service.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                }
+            ]
+        },
+        {
+            "Name": "Entity",
+            "Groups": [],
+            "Partitions": [
+                {
+                    "Name": "实体类",
+                    "FileName": "entity.tt",
+                    "Output": "Models\\{ClassName}.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "实体类_扩展",
+                    "FileName": "entity_ex.tt",
+                    "Output": "Models\\{ClassName}_Ex.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "实体关系",
+                    "FileName": "relation.tt",
+                    "Output": "Models\\Relationships.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "上下文类",
+                    "FileName": "context.tt",
+                    "Output": "Data\\DbContext.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                }
+            ]
+        },
+        {
+            "Name": "Mvc",
+            "Groups": [],
+            "Partitions": [
+                {
+                    "Name": "控制器类",
+                    "FileName": "controller.tt",
+                    "Output": "Areas\\{MvcArea}\\Controllers\\{ClassName}Controller.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "列表视图",
+                    "FileName": "listview.tt",
+                    "Output": "Areas\\{MvcArea}\\Views\\{ClassName}\\Index.cshtml",
+                    "Loop": "Tables",
+                    "Syntax": "ASP/XHTML"
+                },
+                {
+                    "Name": "编辑视图",
+                    "FileName": "editview.tt",
+                    "Output": "Areas\\{MvcArea}\\Views\\{ClassName}\\Edit.cshtml",
+                    "Loop": "Tables",
+                    "Syntax": "ASP/XHTML"
+                }
+            ]
+        },
+        {
+            "Name": "Dtos",
+            "Groups": [],
+            "Partitions": [
+                {
+                    "Name": "Dto类",
+                    "FileName": "dto.tt",
+                    "Output": "Dtos\\{ClassName}Dto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "QueryDto类",
+                    "FileName": "querydto.tt",
+                    "Output": "Dtos\\{ClassName}QueryDto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                }
+            ]
+        }
+    ]
+}

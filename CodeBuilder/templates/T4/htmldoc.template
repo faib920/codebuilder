@@ -1,0 +1,17 @@
+{
+    "Name": "Html文档",
+    "Author": "fireasy",
+    "Version": 1,
+    "Description": "基于 Html 格式的数据库说明文档。",
+    "Language": "Html",
+    "Partitions": [
+        {
+            "Name": "文档",
+            "FileName": "index.tt",
+            "Output": "index.html",
+            "Loop": "None",
+            "Syntax": "Html"
+        }
+    ],
+    "Groups": []
+}

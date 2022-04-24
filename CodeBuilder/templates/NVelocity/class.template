@@ -1,0 +1,17 @@
+﻿{
+    "Name": "标准类",
+    "Author": "fireasy",
+    "Version": 1,
+    "Description": null,
+    "Language": "CSharp",
+    "Partitions": [
+        {
+            "Name": "类",
+            "FileName": "class.vm",
+            "Output": "{ClassName}.cs",
+            "Loop": "Tables",
+            "Syntax": "C#"
+        }
+    ],
+    "Groups": []
+}

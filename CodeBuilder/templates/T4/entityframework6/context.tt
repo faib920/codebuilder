@@ -1,0 +1,33 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using System;
+using System.Data.Entity;
+using <#= host.Profile.Namespace #>.Models;
+
+namespace <#= host.Profile.Namespace #>.Data
+{
+    public class EfContext : DbContext
+    {
+<#
+	foreach (var table in host.Tables)
+	{
+#>
+        /// <summary>
+        /// 获取或设置 <#= table.Description #> 实体仓储。
+        /// </summary> 
+        public DbSet<<#= table.ClassName #>> <#= StringExtension.ToPlural(table.ClassName) #> { get; set; }
+<#
+        }
+#>
+    }
+}

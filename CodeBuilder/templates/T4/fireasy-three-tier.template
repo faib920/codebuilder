@@ -1,0 +1,30 @@
+{
+    "Name": "Fireasy for 3Tiers",
+    "Author": "fireasy",
+    "Version": 1,
+    "Description": "基于 Fireasy 框架的三层结构，包括实体模型、业务逻辑层、数据访问层。",
+    "Language": "CSharp",
+    "Partitions": [
+        {
+            "Name": "Model",
+            "FileName": "model.tt",
+            "Output": "Models\\{ClassName}.cs",
+            "Loop": "Tables",
+            "Syntax": "C#"
+        },
+        {
+            "Name": "DAL",
+            "FileName": "dal.tt",
+            "Output": "DAL\\{ClassName}DAL.cs",
+            "Loop": "Tables",
+            "Syntax": "C#"
+        },
+        {
+            "Name": "BLL",
+            "FileName": "bll.tt",
+            "Output": "BLL\\{ClassName}BLL.cs",
+            "Loop": "Tables",
+            "Syntax": "C#"
+        }
+    ]
+}

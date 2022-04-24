@@ -1,0 +1,157 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPType(table);
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using Fireasy.Common.Extensions;
+using Fireasy.Data.Entity;
+using Fireasy.Data.Entity.Linq;
+using Fireasy.Utilities.Web;
+using Fireasy.Web.Http;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using <#= host.Profile.Namespace #>.Data;
+using <#= host.Profile.Namespace #>.Models;
+<#
+    var service = ToCamel(table.ClassName);
+#>
+
+namespace <#= host.Profile.Namespace #>.Web.Areas.<#= host.Profile.MvcArea #>.Controllers
+{
+    public partial class <#= table.ClassName #>Controller : Controller
+    {
+        private readonly I<#= table.ClassName #>Service _<#= service #>Service;
+
+        public <#= table.ClassName #>Controller(I<#= table.ClassName #>Service _<#= service #>Service)
+        {
+            _<#= service #>Service = <#= service #>Service;
+        }
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+    		
+        public ActionResult Edit()
+        {
+            return View();
+        }
+
+<#
+if (!host.Profile.Async)
+{
+#>
+        /// <summary>
+        /// 根据ID获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">信息ID。</param>
+        /// <returns></returns>
+        public JsonResult Get(<#= ptype #> id)
+        {
+            var dto = _<#= service #>Service.Get(id);
+            return Json(dto);
+        }
+
+        /// <summary>
+        /// 保存 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="info">要保存的数据。</param>
+        /// <returns>id</returns>
+        public JsonResult Save(<#= table.ClassName #>Dto info)
+        {
+            info = _<#= service #>Service.Save(info);
+            return Json(Result.Success("保存成功。", info));
+        }
+        
+        /// <summary>
+        /// 根据查询条件获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="keyword">关键字</param>
+        /// <returns></returns>
+        [ExceptionBehavior(true)]
+        public JsonResult Data(string keyword)
+        {
+            var pager = EasyUIHelper.GetDataPager();
+            var sorting = EasyUIHelper.GetSorting();
+            var dtos = _<#= service #>Service.Query(keyword, pager, sorting);
+            return Json(EasyUIHelper.Transfer(pager, dtos));
+        }
+
+        /// <summary>
+        /// 删除 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public JsonResult Delete(<#= ptype #> id)
+        {
+            _<#= service #>Service.Delete(id);
+            return Json(Result.Success("删除成功。"));
+        }
+<#
+}
+else
+{
+#>
+        /// <summary>
+        /// 根据ID获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">信息ID。</param>
+        /// <returns></returns>
+        public async Task<JsonResult> Get(<#= ptype #> id)
+        {
+            var dto = await _<#= service #>Service.GetAsync(id);
+            return Json(dto);
+        }
+
+        /// <summary>
+        /// 保存 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="info">要保存的数据。</param>
+        /// <returns>id</returns>
+        public async Task<JsonResult> Save(<#= table.ClassName #> info)
+        {
+            info = _<#= service #>Service.Save(info);
+            return Json(Result.Success("保存成功。", info));
+        }
+        
+        /// <summary>
+        /// 根据查询条件获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="keyword">关键字</param>
+        /// <returns></returns>
+        [ExceptionBehavior(true)]
+        public async Task<JsonResult> Data(string keyword)
+        {
+            var pager = EasyUIHelper.GetDataPager();
+            var sorting = EasyUIHelper.GetSorting();
+            var dtos = await _<#= service #>Service.QueryAsync(keyword, pager, sorting);
+            return Json(EasyUIHelper.Transfer(pager, dtos));
+        }
+
+        /// <summary>
+        /// 删除 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<JsonResult> Delete(<#= ptype #> id)
+        {
+            await _<#= service #>Service.DeleteAsync(id);
+            return Json(Result.Success("删除成功。"));
+        }
+<#
+}
+#>
+    }
+}

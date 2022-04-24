@@ -1,0 +1,37 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using System;
+
+namespace <#= host.Profile.Namespace #>.Models
+{
+    /// <summary>
+    /// <#= table.Description #> 实体类。
+    /// </summary>
+    public class <#= table.ClassName #>
+    {
+<#
+	foreach (dynamic column in table.Columns)
+	{
+#>
+        /// <summary>
+        /// <#= column.Description #>。
+        /// </summary>
+        public <#= column.PropertyType #> <#= column.PropertyName #> { get; set; }
+
+<#
+    }
+#>
+    }
+}

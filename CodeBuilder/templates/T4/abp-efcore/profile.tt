@@ -1,0 +1,29 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Shared.Dtos.<#= host.Profile.SubNameSpace #>;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Entities;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Models;
+using AutoMapper;
+
+namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>
+{
+    public class <#= GetLastPart(host.Profile.SubNameSpace) #>Profile : Profile
+    {
+        public <#= GetLastPart(host.Profile.SubNameSpace) #>Profile()
+        {
+<#
+	foreach (var table in host.Tables)
+	{
+#>
+            CreateMap<<#= table.ClassName #>SaveDto, <#= table.ClassName #>SaveModel>();
+            CreateMap<<#= table.ClassName #>, <#= table.ClassName #>Dto>();
+<#
+        }
+#>
+        }
+    }
+}

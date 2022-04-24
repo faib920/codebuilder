@@ -1,0 +1,13 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+<#
+	foreach (var table in host.Tables)
+	{
+#>
+alter table <#= table.Name #> MODIFY column hosp_code varchar(10) default '001';
+<#
+    }
+#>

@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{595C1180-C831-4F78-8A3A-5C975A8A46A4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeBuilder.Tools</RootNamespace>
+    <AssemblyName>CodeBuilder.Tools</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\CodeBuilder\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\CodeBuilder\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Fireasy.Common, Version=2.0.0.46108, Culture=neutral, PublicKeyToken=31261c3914251779, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Fireasy.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Fireasy.Data, Version=2.0.0.46108, Culture=neutral, PublicKeyToken=31261c3914251779, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Fireasy.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Fireasy.Windows.Forms, Version=2.0.0.46102, Culture=neutral, PublicKeyToken=31261c3914251779, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Fireasy.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\lib\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConnEncryptor.cs" />
+    <Compile Include="frmConnEncrypt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmConnEncrypt.Designer.cs">
+      <DependentUpon>frmConnEncrypt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmRemoteEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRemoteEdit.Designer.cs">
+      <DependentUpon>frmRemoteEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmRemoter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRemoter.Designer.cs">
+      <DependentUpon>frmRemoter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmTools.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTools.Designer.cs">
+      <DependentUpon>frmTools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="GeneralTools.cs" />
+    <Compile Include="Remoter.cs" />
+    <Compile Include="Tools\GuidGenerator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\GuidGenerator.Designer.cs">
+      <DependentUpon>GuidGenerator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\Base64Converter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Base64Converter.Designer.cs">
+      <DependentUpon>Base64Converter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\NamingConverter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\NamingConverter.Designer.cs">
+      <DependentUpon>NamingConverter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\PropertyGenerator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\PropertyGenerator.Designer.cs">
+      <DependentUpon>PropertyGenerator.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CodeBuilder.Core\CodeBuilder.Core.csproj">
+      <Project>{26662e91-a4f1-48fd-9f58-bd229253a3f5}</Project>
+      <Name>CodeBuilder.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmConnEncrypt.resx">
+      <DependentUpon>frmConnEncrypt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmRemoteEdit.resx">
+      <DependentUpon>frmRemoteEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmRemoter.resx">
+      <DependentUpon>frmRemoter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTools.resx">
+      <DependentUpon>frmTools.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\GuidGenerator.resx">
+      <DependentUpon>GuidGenerator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\Base64Converter.resx">
+      <DependentUpon>Base64Converter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\NamingConverter.resx">
+      <DependentUpon>NamingConverter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\PropertyGenerator.resx">
+      <DependentUpon>PropertyGenerator.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Remote.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,25 @@
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：@Model.Profile.ProjectName
+// 版权：Copyright @Model.Profile.CompanyName
+// 作者：@Model.Profile.Author
+// 时间：@DateTime.Now
+// **************************************
+using System;
+
+namespace @(Model.Profile.Namespace).Models
+{
+    /// <summary>
+    /// @(Model.Current.Description)
+    /// </summary>
+    public partial class @Model.Current.ClassName
+    {
+@foreach(var c in Model.Current.Columns)
+{
+@("        /// <summary>\r\n")
+@("        /// " + c.Description + "。\r\n")
+@("        /// </summary>\r\n")
+@("        public " + @c.PropertyType + " " + @c.PropertyName + "{ get; set; }\r\n\r\n")
+}
+    }
+}

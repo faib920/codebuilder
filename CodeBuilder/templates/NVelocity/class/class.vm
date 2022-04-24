@@ -1,0 +1,19 @@
+#parse("../public/base.vm")
+using System;
+
+namespace ${Profile.Namespace}.Models
+{
+    /// <summary>
+    /// $Current.Description。
+    /// </summary>
+    public class ${Current.ClassName}
+    {
+#foreach ($column in $Current.Columns)
+        /// <summary>
+        /// 获取或设置${column.Description}。
+        /// </summary>
+        public $column.PropertyType ${column.PropertyName} { get; set; }
+
+#end
+    }
+}

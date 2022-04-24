@@ -1,0 +1,10 @@
+#macro (getPropertyTypeForCsharp $column)
+    #set($propertyType = $column.PropertyType)
+    #if (! $column.DbType || ! $propertyType)
+        $propertyType
+    #elseif ($column.DbType == "String" || $column.DbType == "StringFixedLength" || $column.DbType == "AnsiString" || $column.DbType == "AnsiStringFixedLength")
+        string
+    #elseif ($column.DbType == "Int16")
+        short
+    #end
+#end

@@ -1,0 +1,37 @@
+{
+    "Name": "Fireasy 基本",
+    "Author": null,
+    "Version": 1,
+    "Description": "基于 Fireasy 框架的实体模型。",
+    "Language": "CSharp",
+    "Partitions": [
+        {
+            "Name": "实体类",
+            "FileName": "entity.tt",
+            "Output": "Models\\{ClassName}.cs",
+            "Loop": "Tables",
+            "Syntax": "C#"
+        },
+		{
+            "Name": "实体类_扩展",
+            "FileName": "entity_ex.tt",
+            "Output": "Models\\{ClassName}_Ex.cs",
+            "Loop": "Tables",
+            "Syntax": "C#"
+        },
+        {
+            "Name": "实体关系",
+            "FileName": "relation.tt",
+            "Output": "Models\\Relationships.cs",
+            "Loop": "None",
+            "Syntax": "C#"
+        },
+        {
+            "Name": "上下文类",
+            "FileName": "context.tt",
+            "Output": "Data\\DbContext.cs",
+            "Loop": "None",
+            "Syntax": "C#"
+        }
+    ]
+}

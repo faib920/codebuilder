@@ -1,0 +1,168 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var pk = table.PrimaryKeys[0];
+    var ptype = GetPrimaryKeyPType(table);
+    var pkname = ToCamel(pk.PropertyName);
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Fireasy.Data;
+using <#= host.Profile.Namespace #>.Models;
+using <#= host.Profile.Namespace #>.DAL;
+
+namespace <#= host.Profile.Namespace #>.BLL
+{
+    public class <#= table.ClassName #>BLL
+    {
+<# 
+if (!host.Profile.Async) 
+{
+#>
+        /// <summary>
+        /// 通过主键值获取一个对象。
+        /// </summary>
+        /// <param name="<#= pkname #>">主键值。</param>
+        public <#= table.ClassName #> Get(<#= ptype #> <#= pkname #>)
+        {
+            using (var da = new <#= table.ClassName #>DAL())
+            {
+                return da.Get(<#= pkname #>);
+            }
+        }
+        
+        /// <summary>
+        /// 通过条件查询一组对象。
+        /// </summary>
+        /// <param name="condition">条件。</param>
+        /// <param name="orderby">排序。</param>
+        /// <param name="orderby">参数集合。</param>
+        /// <param name="pager">分页对象。</param>
+        public List<<#= table.ClassName #>> Query(string condition, string orderby, ParameterCollection parameters, DataPager pager = null)
+        {
+            using (var da = new <#= table.ClassName #>DAL())
+            {
+                return da.Query(condition, orderby, parameters, pager);
+            }
+        }
+        
+        /// <summary>
+        /// 插入一个对象。
+        /// </summary>
+        /// <param name="model">要插入的对象。</param> 
+        public int Insert(<#= table.ClassName #> model)
+        {
+            using (var da = new <#= table.ClassName #>DAL())
+            {
+                return da.Insert(model);
+            }
+        }
+        
+        /// <summary>
+        /// 更新指定的对象。
+        /// </summary>
+        /// <param name="model">要更新的对象。</param>  
+        public int Update(<#= table.ClassName #> model)
+        {
+            using (var da = new <#= table.ClassName #>DAL())
+            {
+                return da.Update(model);
+            }
+        }
+        
+        /// <summary>
+        /// 通过主键值删除一个对象。
+        /// </summary>
+        /// <param name="<#= pkname #>">主键值。</param>
+        public int Delete(<#= ptype #> <#= pkname #>)
+        {
+            using (var da = new <#= table.ClassName #>DAL())
+            {
+                return da.Delete(<#= pkname #>);
+            }
+        }
+
+<#
+}
+else
+{
+#>
+
+        /// <summary>
+        /// 通过主键值获取一个对象。
+        /// </summary>
+        /// <param name="<#= pkname #>">主键值。</param>
+        public async Task<<#= table.ClassName #>> GetAsync(<#= ptype #> <#= pkname #>)
+        {
+            using (var da = new <#= table.ClassName #>DAL())
+            {
+                return await da.GetAsync(<#= pkname #>);
+            }
+        }
+        
+        /// <summary>
+        /// 通过条件查询一组对象。
+        /// </summary>
+        /// <param name="condition">条件。</param>
+        /// <param name="orderby">排序。</param>
+        /// <param name="orderby">参数集合。</param>
+        /// <param name="pager">分页对象。</param>
+        public async Task<List<<#= table.ClassName #>>> QueryAsync(string condition, string orderby, ParameterCollection parameters, DataPager pager = null)
+        {
+            using (var da = new <#= table.ClassName #>DAL())
+            {
+                return await da.QueryAsync(condition, orderby, parameters, pager);
+            }
+        }
+        
+        /// <summary>
+        /// 插入一个对象。
+        /// </summary>
+        /// <param name="model">要插入的对象。</param> 
+        public async Task<int> InsertAsync(<#= table.ClassName #> model)
+        {
+            using (var da = new <#= table.ClassName #>DAL())
+            {
+                return await da.InsertAsync(model);
+            }
+        }
+        
+        /// <summary>
+        /// 更新指定的对象。
+        /// </summary>
+        /// <param name="model">要更新的对象。</param>  
+        public async Task<int> UpdateAsync(<#= table.ClassName #> model)
+        {
+            using (var da = new <#= table.ClassName #>DAL())
+            {
+                return await da.UpdateAsync(model);
+            }
+        }
+        
+        /// <summary>
+        /// 通过主键值删除一个对象。
+        /// </summary>
+        /// <param name="<#= pkname #>">主键值。</param>
+        public async Task<int> DeleteAsync(<#= ptype #> <#= pkname #>)
+        {
+            using (var da = new <#= table.ClassName #>DAL())
+            {
+                return await da.DeleteAsync(<#= pkname #>);
+            }
+        }
+<#
+}
+#>
+    }
+}

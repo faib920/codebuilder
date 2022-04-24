@@ -1,0 +1,89 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+#>
+@{
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+}
+@model <#= host.Profile.Namespace #>.Models.<#= table.ClassName #>
+@{
+    ViewBag.Title = "<#= table.Description #>管理";
+    Layout = "~/Views/Shared/_EasyUILayout.cshtml";
+}
+<script type="text/javascript">
+    var id = '@Request.QueryString["id"]';
+    $(function () {
+        loadInfo();
+    });
+
+    //加载信息
+    function loadInfo() {
+        if (id != '') {
+            $.getJSON('@Url.Action("Get")?id=' + id, function (data) {
+                common.processResult(data, function () {
+                    $('#form1').form('load', data);
+                });
+            });
+
+            $('#btnSaveAndNew').remove();
+        }
+    }
+
+    //保存信息
+    function saveInfo(isNew) {
+        if (!$('#form1').form('validate')) {
+            return;
+        }
+
+        var postData = new Object();
+
+        //将表单填充的内容序列化为json
+        var data = $('#form1').form('save');
+        postData["info"] = JSON.stringify(data);
+
+        common.showProcess();
+        $.post('@Url.Action("Save")?id=' + id, postData, function (result) {
+            common.processResult(result, function () {
+                if (isNew) {
+                    $('#form1').form('clear');
+                }
+
+                id = isNew ? '' : result.data;
+                common.setReturnValue(true);
+            });
+        });
+    }
+</script>
+<div data-options="region:'center',border:false">
+    <table class="form-body">
+<#
+foreach (dynamic column in table.Columns)
+{
+    if (column.IsPrimaryKey || !column.GenerateField)
+    {
+        continue;
+    }
+#>
+        <tr>
+            <td class="addon"><#= column.Description #></td>
+            <td>@Html.<#= column.ControlType.ToString() #>(s => s.<#= column.PropertyName #>)</td>
+        </tr>
+<#
+}
+#>        
+    </table>
+</div>
+<div data-options="region:'south',border:false" class="form-button">
+    <a class="easyui-linkbutton" onclick="saveInfo()" id="btnSave" data-options="iconCls:'icon-save'">保存</a>
+    <a class="easyui-linkbutton" onclick="saveInfo(true)" id="btnSaveAndNew" data-options="iconCls:'icon-save_new'">保存并新建</a>
+    <a class="easyui-linkbutton" onclick="common.closeWindow()" id="btnClose" data-options="iconCls:'icon-cancel'">关闭</a>
+</div>

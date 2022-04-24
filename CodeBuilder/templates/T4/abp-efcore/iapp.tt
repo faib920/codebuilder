@@ -1,0 +1,67 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Shared.Dtos.<#= host.Profile.SubNameSpace #>;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Shared.QueryDtos.<#= host.Profile.SubNameSpace #>;
+
+namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Application.Contracts.<#= host.Profile.SubNameSpace #>
+{
+    /// <summary>
+    /// <#= table.Description #>应用服务接口
+    /// </summary>
+    public interface I<#= table.ClassName #>AppService : IAbpApplicationService
+    {
+        /// <summary>
+        /// 分页获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<<#= table.ClassName #>Dto>> QueryPagedListAsync(<#= table.ClassName #>QueryDto queryDto);
+
+        /// <summary>
+        /// 获取<#= table.Description #>数据条数
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        Task<int> QueryCountAsync(<#= table.ClassName #>QueryDto queryDto);
+
+        /// <summary>
+        /// 获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        Task<List<<#= table.ClassName #>Dto>> GetListAsync(<#= table.ClassName #>QueryDto queryDto);
+
+        /// <summary>
+        /// 根据一组ID获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task<List<<#= table.ClassName #>Dto>> GetListByIdsAsync(List<<#= ptype #>> ids);
+
+        /// <summary>
+        /// 获取<#= table.Description #>详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<<#= table.ClassName #>Dto> GetAsync(<#= ptype #> id);
+
+        /// <summary>
+        /// 保存<#= table.Description #>
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        Task<<#= table.ClassName #>Dto> SaveAsync(<#= table.ClassName #>SaveDto dto);
+    }
+}

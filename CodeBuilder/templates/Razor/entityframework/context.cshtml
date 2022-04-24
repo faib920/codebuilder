@@ -1,0 +1,23 @@
+﻿// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：@Model.Profile.ProjectName
+// 版权：Copyright @Model.Profile.CompanyName
+// 作者：@Model.Profile.Author
+// 时间：@DateTime.Now
+// **************************************
+using System.Data.Entity;
+using @(Model.Profile.Namespace).Models;
+
+namespace @(Model.Profile.Namespace).Data
+{
+    public class EfContext : DbContext
+    {
+@foreach (var table in Model.Tables)
+{
+@("        /// <summary>\r\n")
+@("        /// 获取或设置 " + table.Description + "。\r\n")
+@("        /// </summary>\r\n")
+@("        public DbSet<" + table.ClassName + "> " + StringExtension.ToPlural(table.ClassName) + " { get; set; }\r\n\r\n")
+}
+    }
+}

@@ -1,0 +1,115 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Volo.Abp.Domain.Services;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Entities;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Models;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Repositories;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Shared.QueryDtos.<#= host.Profile.SubNameSpace #>;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.EfCore;
+
+namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Managers
+{
+    /// <summary>
+    /// <#= table.Description #>领域服务类
+    /// </summary>
+    public class <#= table.ClassName #>Manager : DomainService
+    {
+        private readonly <#= table.ClassName #>Repository _<#= ToCamel(table.ClassName) #>Repository;
+
+        public <#= table.ClassName #>Manager(<#= table.ClassName #>Repository <#= ToCamel(table.ClassName) #>Repository)
+        {
+            _<#= ToCamel(table.ClassName) #>Repository = <#= ToCamel(table.ClassName) #>Repository;
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>列表（分页）
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        public async Task<List<<#= table.ClassName #>>> GetPagedListAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+            return await _<#= ToCamel(table.ClassName) #>Repository.GetPagedListAsync(queryDto);
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>数据条数
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        public async Task<int> QueryCountAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+            return await _<#= ToCamel(table.ClassName) #>Repository.QueryCountAsync(queryDto);
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        public async Task<List<<#= table.ClassName #>>> GetListAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+            return await _<#= ToCamel(table.ClassName) #>Repository.GetListAsync(queryDto);
+        }
+
+        /// <summary>
+        /// 根据一组ID获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task<List<<#= table.ClassName #>>> GetListByIdsAsync(List<<#= ptype #>> ids)
+        {
+            return await _<#= ToCamel(table.ClassName) #>Repository.GetListByIdsAsync(ids);
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<<#= table.ClassName #>> GetAsync(<#= ptype #> id)
+        {
+            return await _<#= ToCamel(table.ClassName) #>Repository.GetAsync(id);
+        }
+
+        /// <summary>
+        /// 保存<#= table.Description #>
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<<#= table.ClassName #>> SaveAsync(<#= table.ClassName #>SaveModel model)
+        {
+            if (model.<#= GetPrimaryKey(table) #> > 0)
+            {
+                var entity = await _<#= ToCamel(table.ClassName) #>Repository.GetByIdAsync(model.<#= pk #>, true);
+                entity.Update(model);
+                return entity;
+            }
+            else
+            {
+                var entity = <#= table.ClassName #>.Create(model);
+                return await _<#= ToCamel(table.ClassName) #>Repository.InsertAsync(entity, true);
+            }
+        }
+
+        /// <summary>
+        /// 删除<#= table.Description #>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<bool> DeleteAsync(<#= ptype #> id)
+        {
+            await _<#= ToCamel(table.ClassName) #>Repository.DeleteAsync(id);
+            return true;
+        }
+    }
+}

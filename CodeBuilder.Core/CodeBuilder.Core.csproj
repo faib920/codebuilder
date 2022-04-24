@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{26662E91-A4F1-48FD-9F58-BD229253A3F5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeBuilder.Core</RootNamespace>
+    <AssemblyName>CodeBuilder.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Fireasy.Common">
+      <HintPath>..\lib\Fireasy.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Fireasy.Windows.Forms">
+      <HintPath>..\lib\Fireasy.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CancellationTokenScope.cs" />
+    <Compile Include="Designer\ForeignKeyEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Designer\ForeignKeyEditorForm.Designer.cs">
+      <DependentUpon>ForeignKeyEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExtendPropertyAttribute.cs" />
+    <Compile Include="FileTypeHelper.cs" />
+    <Compile Include="IClosableDockManaged.cs" />
+    <Compile Include="IDevHosting.cs" />
+    <Compile Include="IPlugin.cs" />
+    <Compile Include="Initializers\IProfileInitializer.cs" />
+    <Compile Include="RequiredCheckAttribute.cs" />
+    <Compile Include="SchemaUnity.cs" />
+    <Compile Include="ValidationUnity.cs" />
+    <Compile Include="TemplateUnity.cs" />
+    <Compile Include="UnPersistentlyAttribute.cs" />
+    <Compile Include="SourceOption.cs" />
+    <Compile Include="Source\IField.cs" />
+    <Compile Include="Source\IObject.cs" />
+    <Compile Include="Profile.cs" />
+    <Compile Include="frmProcessor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmProcessor.Designer.cs">
+      <DependentUpon>frmProcessor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ISourceProvider.cs" />
+    <Compile Include="ITemplateProvider.cs" />
+    <Compile Include="ProfileUnity.cs" />
+    <Compile Include="Designer\ForeignKeyEditor.cs" />
+    <Compile Include="Source\DisGenerateAttribute.cs" />
+    <Compile Include="Source\Host.cs" />
+    <Compile Include="Initializers\ISchemaInitializer.cs" />
+    <Compile Include="Initializers\InitializerUnity.cs" />
+    <Compile Include="Source\SchemaBase.cs" />
+    <Compile Include="Source\SchemaExtensionAttribute.cs" />
+    <Compile Include="Source\SchemaInitializerAttribute.cs" />
+    <Compile Include="StaticUnity.cs" />
+    <Compile Include="Processor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Template\GenerateResult.cs" />
+    <Compile Include="Template\GroupDefinition.cs" />
+    <Compile Include="Template\Parser.cs" />
+    <Compile Include="Template\ResourceWriter.cs" />
+    <Compile Include="Template\TemplateDirectory.cs" />
+    <Compile Include="Template\TemplateStorage.cs" />
+    <Compile Include="IToolProvider.cs" />
+    <Compile Include="Variable\AssemblyReferenceManager.cs" />
+    <Compile Include="Variable\CommonExtensionManager.cs" />
+    <Compile Include="Variable\PropertyMap.cs" />
+    <Compile Include="Variable\SchemaExtensionManager.cs" />
+    <Compile Include="Source\Column.cs" />
+    <Compile Include="Source\Reference.cs" />
+    <Compile Include="Source\Table.cs" />
+    <Compile Include="Source\TableSchemaProcessHandler.cs" />
+    <Compile Include="TemplateOption.cs" />
+    <Compile Include="Template\CodeGenerateHandler.cs" />
+    <Compile Include="Template\TemplateFile.cs" />
+    <Compile Include="Template\PartitionDefinition.cs" />
+    <Compile Include="Template\PartitionLoop.cs" />
+    <Compile Include="Template\PartitionWriter.cs" />
+    <Compile Include="Template\TemplateDefinition.cs" />
+    <Compile Include="Template\TemplateParser.cs" />
+    <Compile Include="Util.cs" />
+    <Compile Include="Variable\ProfileExtensionManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Designer\ForeignKeyEditorForm.resx">
+      <DependentUpon>ForeignKeyEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmProcessor.resx">
+      <DependentUpon>frmProcessor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\App.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Internal\" />
+    <Folder Include="Tool\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\4.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\column.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

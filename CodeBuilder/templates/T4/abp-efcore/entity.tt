@@ -1,0 +1,126 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+using System;
+using System.Collections.Generic;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Models;
+using Volo.Abp.Domain.Entities;
+
+namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Entities
+{
+    /// <summary>
+    /// <#= table.Description #>
+    /// </summary>
+    public class <#= table.ClassName #> : Entity<<#= ptype #>>
+    {
+<#
+	foreach (dynamic column in table.Columns)
+	{
+	    if (IsExcludeProperty(column, host.Profile.EntityExcludeProperties))
+	    {
+	        continue;
+	    }
+#>
+        /// <summary>
+        /// <#= column.Description #>
+        /// </summary>
+        public <#= column.PropertyType #> <#= column.PropertyName #> { get; set; }
+
+<#
+	}
+	
+	foreach (dynamic fk in table.ForeignKeys)
+	{
+#>
+        /// <summary>
+        /// <see cref="<#= fk.PkTable.ClassName #>"/>
+        /// </summary>
+        public virtual <#= fk.PkTable.ClassName #> <#= fk.PkTable.ClassName #> { get; set; }
+
+<#
+	}
+	
+	foreach (dynamic fk in table.SubKeys)
+	{
+#>
+        /// <summary>
+        /// <see cref="<#= fk.FkTable.ClassName #>"/>
+        /// </summary>
+        public virtual ICollection<<#= fk.FkTable.ClassName #>> <#= ToPlural(fk.FkTable.ClassName) #> { get; set; }
+
+<#
+	}
+#>
+
+        #region Methods
+        public static <#= table.ClassName #> Create(<#= table.ClassName #>SaveModel model)
+        {
+            Validate(model);
+            //TODO:Someone 修改要赋值的项
+            return new <#= table.ClassName #>
+            {
+<#
+        for (int i=0;i< table.Columns.Count;i++)
+        {
+        	 
+            var column=table.Columns[i];
+            if (IsExcludeProperty(column, host.Profile.EntityExcludeProperties) || column.Name == "RowVersion")
+            {
+                continue;
+            }
+            if (i == table.Columns.Count - 1)
+            {
+#>
+                <#= column.PropertyName #> = model.<#= column.PropertyName #>
+<#
+            }
+            else
+            {
+#>
+                <#= column.PropertyName #> = model.<#= column.PropertyName #>,
+<#
+            }
+#>
+<#
+        }
+#>
+            };
+        }
+
+        public void Update(<#= table.ClassName #>SaveModel model)
+        {
+            Validate(model);
+
+            //TODO:Someone 检查更新项
+<#
+        foreach (dynamic column in table.Columns)
+        {
+            if (IsExcludeProperty(column, host.Profile.EntityExcludeProperties) || column.Name == "RowVersion")
+            {
+                continue;
+            }
+#>
+            <#= column.PropertyName #> = model.<#= column.PropertyName #>;
+<#
+        }
+#>
+        }
+
+        private static void Validate(<#= table.ClassName #>SaveModel model)
+        {
+            var validationResultList = new List<WmpValidationResult>();
+            //TODO:Someone 验证数据
+            if (validationResultList.HasItems())
+            {
+                throw new WmpValidationException(validationResultList.ToArray());
+            }
+        }
+        #endregion
+    }
+}

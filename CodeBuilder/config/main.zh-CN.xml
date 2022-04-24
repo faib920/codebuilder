@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+    <menu_file>文件(&F)</menu_file>
+    <menu_file_new>新建</menu_file_new>
+    <menu_file_open>打开</menu_file_open>
+    <menu_file_save>保存</menu_file_save>
+    <menu_file_saveas>另存为</menu_file_saveas>
+    <menu_file_option>首选项</menu_file_option>
+    <menu_file_build>生成代码文件</menu_file_build>
+    <menu_file_exit>退出</menu_file_exit>
+</strings>

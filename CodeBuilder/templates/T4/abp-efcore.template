@@ -1,0 +1,113 @@
+﻿{
+    "Name": "Abp + EfCore",
+    "Author": "Fireasy",
+    "Version": 1,
+    "Description": "基于 Abp + EntityFrameworkCore 的 DDD 模型，包括应用层、领域层、数据传输对象等等。",
+    "Language": "CSharp",
+    "Groups": [
+        {
+            "Name": "Application",
+            "Partitions": [
+                {
+                    "Name": "AppService",
+                    "FileName": "app.tt",
+                    "Output": "Services\\{SubNameSpace}\\{ClassName}AppService.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "AutoMapperProfile",
+                    "FileName": "profile.tt",
+                    "Output": "AutoMapperProfiles\\{SubNameSpace}Profile.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                }
+            ]
+        },
+        {
+            "Name": "Application.Contracts",
+            "Partitions": [
+                {
+                    "Name": "IAppService",
+                    "FileName": "iapp.tt",
+                    "Output": "{SubNameSpace}\\I{ClassName}AppService.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                }
+            ]
+        },
+        {
+            "Name": "Domain",
+            "Partitions": [
+                {
+                    "Name": "Entity",
+                    "FileName": "entity.tt",
+                    "Output": "{SubNameSpace}\\Entities\\{ClassName}.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "SaveModel",
+                    "FileName": "savemodel.tt",
+                    "Output": "{SubNameSpace}\\Models\\{ClassName}SaveModel.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Repository",
+                    "FileName": "repos.tt",
+                    "Output": "{SubNameSpace}\\Repositories\\{ClassName}Repository.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "DomainService",
+                    "FileName": "manager.tt",
+                    "Output": "{SubNameSpace}\\Managers\\{ClassName}Manager.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "DbContext",
+                    "FileName": "dbcontext.tt",
+                    "Output": "EfCore\\{Module}DbContext.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "ModelCreatingExtensions",
+                    "FileName": "modecreating.tt",
+                    "Output": "EfCore\\{Module}DbContextModelCreatingExtensions.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                }
+            ]
+        },
+        {
+            "Name": "Shared",
+            "Partitions": [
+                {
+                    "Name": "Dto",
+                    "FileName": "dto.tt",
+                    "Output": "Dtos\\{SubNameSpace}\\{ClassName}Dto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "SaveDto",
+                    "FileName": "savedto.tt",
+                    "Output": "Dtos\\{SubNameSpace}\\{ClassName}SaveDto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "QueryDto",
+                    "FileName": "querydto.tt",
+                    "Output": "QueryDtos\\{SubNameSpace}\\{ClassName}QueryDto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                }
+            ]
+        }
+    ]
+}

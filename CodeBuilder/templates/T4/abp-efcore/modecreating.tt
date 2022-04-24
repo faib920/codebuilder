@@ -1,0 +1,42 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+using System;
+using Microsoft.EntityFrameworkCore;
+using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Entities;
+
+namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.EfCore
+{
+    public static class <#= host.Profile.Module #>DbContextModelCreatingExtensions
+    {
+        public static void Configure<#= host.Profile.Module #>(this ModelBuilder builder)
+        {
+<#
+	foreach (var table in host.Tables)
+	{
+#>
+            builder.Entity<<#= table.ClassName #>>(o =>
+            {
+                o.ToTable("<#= table.Name #>");
+                o.HasComment("<#= table.Description #>");
+                o.HasKey(a => a.<#= GetPrimaryKey(table) #>);
+<#         
+        foreach (dynamic fk in table.ForeignKeys)
+	    {
+#>
+                o.HasOne(e => e.<#= fk.PkTable.ClassName #>)
+                    .WithMany()
+                    .HasForeignKey(e => e.<#= fk.FkColumn.PropertyName #>);
+<#
+        }
+#>
+            });
+<#
+	}
+#>
+        }
+    }
+}

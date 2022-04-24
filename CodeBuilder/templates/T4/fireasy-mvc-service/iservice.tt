@@ -1,0 +1,97 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using Fireasy.Common.Extensions;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using <#= host.Profile.Namespace #>.Dtos;
+
+namespace <#= host.Profile.Namespace #>.Services
+{
+    public class I<#= table.ClassName #>Service
+    {
+<#
+if (!host.Profile.Async)
+{
+#>
+        /// <summary>
+        /// 根据ID获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">信息ID。</param>
+        /// <returns></returns>
+        <#= table.ClassName #>Dto Get(<#= ptype #> id);
+
+        /// <summary>
+        /// 保存 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="info">要保存的数据。</param>
+        /// <returns>id</returns>
+        <#= table.ClassName #>Dto Save(<#= table.ClassName #>Dto info);
+        
+        /// <summary>
+        /// 根据查询条件获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="keyword">关键字</param>
+        /// <param name="pager">分页参数</param>
+        /// <param name="sorting">排序定义</param>
+        /// <returns></returns>
+        List<<#= table.ClassName #>Dto> Query(string keyword, DataPager pager, SortDefinition sorting);
+
+        /// <summary>
+        /// 删除 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        bool Delete(<#= ptype #> id);
+<#
+}
+else
+{
+#>
+        /// <summary>
+        /// 根据ID获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">信息ID。</param>
+        /// <returns></returns>
+        Task<<#= table.ClassName #>Dto> GetAsync(<#= ptype #> id);
+
+        /// <summary>
+        /// 保存 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="info">要保存的数据。</param>
+        /// <returns>id</returns>
+        Task<<#= table.ClassName #>Dto> SaveAsync(<#= table.ClassName #>Dto info);
+        
+        /// <summary>
+        /// 根据查询条件获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="keyword">关键字</param>
+        /// <param name="pager">分页参数</param>
+        /// <param name="sorting">排序定义</param>
+        /// <returns></returns>
+        Task<List<<#= table.ClassName #>Dto>> QueryAsync(string keyword, DataPager pager, SortDefinition sorting);
+
+        /// <summary>
+        /// 删除 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        Task<bool> DeleteAsync(<#= ptype #> id);
+<#
+}
+#>
+    }
+}

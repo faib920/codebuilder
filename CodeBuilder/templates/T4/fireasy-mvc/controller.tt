@@ -1,0 +1,231 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPType(table);
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using Fireasy.Common.Extensions;
+using Fireasy.Data.Entity;
+using Fireasy.Data.Entity.Linq;
+using Fireasy.Utilities.Web;
+using Fireasy.Web.Http;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using <#= host.Profile.Namespace #>.Data;
+using <#= host.Profile.Namespace #>.Models;
+
+namespace <#= host.Profile.Namespace #>.Web.Areas.<#= host.Profile.MvcArea #>.Controllers
+{
+    public partial class <#= table.ClassName #>Controller : Controller
+    {
+        public ActionResult List()
+        {
+            return View();
+        }
+    		
+        public ActionResult Edit()
+        {
+            return View();
+        }
+
+<#
+if (!host.Profile.Async)
+{
+#>
+        /// <summary>
+        /// 根据ID获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">信息ID。</param>
+        /// <returns></returns>
+        public JsonResult Get(<#= ptype #> id)
+        {
+            using (var context = new DbContext())
+            {
+                return Json(context.<#= StringExtension.ToPlural(table.ClassName) #>.Get(id));
+            }
+        }
+
+        /// <summary>
+        /// 保存 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id。</param>
+        /// <param name="info">要保存的数据。</param>
+        /// <returns>id</returns>
+        public JsonResult Save(<#= ptype #> id, <#= table.ClassName #> info)
+        {
+            using (var context = new DbContext())
+            {
+<#
+    if (ptype == "string")
+    {
+#>
+                if (string.IsNullOrEmpty(id))
+                {
+                    info.Id = Guid.NewGuid().ToString();
+                    context.<#= StringExtension.ToPlural(table.ClassName) #>.Insert(info);
+                }
+<#
+    }
+    else
+    {
+#>
+                if (id == null)
+                {
+                    context.<#= StringExtension.ToPlural(table.ClassName) #>.Insert(info);
+                    id = info.<#= GetPrimaryKey(table) #>;
+                }
+<#
+    }
+#>
+                else
+                {
+                    context.<#= StringExtension.ToPlural(table.ClassName) #>.Update(info.Normalize(new[] { id }));
+                }
+
+                return Json(Result.Success("保存成功。", id));
+            }
+        }
+        
+        /// <summary>
+        /// 根据查询条件获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="keyword">关键字</param>
+        /// <returns></returns>
+        [ExceptionBehavior(true)]
+        public JsonResult Data(string keyword)
+        {
+            var pager = EasyUIHelper.GetDataPager();
+            var sorting = EasyUIHelper.GetSorting();
+            using (var context = new DbContext())
+            {
+                var list = context.<#= StringExtension.ToPlural(table.ClassName) #>
+                    .Segment(pager)
+                    //.OrderBy(sorting)
+                    //.AssertWhere(!string.IsNullOrEmpty(keyword), s => s.Name.Contains(keyword))
+                    .ToList();
+                return Json(EasyUIHelper.Transfer(pager, list));
+            }
+        }
+
+        /// <summary>
+        /// 删除 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public JsonResult Delete(<#= ptype #> id)
+        {
+            using (var context = new DbContext())
+            {
+                context.<#= StringExtension.ToPlural(table.ClassName) #>.Delete(new[] { id });
+                return Json(Result.Success("删除成功。"));
+            }
+        }
+<#
+}
+else
+{
+#>
+        /// <summary>
+        /// 根据ID获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">信息ID。</param>
+        /// <returns></returns>
+        public async Task<JsonResult> Get(<#= ptype #> id)
+        {
+            using (var context = new DbContext())
+            {
+                return Json(await context.<#= StringExtension.ToPlural(table.ClassName) #>.GetAsync(id));
+            }
+        }
+
+        /// <summary>
+        /// 保存 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id。</param>
+        /// <param name="info">要保存的数据。</param>
+        /// <returns>id</returns>
+        public async Task<JsonResult> Save(<#= ptype #> id, <#= table.ClassName #> info)
+        {
+            using (var context = new DbContext())
+            {
+<#
+    if (ptype == "string")
+    {
+#>
+                if (string.IsNullOrEmpty(id))
+                {
+                    info.Id = Guid.NewGuid().ToString();
+                    await context.<#= StringExtension.ToPlural(table.ClassName) #>.InsertAsync(info);
+                }
+<#
+    }
+    else
+    {
+#>
+                if (id == null)
+                {
+                    await context.<#= StringExtension.ToPlural(table.ClassName) #>.InsertAsync(info);
+                    id = info.<#= GetPrimaryKey(table) #>;
+                }
+<#
+    }
+#>
+                else
+                {
+                    await context.<#= StringExtension.ToPlural(table.ClassName) #>.UpdateAsync(info.Normalize(new[] { id }));
+                }
+
+                return Json(Result.Success("保存成功。", id));
+            }
+        }
+        
+        /// <summary>
+        /// 根据查询条件获取 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="keyword">关键字</param>
+        /// <returns></returns>
+        [ExceptionBehavior(true)]
+        public async Task<JsonResult> Data(string keyword)
+        {
+            var pager = EasyUIHelper.GetDataPager();
+            var sorting = EasyUIHelper.GetSorting();
+            using (var context = new DbContext())
+            {
+                var list = await context.<#= StringExtension.ToPlural(table.ClassName) #>
+                    .Segment(pager)
+                    //.OrderBy(sorting)
+                    //.AssertWhere(!string.IsNullOrEmpty(keyword), s => s.Name.Contains(keyword))
+                    .ToListAsync();
+                return Json(EasyUIHelper.Transfer(pager, list));
+            }
+        }
+
+        /// <summary>
+        /// 删除 <see cref="<#= table.ClassName #>" />。
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public async Task<JsonResult> Delete(<#= ptype #> id)
+        {
+            using (var context = new DbContext())
+            {
+                await context.<#= StringExtension.ToPlural(table.ClassName) #>.DeleteAsync(new[] { id });
+                return Json(Result.Success("删除成功。"));
+            }
+        }
+<#
+}
+#>
+    }
+}

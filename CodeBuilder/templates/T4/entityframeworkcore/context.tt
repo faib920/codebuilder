@@ -1,0 +1,92 @@
+<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using <#= host.Profile.Namespace #>.Models;
+
+namespace <#= host.Profile.Namespace #>.Data
+{
+    public class EfContext : DbContext
+    {
+<#
+	foreach (var table in host.Tables)
+	{
+#>
+        /// <summary>
+        /// <#= table.Description #>。
+        /// </summary> 
+        public virtual DbSet<<#= table.ClassName #>> <#= StringExtension.ToPlural(table.ClassName) #> { get; set; }
+<#
+        }
+#>
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+        }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+<#
+	foreach (var table in host.Tables)
+	{
+#>
+            modelBuilder.Entity<<#= table.ClassName #>>(entity =>
+            {
+                entity.ToTable("<#= table.Name #>");
+                entity.HasComment("<#= table.Description #>");
+<#         
+        foreach (dynamic column in table.PrimaryKeys)
+	    {
+#>
+                entity.HasKey(e => e.<#= column.PropertyName #>);
+<#
+        }
+#>
+
+<#         
+        foreach (dynamic fk in table.ForeignKeys)
+	    {
+#>
+                entity.HasOne(e => e.<#= fk.PkTable.ClassName #>)
+                    .WithMany()
+                    .HasHasForeignKey(e => e.<#= fk.FkColumn.PropertyName #>);
+<#
+        }
+#>
+
+<#         
+        foreach (dynamic column in table.Columns)
+	    {
+#>
+                entity.Property(e => e.<#= column.PropertyName #>)
+                    .HasColumnName("<#= column.Name #>")
+<# if (column.DbType == DbType.String && column.Length != 0) { #>
+                    .HasMaxLength(<#= column.Length #>)
+<# } #>
+<# if (!column.IsNullable) { #>
+                    .IsRequired(true)
+<# } #>
+                    .HasComment("<#= column.Description #>");
+                    
+<#
+	    }
+#>
+            };
+<#
+	}
+#>
+
+        }
+    }
+}

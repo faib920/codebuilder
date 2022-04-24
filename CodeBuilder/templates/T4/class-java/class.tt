@@ -1,0 +1,54 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".java" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+#>
+package <#= host.Profile.Namespace #>.Models;
+
+public class <#= table.ClassName #> {
+<#
+    foreach (var column in table.Columns)
+    {
+#>
+    private <#= column.PropertyType #> <#= ToCamel(column.PropertyName) #>;
+<#
+    }
+#>
+
+    public <#= table.ClassName #>(
+<#
+    var index = 0;
+    for (var i = 0; i < table.Columns.Count; i++)
+    {
+        var column = table.Columns[i];
+#>
+        <#= column.PropertyType #> <#= ToCamel(column.PropertyName) #><#= i == table.Columns.Count - 1 ? ") {" : "," #>
+<#
+    }
+    foreach (var column in table.Columns)
+    {
+#>
+        this.<#= ToCamel(column.PropertyName) #> = <#= ToCamel(column.PropertyName) #>;
+<#
+    }
+#>
+    }
+
+<#
+    foreach (var column in table.Columns)
+    {
+#>
+    public void set<#= column.PropertyName #>(<#= column.PropertyType #> <#= ToCamel(column.PropertyName) #>) { 
+        this.<#= ToCamel(column.PropertyName) #> = <#= ToCamel(column.PropertyName) #>;
+    }
+
+    public <#= column.PropertyType #> get<#= column.PropertyName #>() { 
+        return this.<#= ToCamel(column.PropertyName) #>;
+    }
+
+<#
+    }
+#>
+}

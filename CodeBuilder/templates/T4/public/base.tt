@@ -1,0 +1,156 @@
+﻿<#+
+//判断是否为逻辑删除标记
+public static bool CheckDelFlag(Column column)
+{
+    switch (column.Name.ToLower())
+    {
+        case "del_flag":
+        case "delflag":
+        case "isdelete":
+            return true;
+    }
+    
+    return false;
+}
+
+//获取主键名称
+public static string GetPrimaryKey(Table table)
+{
+    if (table.PrimaryKeys.Count == 0)
+    {
+        return string.Empty;
+    }
+    
+    return table.PrimaryKeys[0].PropertyName;
+}
+
+//获取主键类型
+public static string GetPrimaryKeyPType(Table table)
+{
+    if (table.PrimaryKeys.Count == 0)
+    {
+        return "string";
+    }
+    
+    var type = table.PrimaryKeys[0].PropertyType;
+    if (type != "string")
+    {
+        type += "?";
+    }
+    
+    return type;
+}
+
+//获取主键类型
+public static string GetPrimaryKeyPTypeNonNullable(Table table)
+{
+    if (table.PrimaryKeys.Count == 0)
+    {
+        return "string";
+    }
+    
+    var type = table.PrimaryKeys[0].PropertyType;
+    return type;
+}
+
+public static string GetNullableType(string type)
+{
+    if (type == "string" || type.EndsWith("?"))
+    {
+        return type;
+    }
+    
+    return type + "?";
+}
+
+public static string ToCamel(string name)
+{
+    if (name.Length <= 1)
+    {
+        return name;
+    }
+
+    return name[0].ToString().ToLower() + name.Substring(1);
+}
+
+public static string ToPlural(string word)
+{
+    if (IsSample(word))
+    {
+        return word;
+    }
+
+    var plural1 = new Regex("(?<keep>[^aeiou])y$");
+    var plural2 = new Regex("(?<keep>[aeiou]y)$");
+    var plural3 = new Regex("(?<keep>[sxzh])$");
+    var plural4 = new Regex("(?<keep>[^sxzhy])$");
+
+    if (plural1.IsMatch(word))
+    {
+        return plural1.Replace(word, "${keep}ies");
+    }
+    else if (plural2.IsMatch(word))
+    {
+        return plural2.Replace(word, "${keep}s");
+    }
+    else if (plural3.IsMatch(word))
+    {
+        return plural3.Replace(word, "${keep}es");
+    }
+    else if (plural4.IsMatch(word))
+    {
+        return plural4.Replace(word, "${keep}s");
+    }
+
+    return word;
+}
+
+public static bool IsExcludeProperty(Column column, string properties)
+{
+    foreach (var p in properties.Split('|'))
+    {
+        if (p == column.Name)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+public static string GetLastPart(string path)
+{
+    var array = path.Split('.');
+    return array.Length > 0 ? array[array.Length - 1] : path;
+}
+
+public static string NewGuid()
+{
+    return Guid.NewGuid().ToString().ToUpper();
+}
+
+public static string Imports(string names)
+{
+    if (names == null)
+    {
+        return string.Empty;
+    }
+    var str = string.Empty;
+    var array = names.Split('|');
+    for (var i = 0; i < array.Length; i++)
+    {
+        if (!string.IsNullOrEmpty(array[i]))
+        {
+            str += "using " + array[i] + ";";
+            if (i != array.Length - 1) str += "\r\n";
+        }
+    }
+    return str;
+}
+
+private static bool IsSample(string word)
+{
+    var words = new[] { "people", "deer", "sheep" };
+    return words.Contains(word.ToLower());
+}
+#>

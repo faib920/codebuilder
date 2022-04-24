@@ -1,0 +1,62 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+using System;
+using System.Collections.Generic;
+
+namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Shared.QueryDtos.<#= host.Profile.SubNameSpace #>
+{
+    /// <summary>
+    /// <#= table.Description #>QueryDto
+    /// </summary>
+    public class <#= table.ClassName #>QueryDto
+    {
+        /// <summary>
+        /// 当前页码
+        /// </summary>
+        public int PageIndex { get; set; }
+        
+        /// <summary>
+        /// 每页条数
+        /// </summary>
+        public int PageSize { get; set; }
+        
+        /// <summary>
+        /// 排序的字段
+        /// </summary>
+        public string OrderBy { get; set; }
+                
+        /// <summary>
+        /// 排序的方式
+        /// </summary>
+        public int OrderDirect { get; set; }
+
+        /// <summary>
+        /// Id 集合
+        /// </summary>
+        public List<<#= ptype #>> Ids { get; set; }
+
+<#
+	foreach (dynamic column in table.Columns)
+	{
+	    if (column.Name == "RowVersion")
+	    {
+	        continue;
+	    }
+#>
+        /// <summary>
+        /// <#= column.Description #>
+        /// </summary>
+        public <#= column.PropertyType #> <#= column.PropertyName #> { get; set; }
+
+<#
+	}
+#>
+    }
+}
