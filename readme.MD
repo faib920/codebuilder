@@ -20,3 +20,7 @@ xcopy lib\x64 CodeBuilder\bin\Debug\ /E
 xcopy lib\x86 CodeBuilder\bin\Debug\ /E
 xcopy CodeBuilder\templates CodeBuilder\bin\Debug\templates\ /E
 ```
+
+## 敬请加入
+
+QQ号： 55570729   QQ群： 6406277、225698098
