@@ -24,7 +24,7 @@ xcopy CodeBuilder\templates CodeBuilder\bin\Debug\templates\ /E
 
 ## 发布版本
 
-  (http://www.fireasy.cn/codebuilder)[http://www.fireasy.cn/codebuilder]
+  [http://www.fireasy.cn/codebuilder](http://www.fireasy.cn/codebuilder)
 
 
 ## 欢迎加入
