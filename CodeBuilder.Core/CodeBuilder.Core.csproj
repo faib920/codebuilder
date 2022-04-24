@@ -105,6 +105,7 @@
     <Compile Include="Initializers\IProfileInitializer.cs" />
     <Compile Include="RequiredCheckAttribute.cs" />
     <Compile Include="SchemaUnity.cs" />
+    <Compile Include="Tool\MultipleToolProviderBase.cs" />
     <Compile Include="ValidationUnity.cs" />
     <Compile Include="TemplateUnity.cs" />
     <Compile Include="UnPersistentlyAttribute.cs" />
@@ -180,7 +181,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Internal\" />
-    <Folder Include="Tool\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\2.gif" />

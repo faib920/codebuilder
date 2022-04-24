@@ -308,21 +308,25 @@ namespace CodeBuilder
 
                 if (p is IMultipleToolProvider mprovider)
                 {
-                    foreach (var i in mprovider.SubItems)
+                    var subItems = mprovider.SubItems;
+                    if (subItems != null)
                     {
-                        if (i is ToolMenuItem tmi)
+                        foreach (var i in subItems)
                         {
-                            var iItem = new ToolStripMenuItem();
-                            iItem.Text = tmi.Name;
-                            iItem.Name = tmi.Name;
-                            iItem.Tag = Tuple.Create(mprovider, tmi.Name, tmi.Parameter);
-                            iItem.Click += toolProvider_Click;
+                            if (i is ToolMenuItem tmi)
+                            {
+                                var iItem = new ToolStripMenuItem();
+                                iItem.Text = tmi.Name;
+                                iItem.Name = tmi.Name;
+                                iItem.Tag = Tuple.Create(mprovider, tmi.Name, tmi.Parameter);
+                                iItem.Click += toolProvider_Click;
 
-                            sItem.DropDownItems.Add(iItem);
-                        }
-                        else if (i is ToolMenuSeparator)
-                        {
-                            sItem.DropDownItems.Add(new ToolStripSeparator());
+                                sItem.DropDownItems.Add(iItem);
+                            }
+                            else if (i is ToolMenuSeparator)
+                            {
+                                sItem.DropDownItems.Add(new ToolStripSeparator());
+                            }
                         }
                     }
                 }
@@ -827,8 +831,7 @@ namespace CodeBuilder
                     var fileName = Path.Combine(Application.StartupPath, plug.Code + ".dll");
                     if (File.Exists(fileName))
                     {
-                        var version = FileVersionInfo.GetVersionInfo(fileName);
-                        if (CompareVersion(version, plug.Version))
+                        if (VersionHelper.CompareVersion(fileName, plug.Version) > 0)
                         {
                             updateCount++;
                         }
@@ -909,11 +912,6 @@ namespace CodeBuilder
                 };
                 statusStrip1.Items.Add(ss);
             }
-        }
-
-        private bool CompareVersion(FileVersionInfo source, string target)
-        {
-            return new Version(target) > new Version(source.FileMajorPart, source.FileMinorPart, source.FileBuildPart, source.ProductPrivatePart);
         }
     }
 }

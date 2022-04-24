@@ -6,7 +6,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
-using CodeBuilder.Core.Template;
 using Fireasy.Common.Serialization;
 using Fireasy.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip;
@@ -99,9 +98,8 @@ namespace CodeBuilder
                 var fileName = Path.Combine(Application.StartupPath, plug.Code + ".dll");
                 if (File.Exists(fileName))
                 {
-                    var version = FileVersionInfo.GetVersionInfo(fileName);
                     plug.IsInstalled = true;
-                    plug.NeedUpdate = CompareVersion(version, plug.Version);
+                    plug.NeedUpdate = VersionHelper.CompareVersion(fileName, plug.Version) > 0;
                 }
 
                 plug.Weight = plug.NeedUpdate ? 10 : !plug.IsInstalled ? 5 : 0;
@@ -114,11 +112,6 @@ namespace CodeBuilder
                 item.Tag = plug;
                 lvwPlugin.Items.Add(item);
             }
-        }
-
-        private bool CompareVersion(FileVersionInfo source, string target)
-        {
-            return new Version(target) > new Version(source.FileMajorPart, source.FileMinorPart, source.FileBuildPart, source.ProductPrivatePart);
         }
 
         private void lvwPlugin_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
@@ -163,6 +156,12 @@ namespace CodeBuilder
             if (string.IsNullOrEmpty(plugin.PackageUrl))
             {
                 _hosting.ShowWarn("无效的插件路径 PackageUrl。");
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(plugin.ReqVersion) && VersionHelper.CompareVersion(Process.GetCurrentProcess().MainModule.FileName, plugin.ReqVersion) > 0)
+            {
+                _hosting.ShowWarn("无法" + (plugin.IsInstalled ? "更新" : "下载") + "，需要 CodeBuilder 主程序版本为 " + plugin.ReqVersion + " 及以上。");
                 return;
             }
 
@@ -269,44 +268,6 @@ namespace CodeBuilder
             lvwPlugin.Items.Clear();
             await LoadPlugins();
         }
-    }
-
-    internal class OnlinePluginData
-    {
-        public List<OnlinePlugin> Items { get; set; }
-
-        public int Total { get; set; }
-
-        public int PageCount { get; set; }
-
-        public bool LastPage { get; set; }
-    }
-
-    internal class OnlinePlugin
-    {
-        public string Category { get; set; }
-
-        public string Code { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public string Author { get; set; }
-
-        public string Version { get; set; }
-
-        public string PackageUrl { get; set; }
-
-        public string PublishTime { get; set; }
-
-        public bool IsInstalled { get; set; }
-
-        public bool NeedUpdate { get; set; }
-
-        public TemplateDefinition Template { get; set; }
-
-        public int Weight { get; set; }
     }
 
     internal class PlugTreeListRenderer1 : TreeListRenderer

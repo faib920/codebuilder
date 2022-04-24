@@ -1,5 +1,13 @@
-﻿using CodeBuilder.Core;
+﻿// -----------------------------------------------------------------------
+// <copyright company="Fireasy"
+//      email="faib920@126.com"
+//      qq="55570729">
+//   (c) Copyright Fireasy. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+using CodeBuilder.Core;
 using CodeBuilder.Core.Source;
+using CodeBuilder.Core.Tool;
 using NPOI.XWPF.UserModel;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -9,23 +17,16 @@ using System.Linq;
 namespace CodeBuilder.ExportTool
 {
     [Export(typeof(IToolProvider))]
-    public class Exporter : IMultipleToolProvider
+    public class Exporter : MultipleToolProviderBase
     {
-        private IDevHosting _hosting;
-
-        public string Name
+        public override string Name
         {
-            get { return "导出..."; }
+            get { return "导出到文件"; }
         }
 
-        public void Execute()
+        public override void Execute(string name, object parameter)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void Execute(string name, object parameter)
-        {
-            if (parameter == "template")
+            if (parameter.ToString() == "template")
             {
                 _hosting.ShowInfo("将数据表导致到其他格式的文件。");
                 return;
@@ -46,12 +47,7 @@ namespace CodeBuilder.ExportTool
             }
         }
 
-        public void Initialize(IDevHosting hosting)
-        {
-            _hosting = hosting;
-        }
-
-        public IEnumerable<IToolMenu> SubItems
+        public override IEnumerable<IToolMenu> SubItems
         {
             get
             {
@@ -116,12 +112,16 @@ namespace CodeBuilder.ExportTool
             var run = ph.CreateRun();
             run.SetText(source.Text);
 
+            // todo 复制段落并替换
+
             return ph;
         }
 
         private XWPFTable CloneTable(XWPFDocument doc, XWPFTable source)
         {
             var tt = doc.CreateTable();
+
+            // todo 复制表格并替换
 
             return tt;
         }

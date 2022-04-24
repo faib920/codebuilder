@@ -121,6 +121,9 @@
     <Compile Include="DockForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="OnlinePluginData.cs" />
+    <Compile Include="OnlineTemplateData.cs" />
+    <Compile Include="VersionHelper.cs" />
     <Content Include="extensions\profile\base.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -290,44 +290,6 @@ namespace CodeBuilder
         }
     }
 
-    internal class OnlineTemplateData
-    {
-        public List<OnlineTemplate> Items { get; set; }
-
-        public int Total { get; set; }
-
-        public int PageCount { get; set; }
-
-        public bool LastPage { get; set; }
-    }
-
-    internal class OnlineTemplate
-    {
-        public string Category { get; set; }
-
-        public string Code { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public string Author { get; set; }
-
-        public decimal Version { get; set; }
-
-        public string PackageUrl { get; set; }
-
-        public string PublishTime { get; set; }
-
-        public bool IsInstalled { get; set; }
-
-        public bool NeedUpdate { get; set; }
-
-        public TemplateDefinition Template { get; set; }
-
-        public int Weight { get; set; }
-    }
-
     internal class TemplateTreeListRenderer : TreeListRenderer
     {
         public override void DrawCell(TreeListCellRenderEventArgs e)
