@@ -16,5 +16,10 @@ namespace CodeBuilder.Core
         /// 获取或设置是否读取视图。
         /// </summary>
         public bool View { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否跳过获取架构。
+        /// </summary>
+        public bool SkipSchema { get; set; }
     }
 }

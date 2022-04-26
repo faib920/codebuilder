@@ -42,6 +42,7 @@
             this.btnClear = new System.Windows.Forms.Button();
             this.lstSaved = new Fireasy.Windows.Forms.TreeList();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.btnSQL = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // treeListColumn1
@@ -202,11 +203,22 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // btnSQL
+            // 
+            this.btnSQL.Location = new System.Drawing.Point(421, 12);
+            this.btnSQL.Name = "btnSQL";
+            this.btnSQL.Size = new System.Drawing.Size(112, 23);
+            this.btnSQL.TabIndex = 15;
+            this.btnSQL.Text = "SQL 构造器";
+            this.btnSQL.UseVisualStyleBackColor = true;
+            this.btnSQL.Click += new System.EventHandler(this.btnSQL_Click);
+            // 
             // frmTableSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(549, 463);
+            this.ClientSize = new System.Drawing.Size(549, 464);
+            this.Controls.Add(this.btnSQL);
             this.Controls.Add(this.lstSaved);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnSave);
@@ -244,5 +256,6 @@
         private System.Windows.Forms.Button btnClear;
         private Fireasy.Windows.Forms.TreeList lstSaved;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button btnSQL;
     }
 }

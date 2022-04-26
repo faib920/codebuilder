@@ -10,6 +10,7 @@ using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Variable;
 using Fireasy.Common.Extensions;
 using Fireasy.Common.Security;
+using Fireasy.Data;
 using Fireasy.Data.Extensions;
 using Fireasy.Data.Provider;
 using Fireasy.Windows.Forms;
@@ -61,6 +62,7 @@ namespace CodeBuilder.Database
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
+                    option.SkipSchema = frm.IsCustomSQL;
                     return frm.Selected.Count == 0 ? null : frm.Selected;
                 }
             }
@@ -78,6 +80,56 @@ namespace CodeBuilder.Database
             {
                 ErrorMessageBox.Show("获取数据架构时出错。", exp);
                 return null;
+            }
+        }
+
+        public List<Table> ParseCustomContent(string content)
+        {
+            var provider = ProviderHelper.GetDefinedProviderInstance(_con.Type);
+            using (var db = new Fireasy.Data.Database(_con.ConnectionString, provider))
+            {
+                var tables = new List<Table>();
+                var index = 0;
+                var sqlSegments = content.IndexOf(';') != -1 ? content.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) : new[] { content };
+                foreach (var _sql in sqlSegments)
+                {
+                    var sql = _sql.Trim(new[] { '\r', '\n' });
+                    if (string.IsNullOrWhiteSpace(sql))
+                    {
+                        continue;
+                    }
+
+                    var table = new Table { Description = string.Empty };
+
+                    var gotoIndex = sql.IndexOf("=>");
+                    if (gotoIndex != -1)
+                    {
+                        table.Name = sql.Substring(0, gotoIndex).Trim();
+                        sql = sql.Substring(gotoIndex + 2);
+                    }
+                    else
+                    {
+                        table.Name = "Table" + (++index);
+                    }
+
+                    using (var reader = db.ExecuteReader((SqlCommand)sql, behavior: CommandBehavior.SchemaOnly))
+                    {
+                        for (var i = 0; i < reader.FieldCount; i++)
+                        {
+                            table.Columns.Add(new Column(table)
+                            {
+                                Name = reader.GetName(i),
+                                DbType = reader.GetFieldType(i).GetDbType(),
+                                Description = string.Empty,
+                                Length = 20
+                            });
+                        }
+                    }
+
+                    tables.Add(table);
+                }
+
+                return tables;
             }
         }
 

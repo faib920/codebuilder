@@ -348,7 +348,7 @@ namespace CodeBuilder
                 return;
             }
 
-            GetSchemaAsync(provider, tables);
+            GetSchemaAsync(provider, tables, option);
         }
 
         private void FillTables(IEnumerable<IObject> tables)
@@ -361,14 +361,14 @@ namespace CodeBuilder
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="source"></param>
-        private void GetSchemaAsync(ISourceProvider provider, List<Table> source)
+        private void GetSchemaAsync(ISourceProvider provider, List<Table> source, SourceOption option)
         {
             spbar.Value = 0;
             spbar.Visible = true;
 
             Processor.Run(this, () =>
                 {
-                    var tables = provider.GetSchema(source, (t, p) =>
+                    var tables = option.SkipSchema ? source : provider.GetSchema(source, (t, p) =>
                         {
                             Invoke(new Action(() =>
                                 {
@@ -464,6 +464,8 @@ namespace CodeBuilder
             {
                 return;
             }
+
+            _hosting.SourceProvider = provider;
 
             LoadSourceStruct(provider);
         }

@@ -40,6 +40,8 @@ namespace CodeBuilder.Database
 
         public List<Table> Selected { get; private set; }
 
+        public bool IsCustomSQL { get; private set; }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             _tables.Clear();
@@ -175,6 +177,26 @@ namespace CodeBuilder.Database
         {
             timer1.Enabled = false;
             FillTables(txtKeyword.Text);
+        }
+
+        private void btnSQL_Click(object sender, EventArgs e)
+        {
+            using (var frm = new frmSQLEditor(_hosting))
+            {
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        _tables = _hosting.SourceProvider.ParseCustomContent(frm.SQL);
+                        FillTables(string.Empty);
+                        IsCustomSQL = true;
+                    }
+                    catch (Exception exp)
+                    {
+                        _hosting.ShowError(exp.Message);
+                    }
+                }
+            }
         }
     }
 }
