@@ -120,8 +120,7 @@ namespace CodeBuilder.Database
                             {
                                 Name = reader.GetName(i),
                                 DbType = reader.GetFieldType(i).GetDbType(),
-                                Description = string.Empty,
-                                Length = 20
+                                Description = string.Empty
                             });
                         }
                     }
