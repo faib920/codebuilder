@@ -9,9 +9,11 @@ using CodeBuilder.Core;
 using Fireasy.Common.Extensions;
 using Fireasy.Common.Serialization;
 using Fireasy.Windows.Forms;
+using ICSharpCode.TextEditor.Document;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
@@ -34,6 +36,10 @@ namespace CodeBuilder.JsonTool
         {
             InitializeComponent();
             _hosting = hosting;
+
+            txtResult.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("JavaScript");
+            txtResult.TextEditorProperties.CaretLine = true;
+            txtResult.TextEditorProperties.ConvertTabsToSpaces = true;
         }
 
         private bool Parse(TreeListItemCollection items, object obj)
@@ -146,6 +152,11 @@ namespace CodeBuilder.JsonTool
 
         private void HandleTree()
         {
+            if (string.IsNullOrWhiteSpace(txtSource.Text))
+            {
+                return;
+            }
+
             try
             {
                 var serializer = new JsonSerializer(new JsonSerializeOption { Indent = true });
@@ -157,6 +168,7 @@ namespace CodeBuilder.JsonTool
                 treeList1.EndUpdate();
 
                 txtResult.Text = serializer.Serialize(obj);
+                lblStatus.Text = "未选中内容";
             }
             catch (Exception exp)
             {
@@ -215,6 +227,11 @@ namespace CodeBuilder.JsonTool
                     Clipboard.SetText(item.Cells[1].Text);
                 }
             }
+        }
+
+        private void mnuView_Click(object sender, EventArgs e)
+        {
+            HandleTree();
         }
 
         private void mnuFind_Click(object sender, EventArgs e)
@@ -374,6 +391,24 @@ namespace CodeBuilder.JsonTool
             }
 
             lblStatus.Text = str;
+        }
+
+        private void mnuColor_Click(object sender, EventArgs e)
+        {
+            if (treeList1.SelectedItems.Count > 0)
+            {
+                var item = treeList1.SelectedItems[0];
+                item.BackgroundColor = ((ToolStripMenuItem)sender).BackColor;
+            }
+        }
+
+        private void mnuClearMark_Click(object sender, EventArgs e)
+        {
+            if (treeList1.SelectedItems.Count > 0)
+            {
+                var item = treeList1.SelectedItems[0];
+                item.BackgroundColor = Color.Empty;
+            }
         }
     }
 }
