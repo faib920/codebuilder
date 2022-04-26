@@ -16,8 +16,8 @@
   首次使用请全部编译解决方案，然后在根目录下执行如下命令，也可手动拷贝文件到相应的目录下：
 
 ```
-xcopy lib\x64 CodeBuilder\bin\Debug\ /E
-xcopy lib\x86 CodeBuilder\bin\Debug\ /E
+xcopy lib\x64 CodeBuilder\bin\Debug\x64\ /E
+xcopy lib\x86 CodeBuilder\bin\Debug\x86\ /E
 xcopy CodeBuilder\templates CodeBuilder\bin\Debug\templates\ /E
 ```
 
