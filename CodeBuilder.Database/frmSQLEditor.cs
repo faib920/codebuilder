@@ -6,6 +6,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Source;
+using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace CodeBuilder.Database
@@ -24,10 +27,7 @@ namespace CodeBuilder.Database
             _hosting = hosting;
         }
 
-        public string SQL
-        {
-            get { return txtSQL.Text; }
-        }
+        public List<Table> Tables { get; private set; }
 
         private void btnOk_Click(object sender, System.EventArgs e)
         {
@@ -37,7 +37,16 @@ namespace CodeBuilder.Database
                 return;
             }
 
-            DialogResult = DialogResult.OK;
+            try
+            {
+                Tables = ((SourceProvider)_hosting.SourceProvider).ParseSQL(txtSQL.Text);
+
+                DialogResult = DialogResult.OK;
+            }
+            catch (Exception exp)
+            {
+                _hosting.ShowError(exp);
+            }
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

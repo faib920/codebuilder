@@ -82,7 +82,7 @@ namespace CodeBuilder.NVelocity
             }
             catch (Exception exp)
             {
-                _hosting.ShowError(exp.Message);
+                _hosting.ShowError(exp);
                 return null;
             }
         }

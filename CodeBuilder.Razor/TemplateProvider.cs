@@ -80,7 +80,7 @@ namespace CodeBuilder.Razor
             }
             catch (Exception exp)
             {
-                _hosting.ShowError(exp.Message);
+                _hosting.ShowError(exp);
                 return null;
             }
         }

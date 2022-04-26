@@ -1,6 +1,7 @@
 ﻿using CodeBuilder.Core;
 using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Template;
+using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -64,6 +65,11 @@ namespace CodeBuilder
         public void ShowError(string msg)
         {
             MessageBox.Show(DockContainer, msg, "CodeBuilder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public void ShowError(Exception exp)
+        {
+            ErrorMessageBox.Show(DockContainer, "CodeBuilder", exp);
         }
 
         public void ShowWarn(string msg)

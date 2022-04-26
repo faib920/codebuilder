@@ -185,16 +185,10 @@ namespace CodeBuilder.Database
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    try
-                    {
-                        _tables = _hosting.SourceProvider.ParseCustomContent(frm.SQL);
-                        FillTables(string.Empty);
-                        IsCustomSQL = true;
-                    }
-                    catch (Exception exp)
-                    {
-                        _hosting.ShowError(exp.Message);
-                    }
+                    _tables = frm.Tables;
+
+                    FillTables(string.Empty);
+                    IsCustomSQL = true;
                 }
             }
         }

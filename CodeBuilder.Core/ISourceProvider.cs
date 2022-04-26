@@ -32,13 +32,6 @@ namespace CodeBuilder.Core
         List<Table> GetSchema(List<Table> tables, TableSchemaProcessHandler processHandler);
 
         /// <summary>
-        /// 通过自定义文本解析表结构。
-        /// </summary>
-        /// <param name="content"></param>
-        /// <returns></returns>
-        List<Table> ParseCustomContent(string content);
-
-        /// <summary>
         /// 获取历史记录。
         /// </summary>
         /// <returns></returns>

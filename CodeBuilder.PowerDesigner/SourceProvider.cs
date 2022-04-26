@@ -69,11 +69,6 @@ namespace CodeBuilder.PowerDesigner
             }
         }
 
-        public List<Table> ParseCustomContent(string content)
-        {
-            throw new NotSupportedException();
-        }
-
         private List<Table> InternalGetSchemas(List<Table> tables, TableSchemaProcessHandler processHandler)
         {
             var result = new List<Table>();

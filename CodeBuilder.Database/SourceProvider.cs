@@ -83,7 +83,7 @@ namespace CodeBuilder.Database
             }
         }
 
-        public List<Table> ParseCustomContent(string content)
+        public List<Table> ParseSQL(string content)
         {
             var provider = ProviderHelper.GetDefinedProviderInstance(_con.Type);
             using (var db = new Fireasy.Data.Database(_con.ConnectionString, provider))
@@ -114,14 +114,21 @@ namespace CodeBuilder.Database
 
                     using (var reader = db.ExecuteReader((SqlCommand)sql, behavior: CommandBehavior.SchemaOnly))
                     {
-                        for (var i = 0; i < reader.FieldCount; i++)
+                        var schema = reader.GetSchemaTable();
+                        foreach (DataRow row in schema.Rows)
                         {
-                            table.Columns.Add(new Column(table)
-                            {
-                                Name = reader.GetName(i),
-                                DbType = reader.GetFieldType(i).GetDbType(),
-                                Description = string.Empty
-                            });
+                            var column = new Column(table)
+                                .TrySetValue(row, "ColumnName", (c, s) => c.Name = s.ToString())
+                                .TrySetValue<bool>(row, "IsAutoIncrement", (c, s) => c.AutoIncrement = s)
+                                .TrySetValue<long?>(row, "ColumnSize", (c, s) => c.Length = s)
+                                .TrySetValue<int?>(row, "NumericPrecision", (c, s) => c.Precision = s)
+                                .TrySetValue<int?>(row, "NumericScale", (c, s) => c.Scale = s)
+                                .TrySetValue<bool>(row, "IsKey", (c, s) => c.IsPrimaryKey = s)
+                                .TrySetValue<bool>(row, "AllowDBNull", (c, s) => c.IsNullable = s)
+                                .TrySetValue(row, "DataType", (c, s) => c.DbType = ((Type)s).GetDbType())
+                                .TrySetValue(row, "DataTypeName", (c, s) => c.DataType = s.ToStringSafely());
+
+                            table.Columns.Add(column);
                         }
                     }
 
@@ -393,6 +400,29 @@ namespace CodeBuilder.Database
             }
 
             return null;
+        }
+    }
+
+    internal static class ColumnSchemaHelper
+    {
+        internal static Column TrySetValue(this Column column, DataRow row, string name, Action<Column, object> setter)
+        {
+            if (row.Table.Columns.Contains(name))
+            {
+                setter(column, row[name]);
+            }
+
+            return column;
+        }
+
+        internal static Column TrySetValue<T>(this Column column, DataRow row, string name, Action<Column, T> setter)
+        {
+            if (row.Table.Columns.Contains(name))
+            {
+                setter(column, row[name].To<T>());
+            }
+
+            return column;
         }
     }
 }

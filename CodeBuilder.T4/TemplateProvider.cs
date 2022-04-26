@@ -77,7 +77,7 @@ namespace CodeBuilder.T4
             }
             catch (Exception exp)
             {
-                _hosting.ShowError(exp.Message);
+                _hosting.ShowError(exp);
                 return null;
             }
             finally

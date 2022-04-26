@@ -172,7 +172,7 @@ namespace CodeBuilder.JsonTool
             }
             catch (Exception exp)
             {
-                _hosting.ShowError(exp.Message);
+                _hosting.ShowError(exp);
             }
         }
 
@@ -203,7 +203,7 @@ namespace CodeBuilder.JsonTool
                 }
                 catch (Exception exp)
                 {
-                    _hosting.ShowError(exp.Message);
+                    _hosting.ShowError(exp);
                 }
             }
         }

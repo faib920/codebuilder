@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------
 using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Template;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -80,6 +81,12 @@ namespace CodeBuilder.Core
         /// </summary>
         /// <param name="msg"></param>
         void ShowError(string msg);
+
+        /// <summary>
+        /// 弹出显示错误信息。
+        /// </summary>
+        /// <param name="exp"></param>
+        void ShowError(Exception exp);
 
         /// <summary>
         /// 弹出显示警告信息。
