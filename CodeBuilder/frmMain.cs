@@ -366,25 +366,34 @@ namespace CodeBuilder
             spbar.Value = 0;
             spbar.Visible = true;
 
-            Processor.Run(this, () =>
-                {
-                    var tables = option.SkipSchema ? source : provider.GetSchema(source, (t, p) =>
-                        {
-                            Invoke(new Action(() =>
-                                {
-                                    spState.Text = string.Format("{0}%，正在获取表 {1} 的结构...", p, t);
-                                    spbar.Value = p;
-                                }));
-                        });
+            List<Table> tables = null;
 
-                    Invoke(new Action(() =>
+            if (option.SkipSchema)
+            {
+                tables = source;
+            }
+            else 
+            {
+                Processor.Run(this, () =>
+                {
+                    tables = provider.GetSchema(source, (t, p) =>
+                    {
+                        Invoke(new Action(() =>
                         {
-                            FillTables(tables);
-                            spState.Text = "就绪";
-                            spbar.Value = 0;
-                            spbar.Visible = false;
+                            spState.Text = string.Format("{0}%，正在获取表 {1} 的结构...", p, t);
+                            spbar.Value = p;
                         }));
+                    });
                 });
+            }
+
+            Invoke(new Action(() =>
+            {
+                FillTables(tables);
+                spState.Text = "就绪";
+                spbar.Value = 0;
+                spbar.Visible = false;
+            }));
         }
 
         private void NewEditor()
