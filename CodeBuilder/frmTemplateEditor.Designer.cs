@@ -52,14 +52,14 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label7 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
             this.lstRes = new Fireasy.Windows.Forms.TreeList();
             this.treeListColumn6 = new Fireasy.Windows.Forms.TreeListColumn();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.cboLanguage = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -69,17 +69,17 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(34, 27);
+            this.label1.Location = new System.Drawing.Point(36, 27);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 12);
+            this.label1.Size = new System.Drawing.Size(43, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "标识:";
             // 
             // txtId
             // 
-            this.txtId.Location = new System.Drawing.Point(75, 24);
+            this.txtId.Location = new System.Drawing.Point(83, 23);
             this.txtId.Name = "txtId";
-            this.txtId.Size = new System.Drawing.Size(228, 21);
+            this.txtId.Size = new System.Drawing.Size(228, 27);
             this.txtId.TabIndex = 0;
             // 
             // lstPart
@@ -105,7 +105,7 @@
             this.lstPart.RowNumberIndex = 0;
             this.lstPart.ShowPlusMinus = true;
             this.lstPart.ShowPlusMinusLines = false;
-            this.lstPart.Size = new System.Drawing.Size(798, 415);
+            this.lstPart.Size = new System.Drawing.Size(798, 403);
             this.lstPart.SortKey = null;
             this.lstPart.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstPart.TabIndex = 2;
@@ -175,19 +175,19 @@
             this.toolStripSeparator1,
             this.mnuDelete});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(198, 114);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(189, 106);
             // 
             // mnuAddRoot
             // 
             this.mnuAddRoot.Name = "mnuAddRoot";
-            this.mnuAddRoot.Size = new System.Drawing.Size(197, 26);
+            this.mnuAddRoot.Size = new System.Drawing.Size(188, 24);
             this.mnuAddRoot.Text = "添加顶级组";
             this.mnuAddRoot.Click += new System.EventHandler(this.mnuAddRoot_Click);
             // 
             // mnuAddGroup
             // 
             this.mnuAddGroup.Name = "mnuAddGroup";
-            this.mnuAddGroup.Size = new System.Drawing.Size(197, 26);
+            this.mnuAddGroup.Size = new System.Drawing.Size(188, 24);
             this.mnuAddGroup.Text = "添加组";
             this.mnuAddGroup.Click += new System.EventHandler(this.mnuAddGroup_Click);
             // 
@@ -195,28 +195,28 @@
             // 
             this.mnuAdd.Name = "mnuAdd";
             this.mnuAdd.ShortcutKeys = System.Windows.Forms.Keys.Insert;
-            this.mnuAdd.Size = new System.Drawing.Size(197, 26);
+            this.mnuAdd.Size = new System.Drawing.Size(188, 24);
             this.mnuAdd.Text = "添加部件";
             this.mnuAdd.Click += new System.EventHandler(this.mnuAdd_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(194, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(185, 6);
             // 
             // mnuDelete
             // 
             this.mnuDelete.Name = "mnuDelete";
-            this.mnuDelete.Size = new System.Drawing.Size(197, 26);
+            this.mnuDelete.Size = new System.Drawing.Size(188, 24);
             this.mnuDelete.Text = "删除";
             this.mnuDelete.Click += new System.EventHandler(this.mnuDelete_Click);
             // 
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(692, 573);
+            this.btnOk.Location = new System.Drawing.Point(682, 587);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(80, 28);
             this.btnOk.TabIndex = 4;
             this.btnOk.Text = "确定(&O)";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -226,9 +226,9 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(773, 573);
+            this.btnCancel.Location = new System.Drawing.Point(768, 587);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(80, 28);
             this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "取消(&C)";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -236,9 +236,9 @@
             // btnLocation
             // 
             this.btnLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLocation.Location = new System.Drawing.Point(36, 573);
+            this.btnLocation.Location = new System.Drawing.Point(36, 587);
             this.btnLocation.Name = "btnLocation";
-            this.btnLocation.Size = new System.Drawing.Size(119, 23);
+            this.btnLocation.Size = new System.Drawing.Size(119, 28);
             this.btnLocation.TabIndex = 7;
             this.btnLocation.Text = "定位到文件夹(&L)";
             this.btnLocation.UseVisualStyleBackColor = true;
@@ -246,17 +246,17 @@
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(75, 56);
+            this.txtName.Location = new System.Drawing.Point(83, 62);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(228, 21);
+            this.txtName.Size = new System.Drawing.Size(228, 27);
             this.txtName.TabIndex = 1;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(34, 59);
+            this.label4.Location = new System.Drawing.Point(34, 66);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 12);
+            this.label4.Size = new System.Drawing.Size(43, 20);
             this.label4.TabIndex = 8;
             this.label4.Text = "名称:";
             // 
@@ -264,9 +264,9 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.Color.Blue;
-            this.label3.Location = new System.Drawing.Point(309, 27);
+            this.label3.Location = new System.Drawing.Point(321, 27);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(149, 12);
+            this.label3.Size = new System.Drawing.Size(189, 20);
             this.label3.TabIndex = 9;
             this.label3.Text = "唯一标识，确定后不能修改";
             // 
@@ -274,9 +274,9 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.Blue;
-            this.label5.Location = new System.Drawing.Point(309, 59);
+            this.label5.Location = new System.Drawing.Point(321, 66);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 12);
+            this.label5.Size = new System.Drawing.Size(99, 20);
             this.label5.TabIndex = 10;
             this.label5.Text = "显示在菜单上";
             // 
@@ -287,35 +287,57 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(36, 93);
+            this.tabControl1.Location = new System.Drawing.Point(36, 109);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(812, 471);
+            this.tabControl1.Size = new System.Drawing.Size(812, 466);
             this.tabControl1.TabIndex = 11;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.lstPart);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 29);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage1.Size = new System.Drawing.Size(804, 445);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(804, 433);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "部件";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.Blue;
+            this.label7.Location = new System.Drawing.Point(4, 411);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(219, 20);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "在列表中右键弹出菜单进行维护";
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.label6);
             this.tabPage2.Controls.Add(this.lstRes);
-            this.tabPage2.Location = new System.Drawing.Point(4, 23);
+            this.tabPage2.Location = new System.Drawing.Point(4, 29);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage2.Size = new System.Drawing.Size(804, 444);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(804, 438);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "资源";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.Blue;
+            this.label6.Location = new System.Drawing.Point(4, 418);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(350, 20);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "直接拖拽文件或文件夹到列表中，按 Delete 键删除";
             // 
             // lstRes
             // 
@@ -334,7 +356,7 @@
             this.lstRes.Name = "lstRes";
             this.lstRes.NoneItemText = "";
             this.lstRes.RowNumberIndex = 0;
-            this.lstRes.Size = new System.Drawing.Size(798, 415);
+            this.lstRes.Size = new System.Drawing.Size(798, 408);
             this.lstRes.SortKey = null;
             this.lstRes.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstRes.TabIndex = 0;
@@ -355,9 +377,9 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(523, 59);
+            this.label2.Location = new System.Drawing.Point(517, 66);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 12);
+            this.label2.Size = new System.Drawing.Size(43, 20);
             this.label2.TabIndex = 12;
             this.label2.Text = "语言:";
             // 
@@ -368,38 +390,14 @@
             "CSharp",
             "VB",
             "Java"});
-            this.cboLanguage.Location = new System.Drawing.Point(564, 56);
+            this.cboLanguage.Location = new System.Drawing.Point(572, 61);
             this.cboLanguage.Name = "cboLanguage";
-            this.cboLanguage.Size = new System.Drawing.Size(147, 20);
+            this.cboLanguage.Size = new System.Drawing.Size(213, 28);
             this.cboLanguage.TabIndex = 13;
-            // 
-            // label6
-            // 
-            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.Color.Blue;
-            this.label6.Location = new System.Drawing.Point(4, 425);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(281, 12);
-            this.label6.TabIndex = 1;
-            this.label6.Text = "直接拖拽文件或文件夹到列表中，按 Delete 键删除";
-            // 
-            // label7
-            // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.Blue;
-            this.label7.Location = new System.Drawing.Point(4, 425);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(173, 12);
-            this.label7.TabIndex = 3;
-            this.label7.Text = "在列表中右键弹出菜单进行维护";
             // 
             // frmTemplateEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(867, 610);
+            this.ClientSize = new System.Drawing.Size(867, 629);
             this.Controls.Add(this.cboLanguage);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tabControl1);

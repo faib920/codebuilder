@@ -6,13 +6,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmAbout : Form
+    public partial class frmAbout : FormBase
     {
         public frmAbout()
         {

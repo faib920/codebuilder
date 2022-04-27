@@ -6,13 +6,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using Fireasy.Data.Provider;
 using System;
 using System.Windows.Forms;
 
 namespace CodeBuilder.Database
 {
-    public partial class frmSourceEdit : Form
+    public partial class frmSourceEdit : FormBase
     {
         private string _providerName;
         private readonly IDevHosting _hosting;

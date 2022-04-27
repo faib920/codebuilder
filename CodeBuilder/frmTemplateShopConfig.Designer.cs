@@ -49,9 +49,9 @@ namespace CodeBuilder
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(448, 56);
+            this.btnClose.Location = new System.Drawing.Point(448, 59);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(75, 23);
+            this.btnClose.Size = new System.Drawing.Size(80, 28);
             this.btnClose.TabIndex = 3;
             this.btnClose.Text = "关闭(&C)";
             this.btnClose.UseVisualStyleBackColor = true;
@@ -61,7 +61,7 @@ namespace CodeBuilder
             // 
             this.btnOk.Location = new System.Drawing.Point(448, 22);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(80, 28);
             this.btnOk.TabIndex = 5;
             this.btnOk.Text = "确定(&O)";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -70,9 +70,9 @@ namespace CodeBuilder
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(28, 29);
+            this.label2.Location = new System.Drawing.Point(28, 26);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(107, 12);
+            this.label2.Size = new System.Drawing.Size(133, 20);
             this.label2.TabIndex = 6;
             this.label2.Text = "模板服务提供地址:";
             // 
@@ -80,13 +80,11 @@ namespace CodeBuilder
             // 
             this.txtServer.Location = new System.Drawing.Point(30, 51);
             this.txtServer.Name = "txtServer";
-            this.txtServer.Size = new System.Drawing.Size(384, 21);
+            this.txtServer.Size = new System.Drawing.Size(384, 27);
             this.txtServer.TabIndex = 7;
             // 
             // frmTemplateShopConfig
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(550, 109);
             this.Controls.Add(this.txtServer);
             this.Controls.Add(this.label2);

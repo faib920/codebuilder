@@ -7,17 +7,17 @@
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
 using CodeBuilder.Core.Template;
+using CodeBuilder.Core.Forms;
 using Fireasy.Common.Extensions;
 using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmPreBuild : Form
+    public partial class frmPreBuild : FormBase
     {
         private List<string> _partitions;
         private readonly IDevHosting _hosting;

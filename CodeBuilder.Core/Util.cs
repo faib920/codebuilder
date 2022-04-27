@@ -11,6 +11,8 @@ using Fireasy.Common.Security;
 using System;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
+
 namespace CodeBuilder.Core
 {
     /// <summary>
@@ -82,6 +84,5 @@ namespace CodeBuilder.Core
                 return type.Name;
             }
         }
-
     }
 }

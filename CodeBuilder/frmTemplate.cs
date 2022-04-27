@@ -6,13 +6,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core.Template;
+using CodeBuilder.Core.Forms;
 using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
 
 namespace CodeBuilder
 {
-    public partial class frmTemplate : DockForm
+    public partial class frmTemplate : DockFormBase
     {
         private readonly DevHosting _hosting;
 

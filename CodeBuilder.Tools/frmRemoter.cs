@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using Fireasy.Common.Serialization;
 using Fireasy.Windows.Forms;
 using System;
@@ -18,7 +19,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace CodeBuilder.Tools
 {
-    public partial class frmRemoter : DockContent, IClosableDockManaged
+    public partial class frmRemoter : DockFormBase, IClosableDockManaged
     {
         private List<Remoter.Connection> _connections = new List<Remoter.Connection>();
         private readonly IDevHosting _hosting;

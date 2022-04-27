@@ -6,23 +6,22 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using CodeBuilder.Tools.Tools;
 using Fireasy.Common.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 
 namespace CodeBuilder.Tools
 {
-    public partial class frmTools : DockContent, IClosableDockManaged
+    public partial class frmTools : DockFormBase, IClosableDockManaged
     {
         private readonly IDevHosting _hosting;
 
         public frmTools(IDevHosting hosting)
         {
             InitializeComponent();
+            Icon = Util.GetIcon();
             _hosting = hosting;
         }
 

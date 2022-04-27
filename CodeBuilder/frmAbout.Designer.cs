@@ -56,9 +56,9 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(386, 329);
+            this.btnOk.Location = new System.Drawing.Point(386, 332);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(80, 28);
             this.btnOk.TabIndex = 2;
             this.btnOk.Text = "确定(&O)";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -93,36 +93,36 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(56, 192);
+            this.label1.Location = new System.Drawing.Point(56, 186);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 12);
+            this.label1.Size = new System.Drawing.Size(62, 19);
             this.label1.TabIndex = 3;
             this.label1.Text = "Version: ";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(56, 298);
+            this.label2.Location = new System.Drawing.Point(56, 297);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(191, 12);
+            this.label2.Size = new System.Drawing.Size(214, 19);
             this.label2.TabIndex = 4;
-            this.label2.Text = "Copyright © 2010 - 2021 Fireasy";
+            this.label2.Text = "Copyright © 2010 - 2022 Fireasy";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(56, 222);
+            this.label3.Location = new System.Drawing.Point(56, 217);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(83, 12);
+            this.label3.Size = new System.Drawing.Size(106, 19);
             this.label3.TabIndex = 5;
             this.label3.Text = "QQ: 55570729 ";
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(93, 265);
+            this.linkLabel1.Location = new System.Drawing.Point(102, 266);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(203, 12);
+            this.linkLabel1.Size = new System.Drawing.Size(219, 19);
             this.linkLabel1.TabIndex = 6;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "http://www.fireasy.cn/codebuilder";
@@ -131,26 +131,26 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(56, 244);
+            this.label4.Location = new System.Drawing.Point(56, 242);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(47, 12);
+            this.label4.Size = new System.Drawing.Size(48, 19);
             this.label4.TabIndex = 7;
             this.label4.Text = "Email: ";
             // 
             // lblVer
             // 
             this.lblVer.AutoSize = true;
-            this.lblVer.Location = new System.Drawing.Point(112, 192);
+            this.lblVer.Location = new System.Drawing.Point(112, 186);
             this.lblVer.Name = "lblVer";
-            this.lblVer.Size = new System.Drawing.Size(0, 12);
+            this.lblVer.Size = new System.Drawing.Size(0, 19);
             this.lblVer.TabIndex = 8;
             // 
             // linkLabel2
             // 
             this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(97, 244);
+            this.linkLabel2.Location = new System.Drawing.Point(98, 242);
             this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(95, 12);
+            this.linkLabel2.Size = new System.Drawing.Size(123, 19);
             this.linkLabel2.TabIndex = 9;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "faib920@126.com";
@@ -159,16 +159,14 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(56, 265);
+            this.label5.Location = new System.Drawing.Point(56, 266);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(41, 12);
+            this.label5.Size = new System.Drawing.Size(53, 19);
             this.label5.TabIndex = 10;
             this.label5.Text = "Home: ";
             // 
             // frmAbout
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(496, 384);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label5);

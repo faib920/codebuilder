@@ -47,9 +47,9 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(732, 434);
+            this.btnCancel.Location = new System.Drawing.Point(728, 431);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(80, 28);
             this.btnCancel.TabIndex = 8;
             this.btnCancel.Text = "取消(&C)";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -57,9 +57,9 @@
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(651, 434);
+            this.btnOk.Location = new System.Drawing.Point(642, 431);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(80, 28);
             this.btnOk.TabIndex = 7;
             this.btnOk.Text = "确定(&O)";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -68,18 +68,18 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 439);
+            this.label1.Location = new System.Drawing.Point(12, 438);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(401, 12);
+            this.label1.Size = new System.Drawing.Size(448, 19);
             this.label1.TabIndex = 9;
             this.label1.Text = "多条 SQL 请使用分号分隔。可以使用 表名=>SQL 语法来指定要生成的表。";
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(419, 439);
+            this.linkLabel1.Location = new System.Drawing.Point(456, 438);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(53, 12);
+            this.linkLabel1.Size = new System.Drawing.Size(61, 19);
             this.linkLabel1.TabIndex = 10;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "查看示例";
@@ -87,8 +87,6 @@
             // 
             // frmSQLEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(819, 469);
             this.Controls.Add(this.linkLabel1);

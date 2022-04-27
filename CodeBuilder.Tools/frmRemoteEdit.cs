@@ -5,18 +5,20 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace CodeBuilder.Tools
 {
-    public partial class frmRemoteEdit : Form
+    public partial class frmRemoteEdit : FormBase
     {
         public frmRemoteEdit()
         {
             InitializeComponent();
-            
+            Icon = Util.GetIcon();
         }
 
         public List<string> Groups { get; set; }

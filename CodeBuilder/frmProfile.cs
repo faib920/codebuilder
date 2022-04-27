@@ -6,13 +6,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using System;
 using System.IO;
 using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmProfile : DockForm
+    public partial class frmProfile : DockFormBase
     {
         private string _profileName;
         private string _profileDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "profiles");

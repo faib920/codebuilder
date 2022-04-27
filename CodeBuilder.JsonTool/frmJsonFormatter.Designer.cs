@@ -39,19 +39,23 @@ namespace CodeBuilder.JsonTool
             this.mnuMark = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tRed = new System.Windows.Forms.ToolStripMenuItem();
-            this.tLime = new System.Windows.Forms.ToolStripMenuItem();
-            this.tAquamarine = new System.Windows.Forms.ToolStripMenuItem();
             this.tDsBlue = new System.Windows.Forms.ToolStripMenuItem();
             this.tCyan = new System.Windows.Forms.ToolStripMenuItem();
+            this.tAquamarine = new System.Windows.Forms.ToolStripMenuItem();
+            this.tLime = new System.Windows.Forms.ToolStripMenuItem();
+            this.tGreenYellow = new System.Windows.Forms.ToolStripMenuItem();
             this.tOrange = new System.Windows.Forms.ToolStripMenuItem();
             this.tGold = new System.Windows.Forms.ToolStripMenuItem();
+            this.tYellow = new System.Windows.Forms.ToolStripMenuItem();
             this.tHotPink = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuClearMark = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCopyKey = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.txtSource = new System.Windows.Forms.RichTextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuFromWeb = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHistory = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.treeList1 = new Fireasy.Windows.Forms.TreeList();
@@ -68,10 +72,9 @@ namespace CodeBuilder.JsonTool
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.mnuClearMark = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
-            this.tGreenYellow = new System.Windows.Forms.ToolStripMenuItem();
-            this.tYellow = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuExpand = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuCollapse = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.contextMenuStrip2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -118,21 +121,26 @@ namespace CodeBuilder.JsonTool
             this.mnuMark,
             this.toolStripMenuItem1,
             this.mnuCopyKey,
-            this.mnuCopy});
+            this.mnuCopy,
+            this.toolStripSeparator1,
+            this.mnuExpand,
+            this.mnuCollapse});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(169, 124);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(227, 178);
             // 
             // mnuFind
             // 
             this.mnuFind.Name = "mnuFind";
-            this.mnuFind.Size = new System.Drawing.Size(168, 24);
+            this.mnuFind.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.mnuFind.Size = new System.Drawing.Size(226, 24);
             this.mnuFind.Text = "查找...";
             this.mnuFind.Click += new System.EventHandler(this.mnuFind_Click);
             // 
             // mnuMark
             // 
             this.mnuMark.Name = "mnuMark";
-            this.mnuMark.Size = new System.Drawing.Size(168, 24);
+            this.mnuMark.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
+            this.mnuMark.Size = new System.Drawing.Size(226, 24);
             this.mnuMark.Text = "查找并标记...";
             this.mnuMark.Click += new System.EventHandler(this.mnuMark_Click);
             // 
@@ -151,38 +159,22 @@ namespace CodeBuilder.JsonTool
             this.tHotPink,
             this.mnuClearMark});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(168, 24);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 24);
             this.toolStripMenuItem1.Text = "使用颜色标记";
             // 
             // tRed
             // 
             this.tRed.BackColor = System.Drawing.Color.Red;
             this.tRed.Name = "tRed";
-            this.tRed.Size = new System.Drawing.Size(180, 24);
+            this.tRed.Size = new System.Drawing.Size(173, 24);
             this.tRed.Text = "Red";
             this.tRed.Click += new System.EventHandler(this.mnuColor_Click);
-            // 
-            // tLime
-            // 
-            this.tLime.BackColor = System.Drawing.Color.Lime;
-            this.tLime.Name = "tLime";
-            this.tLime.Size = new System.Drawing.Size(180, 24);
-            this.tLime.Text = "Lime";
-            this.tLime.Click += new System.EventHandler(this.mnuColor_Click);
-            // 
-            // tAquamarine
-            // 
-            this.tAquamarine.BackColor = System.Drawing.Color.Aquamarine;
-            this.tAquamarine.Name = "tAquamarine";
-            this.tAquamarine.Size = new System.Drawing.Size(180, 24);
-            this.tAquamarine.Text = "Aquamarine";
-            this.tAquamarine.Click += new System.EventHandler(this.mnuColor_Click);
             // 
             // tDsBlue
             // 
             this.tDsBlue.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.tDsBlue.Name = "tDsBlue";
-            this.tDsBlue.Size = new System.Drawing.Size(180, 24);
+            this.tDsBlue.Size = new System.Drawing.Size(173, 24);
             this.tDsBlue.Text = "DeepSkyBlue";
             this.tDsBlue.Click += new System.EventHandler(this.mnuColor_Click);
             // 
@@ -190,15 +182,39 @@ namespace CodeBuilder.JsonTool
             // 
             this.tCyan.BackColor = System.Drawing.Color.Cyan;
             this.tCyan.Name = "tCyan";
-            this.tCyan.Size = new System.Drawing.Size(180, 24);
+            this.tCyan.Size = new System.Drawing.Size(173, 24);
             this.tCyan.Text = "Cyan";
             this.tCyan.Click += new System.EventHandler(this.mnuColor_Click);
+            // 
+            // tAquamarine
+            // 
+            this.tAquamarine.BackColor = System.Drawing.Color.Aquamarine;
+            this.tAquamarine.Name = "tAquamarine";
+            this.tAquamarine.Size = new System.Drawing.Size(173, 24);
+            this.tAquamarine.Text = "Aquamarine";
+            this.tAquamarine.Click += new System.EventHandler(this.mnuColor_Click);
+            // 
+            // tLime
+            // 
+            this.tLime.BackColor = System.Drawing.Color.Lime;
+            this.tLime.Name = "tLime";
+            this.tLime.Size = new System.Drawing.Size(173, 24);
+            this.tLime.Text = "Lime";
+            this.tLime.Click += new System.EventHandler(this.mnuColor_Click);
+            // 
+            // tGreenYellow
+            // 
+            this.tGreenYellow.BackColor = System.Drawing.Color.GreenYellow;
+            this.tGreenYellow.Name = "tGreenYellow";
+            this.tGreenYellow.Size = new System.Drawing.Size(173, 24);
+            this.tGreenYellow.Text = "GreenYellow";
+            this.tGreenYellow.Click += new System.EventHandler(this.mnuColor_Click);
             // 
             // tOrange
             // 
             this.tOrange.BackColor = System.Drawing.Color.Orange;
             this.tOrange.Name = "tOrange";
-            this.tOrange.Size = new System.Drawing.Size(180, 24);
+            this.tOrange.Size = new System.Drawing.Size(173, 24);
             this.tOrange.Text = "Orange";
             this.tOrange.Click += new System.EventHandler(this.mnuColor_Click);
             // 
@@ -206,29 +222,45 @@ namespace CodeBuilder.JsonTool
             // 
             this.tGold.BackColor = System.Drawing.Color.Gold;
             this.tGold.Name = "tGold";
-            this.tGold.Size = new System.Drawing.Size(180, 24);
+            this.tGold.Size = new System.Drawing.Size(173, 24);
             this.tGold.Text = "Gold";
             this.tGold.Click += new System.EventHandler(this.mnuColor_Click);
+            // 
+            // tYellow
+            // 
+            this.tYellow.BackColor = System.Drawing.Color.Yellow;
+            this.tYellow.Name = "tYellow";
+            this.tYellow.Size = new System.Drawing.Size(173, 24);
+            this.tYellow.Text = "Yellow";
+            this.tYellow.Click += new System.EventHandler(this.mnuColor_Click);
             // 
             // tHotPink
             // 
             this.tHotPink.BackColor = System.Drawing.Color.HotPink;
             this.tHotPink.Name = "tHotPink";
-            this.tHotPink.Size = new System.Drawing.Size(180, 24);
+            this.tHotPink.Size = new System.Drawing.Size(173, 24);
             this.tHotPink.Text = "HotPink";
             this.tHotPink.Click += new System.EventHandler(this.mnuColor_Click);
+            // 
+            // mnuClearMark
+            // 
+            this.mnuClearMark.Name = "mnuClearMark";
+            this.mnuClearMark.Size = new System.Drawing.Size(173, 24);
+            this.mnuClearMark.Text = "取消标记";
+            this.mnuClearMark.Click += new System.EventHandler(this.mnuClearMark_Click);
             // 
             // mnuCopyKey
             // 
             this.mnuCopyKey.Name = "mnuCopyKey";
-            this.mnuCopyKey.Size = new System.Drawing.Size(168, 24);
+            this.mnuCopyKey.Size = new System.Drawing.Size(180, 24);
             this.mnuCopyKey.Text = "复制 Key";
             this.mnuCopyKey.Click += new System.EventHandler(this.mnuCopyKey_Click);
             // 
             // mnuCopy
             // 
             this.mnuCopy.Name = "mnuCopy";
-            this.mnuCopy.Size = new System.Drawing.Size(168, 24);
+            this.mnuCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.mnuCopy.Size = new System.Drawing.Size(226, 24);
             this.mnuCopy.Text = "复制 Value";
             this.mnuCopy.Click += new System.EventHandler(this.mnuCopy_Click);
             // 
@@ -252,12 +284,13 @@ namespace CodeBuilder.JsonTool
             this.mnuHistory,
             this.mnuView});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(154, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 98);
             // 
             // mnuFromWeb
             // 
             this.mnuFromWeb.Name = "mnuFromWeb";
-            this.mnuFromWeb.Size = new System.Drawing.Size(153, 24);
+            this.mnuFromWeb.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
+            this.mnuFromWeb.Size = new System.Drawing.Size(210, 24);
             this.mnuFromWeb.Text = "载入网址";
             this.mnuFromWeb.Click += new System.EventHandler(this.mnuFromWeb_Click);
             // 
@@ -266,6 +299,14 @@ namespace CodeBuilder.JsonTool
             this.mnuHistory.Name = "mnuHistory";
             this.mnuHistory.Size = new System.Drawing.Size(153, 24);
             this.mnuHistory.Text = "载入历史";
+            // 
+            // mnuView
+            // 
+            this.mnuView.Name = "mnuView";
+            this.mnuView.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.mnuView.Size = new System.Drawing.Size(210, 24);
+            this.mnuView.Text = "预览和美化";
+            this.mnuView.Click += new System.EventHandler(this.mnuView_Click);
             // 
             // tabControl1
             // 
@@ -362,27 +403,27 @@ namespace CodeBuilder.JsonTool
             // 
             // btnTreeClose
             // 
-            this.btnTreeClose.Location = new System.Drawing.Point(376, 8);
+            this.btnTreeClose.Location = new System.Drawing.Point(380, 6);
             this.btnTreeClose.Name = "btnTreeClose";
-            this.btnTreeClose.Size = new System.Drawing.Size(92, 23);
+            this.btnTreeClose.Size = new System.Drawing.Size(92, 28);
             this.btnTreeClose.TabIndex = 6;
-            this.btnTreeClose.Text = "关闭";
+            this.btnTreeClose.Text = "关闭(&X)";
             this.btnTreeClose.UseVisualStyleBackColor = true;
             this.btnTreeClose.Click += new System.EventHandler(this.btnTreeClose_Click);
             // 
             // btnTreeFind
             // 
-            this.btnTreeFind.Location = new System.Drawing.Point(278, 8);
+            this.btnTreeFind.Location = new System.Drawing.Point(282, 6);
             this.btnTreeFind.Name = "btnTreeFind";
-            this.btnTreeFind.Size = new System.Drawing.Size(92, 23);
+            this.btnTreeFind.Size = new System.Drawing.Size(92, 28);
             this.btnTreeFind.TabIndex = 4;
-            this.btnTreeFind.Text = "查找";
+            this.btnTreeFind.Text = "查找(&F)";
             this.btnTreeFind.UseVisualStyleBackColor = true;
             this.btnTreeFind.Click += new System.EventHandler(this.btnTreeFind_Click);
             // 
             // txtTreeKeyword
             // 
-            this.txtTreeKeyword.Location = new System.Drawing.Point(55, 9);
+            this.txtTreeKeyword.Location = new System.Drawing.Point(62, 8);
             this.txtTreeKeyword.Name = "txtTreeKeyword";
             this.txtTreeKeyword.Size = new System.Drawing.Size(207, 21);
             this.txtTreeKeyword.TabIndex = 3;
@@ -391,7 +432,7 @@ namespace CodeBuilder.JsonTool
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 12);
+            this.label1.Location = new System.Drawing.Point(8, 11);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 12);
             this.label1.TabIndex = 2;
@@ -450,40 +491,27 @@ namespace CodeBuilder.JsonTool
             this.label2.TabIndex = 0;
             this.label2.Text = "将 Json 文本粘贴到上面的文本框中，自动解析及美化，可使用右键菜单载入历史记录。";
             // 
-            // mnuClearMark
+            // mnuExpand
             // 
-            this.mnuClearMark.Name = "mnuClearMark";
-            this.mnuClearMark.Size = new System.Drawing.Size(180, 24);
-            this.mnuClearMark.Text = "取消标记";
-            this.mnuClearMark.Click += new System.EventHandler(this.mnuClearMark_Click);
+            this.mnuExpand.Name = "mnuExpand";
+            this.mnuExpand.Size = new System.Drawing.Size(168, 24);
+            this.mnuExpand.Text = "展开所有节点";
+            this.mnuExpand.Click += new System.EventHandler(this.mnuExpand_Click);
             // 
-            // mnuView
+            // mnuCollapse
             // 
-            this.mnuView.Name = "mnuView";
-            this.mnuView.Size = new System.Drawing.Size(153, 24);
-            this.mnuView.Text = "预览和美化";
-            this.mnuView.Click += new System.EventHandler(this.mnuView_Click);
+            this.mnuCollapse.Name = "mnuCollapse";
+            this.mnuCollapse.Size = new System.Drawing.Size(168, 24);
+            this.mnuCollapse.Text = "折叠所有节点";
+            this.mnuCollapse.Click += new System.EventHandler(this.mnuCollapse_Click);
             // 
-            // tGreenYellow
+            // toolStripSeparator1
             // 
-            this.tGreenYellow.BackColor = System.Drawing.Color.GreenYellow;
-            this.tGreenYellow.Name = "tGreenYellow";
-            this.tGreenYellow.Size = new System.Drawing.Size(180, 24);
-            this.tGreenYellow.Text = "GreenYellow";
-            this.tGreenYellow.Click += new System.EventHandler(this.mnuColor_Click);
-            // 
-            // tYellow
-            // 
-            this.tYellow.BackColor = System.Drawing.Color.Yellow;
-            this.tYellow.Name = "tYellow";
-            this.tYellow.Size = new System.Drawing.Size(180, 24);
-            this.tYellow.Text = "Yellow";
-            this.tYellow.Click += new System.EventHandler(this.mnuColor_Click);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // frmJsonFormatter
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(827, 645);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.splitter1);
@@ -548,5 +576,8 @@ namespace CodeBuilder.JsonTool
         private System.Windows.Forms.ToolStripMenuItem mnuView;
         private System.Windows.Forms.ToolStripMenuItem tGreenYellow;
         private System.Windows.Forms.ToolStripMenuItem tYellow;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem mnuExpand;
+        private System.Windows.Forms.ToolStripMenuItem mnuCollapse;
     }
 }

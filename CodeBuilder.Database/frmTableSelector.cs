@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
 using CodeBuilder.Core.Source;
+using CodeBuilder.Core.Forms;
 using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder.Database
 {
-    public partial class frmTableSelector : Form
+    public partial class frmTableSelector : FormBase
     {
         private List<Table> _tables;
         private List<Table> _saved;

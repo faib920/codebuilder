@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using Fireasy.Common.Serialization;
 using Fireasy.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip;
@@ -21,7 +22,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmPluginShop : Form
+    public partial class frmPluginShop : FormBase
     {
         private int _page = 0;
         private readonly IDevHosting _hosting;
@@ -291,7 +292,7 @@ namespace CodeBuilder
             e.Graphics.DrawString("作者:" + tmp.Author, e.Cell.Item.TreeList.Font, sb, e.Bounds.X + 230, e.Bounds.Y + 85, strFormat);
 
             e.Graphics.DrawString("版本:" + tmp.Version, e.Cell.Item.TreeList.Font, sb, e.Bounds.X + 440, e.Bounds.Y + 85, strFormat);
-            e.Graphics.DrawString("日期:" + tmp.PublishTime, e.Cell.Item.TreeList.Font, sb, e.Bounds.Width - 100, e.Bounds.Y + 85, strFormat);
+            e.Graphics.DrawString("日期:" + tmp.PublishTime, e.Cell.Item.TreeList.Font, sb, e.Bounds.Width - 130, e.Bounds.Y + 85, strFormat);
 
             if (tmp.NeedUpdate)
             {

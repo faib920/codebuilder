@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using Fireasy.Common.Serialization;
 using Fireasy.Data.Provider;
 using Fireasy.Windows.Forms;
@@ -17,7 +18,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder.Database
 {
-    public partial class frmSourceMgr : Form
+    public partial class frmSourceMgr : FormBase
     {
         private string _sourceFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "datasources.cfg");
         private List<DbSourceStruct> _sources = null;

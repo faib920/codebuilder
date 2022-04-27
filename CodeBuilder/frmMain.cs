@@ -9,6 +9,7 @@ using CodeBuilder.Core;
 using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Template;
 using CodeBuilder.Core.Variable;
+using CodeBuilder.Core.Forms;
 using Fireasy.Common.Composition;
 using Fireasy.Common.Serialization;
 using System;
@@ -24,7 +25,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace CodeBuilder
 {
-    public partial class frmMain : Form
+    public partial class frmMain : FormBase
     {
         private frmTable _frmTable;
         private frmProperty _frmProperty;
@@ -36,11 +37,11 @@ namespace CodeBuilder
         public frmMain()
         {
             InitializeComponent();
-            Icon = Util.GetIcon();
             mnuPropertyWnd.Image = Properties.Resources.property.ToBitmap();
             mnuProfileWnd.Image = Properties.Resources.profile.ToBitmap();
             mnuTemplateWnd.Image = Properties.Resources.template.ToBitmap();
             mnuOutputWnd.Image = Properties.Resources.output.ToBitmap();
+            Icon = Util.GetIcon();
             _hosting = new DevHosting();
             _hosting.MainWindow = dockMgr;
             _hosting.DockContainer = dockMgr;

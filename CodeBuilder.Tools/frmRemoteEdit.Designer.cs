@@ -43,7 +43,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(44, 34);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 12);
+            this.label1.Size = new System.Drawing.Size(35, 19);
             this.label1.TabIndex = 0;
             this.label1.Text = "名称";
             // 
@@ -51,14 +51,14 @@
             // 
             this.txtName.Location = new System.Drawing.Point(113, 31);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(248, 21);
+            this.txtName.Size = new System.Drawing.Size(248, 24);
             this.txtName.TabIndex = 1;
             // 
             // txtHost
             // 
             this.txtHost.Location = new System.Drawing.Point(113, 67);
             this.txtHost.Name = "txtHost";
-            this.txtHost.Size = new System.Drawing.Size(248, 21);
+            this.txtHost.Size = new System.Drawing.Size(248, 24);
             this.txtHost.TabIndex = 3;
             // 
             // label2
@@ -66,7 +66,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(44, 70);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 12);
+            this.label2.Size = new System.Drawing.Size(35, 19);
             this.label2.TabIndex = 2;
             this.label2.Text = "主机";
             // 
@@ -75,7 +75,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(44, 106);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 12);
+            this.label3.Size = new System.Drawing.Size(35, 19);
             this.label3.TabIndex = 4;
             this.label3.Text = "分组";
             // 
@@ -84,32 +84,32 @@
             this.cboGroup.FormattingEnabled = true;
             this.cboGroup.Location = new System.Drawing.Point(113, 103);
             this.cboGroup.Name = "cboGroup";
-            this.cboGroup.Size = new System.Drawing.Size(248, 20);
+            this.cboGroup.Size = new System.Drawing.Size(248, 27);
             this.cboGroup.TabIndex = 5;
             // 
             // btnOk
             // 
             this.btnOk.Location = new System.Drawing.Point(113, 152);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(80, 28);
             this.btnOk.TabIndex = 6;
-            this.btnOk.Text = "确定";
+            this.btnOk.Text = "确定(&O)";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(240, 152);
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(199, 152);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(80, 28);
             this.btnCancel.TabIndex = 7;
-            this.btnCancel.Text = "取消";
+            this.btnCancel.Text = "取消(&C)";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // frmRemoteEdit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(419, 204);
             this.Controls.Add(this.btnCancel);

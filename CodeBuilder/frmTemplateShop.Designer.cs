@@ -53,7 +53,7 @@ namespace CodeBuilder
             this.lvwTemplate.NoneItemText = "没有可显示的数据";
             this.lvwTemplate.RowNumberIndex = 0;
             this.lvwTemplate.ShowHeader = false;
-            this.lvwTemplate.Size = new System.Drawing.Size(779, 401);
+            this.lvwTemplate.Size = new System.Drawing.Size(779, 397);
             this.lvwTemplate.SortKey = null;
             this.lvwTemplate.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lvwTemplate.TabIndex = 0;
@@ -73,9 +73,9 @@ namespace CodeBuilder
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Location = new System.Drawing.Point(715, 428);
+            this.btnClose.Location = new System.Drawing.Point(710, 424);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(75, 23);
+            this.btnClose.Size = new System.Drawing.Size(80, 28);
             this.btnClose.TabIndex = 2;
             this.btnClose.Text = "关闭(&C)";
             this.btnClose.UseVisualStyleBackColor = true;
@@ -84,9 +84,9 @@ namespace CodeBuilder
             // btnUpdate
             // 
             this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUpdate.Location = new System.Drawing.Point(627, 428);
+            this.btnUpdate.Location = new System.Drawing.Point(622, 424);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(75, 23);
+            this.btnUpdate.Size = new System.Drawing.Size(80, 28);
             this.btnUpdate.TabIndex = 3;
             this.btnUpdate.Text = "更新";
             this.btnUpdate.UseVisualStyleBackColor = true;
@@ -96,9 +96,9 @@ namespace CodeBuilder
             // btnConfig
             // 
             this.btnConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConfig.Location = new System.Drawing.Point(12, 428);
+            this.btnConfig.Location = new System.Drawing.Point(12, 424);
             this.btnConfig.Name = "btnConfig";
-            this.btnConfig.Size = new System.Drawing.Size(75, 23);
+            this.btnConfig.Size = new System.Drawing.Size(80, 28);
             this.btnConfig.TabIndex = 4;
             this.btnConfig.Text = "配置(&G)";
             this.btnConfig.UseVisualStyleBackColor = true;
@@ -107,9 +107,9 @@ namespace CodeBuilder
             // btnLocation
             // 
             this.btnLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLocation.Location = new System.Drawing.Point(495, 428);
+            this.btnLocation.Location = new System.Drawing.Point(496, 424);
             this.btnLocation.Name = "btnLocation";
-            this.btnLocation.Size = new System.Drawing.Size(119, 23);
+            this.btnLocation.Size = new System.Drawing.Size(120, 28);
             this.btnLocation.TabIndex = 5;
             this.btnLocation.Text = "定位到文件夹(&L)";
             this.btnLocation.UseVisualStyleBackColor = true;
@@ -118,8 +118,6 @@ namespace CodeBuilder
             // 
             // frmTemplateShop
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(803, 465);
             this.Controls.Add(this.btnLocation);
             this.Controls.Add(this.btnConfig);

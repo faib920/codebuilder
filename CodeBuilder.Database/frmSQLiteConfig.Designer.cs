@@ -36,25 +36,25 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(30, 32);
+            this.label1.Location = new System.Drawing.Point(25, 25);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(71, 12);
+            this.label1.Size = new System.Drawing.Size(77, 19);
             this.label1.TabIndex = 0;
             this.label1.Text = "数据库文件:";
             // 
             // txtFile
             // 
             this.txtFile.BackColor = System.Drawing.SystemColors.Window;
-            this.txtFile.Location = new System.Drawing.Point(107, 29);
+            this.txtFile.Location = new System.Drawing.Point(108, 22);
             this.txtFile.Name = "txtFile";
-            this.txtFile.Size = new System.Drawing.Size(241, 21);
+            this.txtFile.Size = new System.Drawing.Size(246, 24);
             this.txtFile.TabIndex = 1;
             // 
             // btnBrowse
             // 
-            this.btnBrowse.Location = new System.Drawing.Point(354, 28);
+            this.btnBrowse.Location = new System.Drawing.Point(360, 20);
             this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(75, 23);
+            this.btnBrowse.Size = new System.Drawing.Size(80, 28);
             this.btnBrowse.TabIndex = 2;
             this.btnBrowse.Text = "浏览(&B)";
             this.btnBrowse.UseVisualStyleBackColor = true;
@@ -62,9 +62,8 @@
             // 
             // frmSQLiteConfig
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(441, 126);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.ClientSize = new System.Drawing.Size(464, 291);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.txtFile);
             this.Controls.Add(this.label1);

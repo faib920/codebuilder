@@ -49,6 +49,7 @@
             this.lstTable.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn2,
             this.treeListColumn3});
+            this.lstTable.DataSource = null;
             this.lstTable.Footer = null;
             this.lstTable.GroupFont = new System.Drawing.Font("Consolas", 12F);
             this.lstTable.HandCursor = false;
@@ -60,7 +61,7 @@
             this.lstTable.ShowCheckBoxes = true;
             this.lstTable.ShowPlusMinus = true;
             this.lstTable.ShowPlusMinusLines = false;
-            this.lstTable.Size = new System.Drawing.Size(616, 362);
+            this.lstTable.Size = new System.Drawing.Size(616, 370);
             this.lstTable.SortKey = null;
             this.lstTable.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstTable.TabIndex = 2;
@@ -108,9 +109,9 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(553, 394);
+            this.btnCancel.Location = new System.Drawing.Point(548, 394);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(80, 28);
             this.btnCancel.TabIndex = 8;
             this.btnCancel.Text = "取消(&C)";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -118,9 +119,9 @@
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(472, 394);
+            this.btnOk.Location = new System.Drawing.Point(462, 394);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(80, 28);
             this.btnOk.TabIndex = 7;
             this.btnOk.Text = "确定(&O)";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -131,7 +132,7 @@
             this.btnAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnAll.Location = new System.Drawing.Point(12, 394);
             this.btnAll.Name = "btnAll";
-            this.btnAll.Size = new System.Drawing.Size(75, 23);
+            this.btnAll.Size = new System.Drawing.Size(80, 28);
             this.btnAll.TabIndex = 9;
             this.btnAll.Text = "全选(&A)";
             this.btnAll.UseVisualStyleBackColor = true;
@@ -139,8 +140,7 @@
             // 
             // frmTableSelector
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(640, 433);
             this.Controls.Add(this.btnAll);
             this.Controls.Add(this.lstTable);

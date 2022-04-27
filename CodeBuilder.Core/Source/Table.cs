@@ -81,24 +81,28 @@ namespace CodeBuilder.Core.Source
         /// <summary>
         /// 获取外键集合。
         /// </summary>
+        [Description("外键集合。")]
         [Browsable(false)]
         public List<Reference> ForeignKeys { get; private set; }
 
         /// <summary>
         /// 获取子键集合。
         /// </summary>
+        [Description("子键集合。")]
         [Browsable(false)]
         public List<Reference> SubKeys { get; private set; }
 
         /// <summary>
         /// 获取主键集合。
         /// </summary>
+        [Description("主键集合。")]
         [Browsable(false)]
         public List<Column> PrimaryKeys { get; private set; }
 
         /// <summary>
         /// 获取字段集合。
         /// </summary>
+        [Description("字段集合。")]
         [Browsable(false)]
         public List<Column> Columns { get; private set; }
 

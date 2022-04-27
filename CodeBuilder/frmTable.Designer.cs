@@ -103,58 +103,56 @@
             this.toolStripMenuItem2,
             this.mnuBuild});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(161, 146);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 158);
             // 
             // mnuSelAllTable
             // 
             this.mnuSelAllTable.Name = "mnuSelAllTable";
-            this.mnuSelAllTable.Size = new System.Drawing.Size(160, 26);
+            this.mnuSelAllTable.Size = new System.Drawing.Size(180, 24);
             this.mnuSelAllTable.Text = "选择所有表";
             this.mnuSelAllTable.Click += new System.EventHandler(this.mnuSelAllTable_Click);
             // 
             // mnuSelInvTable
             // 
             this.mnuSelInvTable.Name = "mnuSelInvTable";
-            this.mnuSelInvTable.Size = new System.Drawing.Size(160, 26);
+            this.mnuSelInvTable.Size = new System.Drawing.Size(180, 24);
             this.mnuSelInvTable.Text = "反向选择表";
             this.mnuSelInvTable.Click += new System.EventHandler(this.mnuSelInvTable_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(157, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuSelAllColumn
             // 
             this.mnuSelAllColumn.Name = "mnuSelAllColumn";
-            this.mnuSelAllColumn.Size = new System.Drawing.Size(160, 26);
+            this.mnuSelAllColumn.Size = new System.Drawing.Size(180, 24);
             this.mnuSelAllColumn.Text = "选择所有列";
             this.mnuSelAllColumn.Click += new System.EventHandler(this.mnuSelAllColumn_Click);
             // 
             // mnuSelInvColumn
             // 
             this.mnuSelInvColumn.Name = "mnuSelInvColumn";
-            this.mnuSelInvColumn.Size = new System.Drawing.Size(160, 26);
+            this.mnuSelInvColumn.Size = new System.Drawing.Size(180, 24);
             this.mnuSelInvColumn.Text = "反向选择列";
             this.mnuSelInvColumn.Click += new System.EventHandler(this.mnuSelInvColumn_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(157, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuBuild
             // 
             this.mnuBuild.Name = "mnuBuild";
-            this.mnuBuild.Size = new System.Drawing.Size(160, 26);
+            this.mnuBuild.Size = new System.Drawing.Size(180, 24);
             this.mnuBuild.Text = "生成预览";
             this.mnuBuild.Click += new System.EventHandler(this.mnuBuild_Click);
             // 
             // frmTable
             // 
             this.AllowEndUserDocking = false;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(672, 409);
             this.CloseButtonVisible = false;
             this.Controls.Add(this.lstObject);

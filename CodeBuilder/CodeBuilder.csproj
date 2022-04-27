@@ -118,9 +118,6 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="DevHosting.cs" />
-    <Compile Include="DockForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="OnlinePluginData.cs" />
     <Compile Include="OnlineTemplateData.cs" />
     <Compile Include="VersionHelper.cs" />

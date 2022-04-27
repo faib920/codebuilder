@@ -88,6 +88,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\lib\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CancellationTokenScope.cs" />
@@ -99,7 +102,13 @@
     </Compile>
     <Compile Include="ExtendPropertyAttribute.cs" />
     <Compile Include="FileTypeHelper.cs" />
-    <Compile Include="IClosableDockManaged.cs" />
+    <Compile Include="Forms\DockFormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IClosableDockManaged.cs" />
     <Compile Include="IDevHosting.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="Initializers\IProfileInitializer.cs" />
@@ -174,6 +183,12 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DockFormBase.resx">
+      <DependentUpon>DockFormBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormBase.resx">
+      <DependentUpon>FormBase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

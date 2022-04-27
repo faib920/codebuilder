@@ -47,7 +47,7 @@ namespace CodeBuilder.Tools.Tools
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(87, 173);
+            this.label4.Location = new System.Drawing.Point(87, 174);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 7;
@@ -61,7 +61,7 @@ namespace CodeBuilder.Tools.Tools
             "|",
             ";",
             ","});
-            this.comboBox1.Location = new System.Drawing.Point(134, 170);
+            this.comboBox1.Location = new System.Drawing.Point(141, 171);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 20);
             this.comboBox1.TabIndex = 6;
@@ -89,7 +89,7 @@ namespace CodeBuilder.Tools.Tools
             // 
             // txtFormatter
             // 
-            this.txtFormatter.Location = new System.Drawing.Point(87, 36);
+            this.txtFormatter.Location = new System.Drawing.Point(87, 40);
             this.txtFormatter.Multiline = true;
             this.txtFormatter.Name = "txtFormatter";
             this.txtFormatter.Size = new System.Drawing.Size(535, 121);
@@ -108,11 +108,11 @@ namespace CodeBuilder.Tools.Tools
             // 
             // txtSource
             // 
-            this.txtSource.Location = new System.Drawing.Point(87, 201);
+            this.txtSource.Location = new System.Drawing.Point(87, 204);
             this.txtSource.Multiline = true;
             this.txtSource.Name = "txtSource";
             this.txtSource.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtSource.Size = new System.Drawing.Size(535, 222);
+            this.txtSource.Size = new System.Drawing.Size(535, 219);
             this.txtSource.TabIndex = 1;
             this.txtSource.Click += new System.EventHandler(this.txtSource_Click);
             this.txtSource.TextChanged += new System.EventHandler(this.txtSource_TextChanged);
@@ -128,18 +128,18 @@ namespace CodeBuilder.Tools.Tools
             // 
             // btnSample
             // 
-            this.btnSample.Location = new System.Drawing.Point(501, 168);
+            this.btnSample.Location = new System.Drawing.Point(542, 169);
             this.btnSample.Name = "btnSample";
-            this.btnSample.Size = new System.Drawing.Size(121, 23);
+            this.btnSample.Size = new System.Drawing.Size(80, 28);
             this.btnSample.TabIndex = 8;
-            this.btnSample.Text = "示例";
+            this.btnSample.Text = "示例(&I)";
             this.btnSample.UseVisualStyleBackColor = true;
             this.btnSample.Click += new System.EventHandler(this.btnSample_Click);
             // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(272, 174);
+            this.checkBox1.Location = new System.Drawing.Point(278, 173);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(84, 16);
             this.checkBox1.TabIndex = 9;
@@ -179,8 +179,6 @@ namespace CodeBuilder.Tools.Tools
             // 
             // PropertyGenerator
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label6);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.label5);

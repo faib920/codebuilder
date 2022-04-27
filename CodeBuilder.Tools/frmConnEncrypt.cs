@@ -5,16 +5,18 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using System;
-using System.Windows.Forms;
 
 namespace CodeBuilder.Tools
 {
-    public partial class frmConnEncrypt : Form
+    public partial class frmConnEncrypt : FormBase
     {
         public frmConnEncrypt()
         {
             InitializeComponent();
+            Icon = Util.GetIcon();
         }
 
         private void btnEncrypt_Click(object sender, EventArgs e)

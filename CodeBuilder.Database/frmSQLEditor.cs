@@ -7,13 +7,14 @@
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
 using CodeBuilder.Core.Source;
+using CodeBuilder.Core.Forms;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace CodeBuilder.Database
 {
-    public partial class frmSQLEditor : Form
+    public partial class frmSQLEditor : FormBase
     {
         private readonly IDevHosting _hosting;
 

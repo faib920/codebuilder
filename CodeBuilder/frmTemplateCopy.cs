@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
 using CodeBuilder.Core.Template;
+using CodeBuilder.Core.Forms;
 using Fireasy.Common.Serialization;
 using System;
 using System.IO;
@@ -15,7 +16,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmTemplateCopy : Form
+    public partial class frmTemplateCopy : FormBase
     {
         private readonly IDevHosting _hosting;
 

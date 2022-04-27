@@ -45,8 +45,10 @@
             this.listBox1.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1,
             this.treeListColumn2});
+            this.listBox1.DataSource = null;
             this.listBox1.Footer = null;
             this.listBox1.GroupFont = new System.Drawing.Font("Consolas", 12F);
+            this.listBox1.HandCursor = false;
             this.listBox1.Location = new System.Drawing.Point(12, 12);
             this.listBox1.Name = "listBox1";
             this.listBox1.NoneItemText = "没有可显示的数据";
@@ -54,28 +56,36 @@
             this.listBox1.ShowPlusMinus = true;
             this.listBox1.ShowPlusMinusLines = false;
             this.listBox1.Size = new System.Drawing.Size(532, 291);
+            this.listBox1.SortKey = null;
+            this.listBox1.SortOrder = System.Windows.Forms.SortOrder.None;
             this.listBox1.TabIndex = 0;
             // 
             // treeListColumn1
             // 
+            this.treeListColumn1.CellForeColor = System.Drawing.Color.Empty;
             this.treeListColumn1.ForeColor = System.Drawing.Color.Empty;
+            this.treeListColumn1.Formatter = null;
             this.treeListColumn1.Image = null;
             this.treeListColumn1.Text = "名称";
+            this.treeListColumn1.Validator = null;
             this.treeListColumn1.Width = 200;
             // 
             // treeListColumn2
             // 
+            this.treeListColumn2.CellForeColor = System.Drawing.Color.Empty;
             this.treeListColumn2.ForeColor = System.Drawing.Color.Empty;
+            this.treeListColumn2.Formatter = null;
             this.treeListColumn2.Image = null;
             this.treeListColumn2.Text = "备注";
+            this.treeListColumn2.Validator = null;
             this.treeListColumn2.Width = 200;
             // 
             // btnRemove
             // 
             this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRemove.Location = new System.Drawing.Point(307, 317);
+            this.btnRemove.Location = new System.Drawing.Point(292, 316);
             this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnRemove.Size = new System.Drawing.Size(80, 28);
             this.btnRemove.TabIndex = 1;
             this.btnRemove.Text = "解除(&U)";
             this.btnRemove.UseVisualStyleBackColor = true;
@@ -84,9 +94,9 @@
             // btnBind
             // 
             this.btnBind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBind.Location = new System.Drawing.Point(388, 317);
+            this.btnBind.Location = new System.Drawing.Point(378, 316);
             this.btnBind.Name = "btnBind";
-            this.btnBind.Size = new System.Drawing.Size(75, 23);
+            this.btnBind.Size = new System.Drawing.Size(80, 28);
             this.btnBind.TabIndex = 2;
             this.btnBind.Text = "绑定(&B)";
             this.btnBind.UseVisualStyleBackColor = true;
@@ -96,17 +106,16 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(469, 317);
+            this.btnCancel.Location = new System.Drawing.Point(464, 316);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(80, 28);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "取消(&C)";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // ForeignKeyEditorForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(556, 355);
             this.Controls.Add(this.btnCancel);

@@ -44,42 +44,42 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(34, 86);
+            this.label2.Location = new System.Drawing.Point(35, 57);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 12);
+            this.label2.Size = new System.Drawing.Size(74, 19);
             this.label2.TabIndex = 1;
             this.label2.Text = "连接字符串";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(34, 41);
+            this.label3.Location = new System.Drawing.Point(34, 21);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 12);
+            this.label3.Size = new System.Drawing.Size(74, 19);
             this.label3.TabIndex = 2;
             this.label3.Text = "数据源名称";
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(115, 38);
+            this.txtName.Location = new System.Drawing.Point(115, 19);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(324, 21);
+            this.txtName.Size = new System.Drawing.Size(369, 24);
             this.txtName.TabIndex = 4;
             // 
             // txtConnStr
             // 
-            this.txtConnStr.Location = new System.Drawing.Point(115, 83);
+            this.txtConnStr.Location = new System.Drawing.Point(115, 58);
             this.txtConnStr.Multiline = true;
             this.txtConnStr.Name = "txtConnStr";
             this.txtConnStr.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtConnStr.Size = new System.Drawing.Size(324, 126);
+            this.txtConnStr.Size = new System.Drawing.Size(369, 154);
             this.txtConnStr.TabIndex = 5;
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(202, 237);
+            this.btnOk.Location = new System.Drawing.Point(318, 227);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(80, 28);
             this.btnOk.TabIndex = 6;
             this.btnOk.Text = "确定(&O)";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -88,9 +88,9 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(364, 237);
+            this.btnCancel.Location = new System.Drawing.Point(404, 227);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(80, 28);
             this.btnCancel.TabIndex = 8;
             this.btnCancel.Text = "取消(&C)";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -101,9 +101,9 @@
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(283, 237);
+            this.btnTest.Location = new System.Drawing.Point(201, 227);
             this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(75, 23);
+            this.btnTest.Size = new System.Drawing.Size(80, 28);
             this.btnTest.TabIndex = 7;
             this.btnTest.Text = "测试(&T)";
             this.btnTest.UseVisualStyleBackColor = true;
@@ -111,9 +111,9 @@
             // 
             // btnConfig
             // 
-            this.btnConfig.Location = new System.Drawing.Point(121, 237);
+            this.btnConfig.Location = new System.Drawing.Point(115, 227);
             this.btnConfig.Name = "btnConfig";
-            this.btnConfig.Size = new System.Drawing.Size(75, 23);
+            this.btnConfig.Size = new System.Drawing.Size(80, 28);
             this.btnConfig.TabIndex = 9;
             this.btnConfig.Text = "向导(&G)";
             this.btnConfig.UseVisualStyleBackColor = true;
@@ -122,10 +122,9 @@
             // frmSourceEdit
             // 
             this.AcceptButton = this.btnOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(494, 287);
+            this.ClientSize = new System.Drawing.Size(538, 272);
             this.Controls.Add(this.btnConfig);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnCancel);

@@ -5,7 +5,7 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
-namespace CodeBuilder.Core
+namespace CodeBuilder.Core.Forms
 {
     /// <summary>
     /// 表示可受 Dock 管理关闭。

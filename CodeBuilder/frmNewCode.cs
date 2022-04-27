@@ -6,13 +6,14 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using System;
 using System.IO;
 using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmNewCode : Form
+    public partial class frmNewCode : FormBase
     {
         private readonly IDevHosting _hosting;
 

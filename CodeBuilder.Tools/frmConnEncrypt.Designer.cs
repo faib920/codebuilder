@@ -44,36 +44,35 @@
             // 
             // txt2
             // 
-            this.txt2.Location = new System.Drawing.Point(12, 235);
+            this.txt2.Location = new System.Drawing.Point(12, 228);
             this.txt2.Multiline = true;
             this.txt2.Name = "txt2";
-            this.txt2.Size = new System.Drawing.Size(700, 167);
+            this.txt2.Size = new System.Drawing.Size(700, 177);
             this.txt2.TabIndex = 1;
             // 
             // btnEncrypt
             // 
-            this.btnEncrypt.Location = new System.Drawing.Point(12, 197);
+            this.btnEncrypt.Location = new System.Drawing.Point(12, 191);
             this.btnEncrypt.Name = "btnEncrypt";
-            this.btnEncrypt.Size = new System.Drawing.Size(75, 23);
+            this.btnEncrypt.Size = new System.Drawing.Size(80, 28);
             this.btnEncrypt.TabIndex = 2;
-            this.btnEncrypt.Text = "加密↓";
+            this.btnEncrypt.Text = "加密(&E) ↓";
             this.btnEncrypt.UseVisualStyleBackColor = true;
             this.btnEncrypt.Click += new System.EventHandler(this.btnEncrypt_Click);
             // 
             // btnDecrypt
             // 
-            this.btnDecrypt.Location = new System.Drawing.Point(93, 197);
+            this.btnDecrypt.Location = new System.Drawing.Point(98, 191);
             this.btnDecrypt.Name = "btnDecrypt";
-            this.btnDecrypt.Size = new System.Drawing.Size(75, 23);
+            this.btnDecrypt.Size = new System.Drawing.Size(80, 28);
             this.btnDecrypt.TabIndex = 3;
-            this.btnDecrypt.Text = "解密↑";
+            this.btnDecrypt.Text = "解密(&D) ↑";
             this.btnDecrypt.UseVisualStyleBackColor = true;
             this.btnDecrypt.Click += new System.EventHandler(this.btnDecrypt_Click);
             // 
             // frmConnEncrypt
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(726, 421);
             this.Controls.Add(this.btnDecrypt);
             this.Controls.Add(this.btnEncrypt);

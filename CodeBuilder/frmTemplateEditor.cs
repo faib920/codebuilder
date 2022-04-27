@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
 using CodeBuilder.Core.Template;
+using CodeBuilder.Core.Forms;
 using CodeBuilder.Properties;
 using Fireasy.Common.Extensions;
 using Fireasy.Common.Serialization;
@@ -23,7 +24,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmTemplateEditor : Form
+    public partial class frmTemplateEditor : FormBase
     {
         private List<string> _removeResources;
         private readonly IDevHosting _hosting;

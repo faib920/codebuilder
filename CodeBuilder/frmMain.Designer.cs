@@ -326,16 +326,16 @@
             this.spState,
             this.spCount,
             this.spbar});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 574);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 575);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1047, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(1047, 25);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // spState
             // 
             this.spState.Name = "spState";
-            this.spState.Size = new System.Drawing.Size(799, 21);
+            this.spState.Size = new System.Drawing.Size(1032, 20);
             this.spState.Spring = true;
             this.spState.Text = "就绪";
             this.spState.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -343,7 +343,7 @@
             // spCount
             // 
             this.spCount.Name = "spCount";
-            this.spCount.Size = new System.Drawing.Size(0, 21);
+            this.spCount.Size = new System.Drawing.Size(0, 20);
             // 
             // spbar
             // 
@@ -383,7 +383,7 @@
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
             this.splitter1.Location = new System.Drawing.Point(1044, 59);
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(3, 515);
+            this.splitter1.Size = new System.Drawing.Size(3, 516);
             this.splitter1.TabIndex = 4;
             this.splitter1.TabStop = false;
             // 
@@ -439,7 +439,7 @@
             this.dockMgr.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
             this.dockMgr.Location = new System.Drawing.Point(0, 59);
             this.dockMgr.Name = "dockMgr";
-            this.dockMgr.Size = new System.Drawing.Size(1044, 515);
+            this.dockMgr.Size = new System.Drawing.Size(1044, 516);
             this.dockMgr.TabIndex = 5;
             this.dockMgr.ContentAdded += new System.EventHandler<WeifenLuo.WinFormsUI.Docking.DockContentEventArgs>(this.dockMgr_ContentAdded);
             // 
@@ -484,8 +484,6 @@
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1047, 600);
             this.Controls.Add(this.dockMgr);
             this.Controls.Add(this.splitter1);

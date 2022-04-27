@@ -5,13 +5,14 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core.Forms;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmOutput : DockForm
+    public partial class frmOutput : DockFormBase
     {
         private readonly DevHosting _hosting;
 

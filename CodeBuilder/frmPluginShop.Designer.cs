@@ -75,9 +75,9 @@ namespace CodeBuilder
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.Location = new System.Drawing.Point(715, 428);
+            this.btnClose.Location = new System.Drawing.Point(711, 426);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(75, 23);
+            this.btnClose.Size = new System.Drawing.Size(80, 28);
             this.btnClose.TabIndex = 2;
             this.btnClose.Text = "关闭(&C)";
             this.btnClose.UseVisualStyleBackColor = true;
@@ -86,9 +86,9 @@ namespace CodeBuilder
             // btnUpdate
             // 
             this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUpdate.Location = new System.Drawing.Point(627, 428);
+            this.btnUpdate.Location = new System.Drawing.Point(625, 426);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(75, 23);
+            this.btnUpdate.Size = new System.Drawing.Size(80, 28);
             this.btnUpdate.TabIndex = 3;
             this.btnUpdate.Text = "更新";
             this.btnUpdate.UseVisualStyleBackColor = true;
@@ -100,9 +100,9 @@ namespace CodeBuilder
             this.chkSource.AutoSize = true;
             this.chkSource.Checked = true;
             this.chkSource.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkSource.Location = new System.Drawing.Point(50, 432);
+            this.chkSource.Location = new System.Drawing.Point(67, 429);
             this.chkSource.Name = "chkSource";
-            this.chkSource.Size = new System.Drawing.Size(60, 16);
+            this.chkSource.Size = new System.Drawing.Size(79, 24);
             this.chkSource.TabIndex = 4;
             this.chkSource.Text = "Source";
             this.chkSource.UseVisualStyleBackColor = true;
@@ -113,9 +113,9 @@ namespace CodeBuilder
             this.chkTemplate.AutoSize = true;
             this.chkTemplate.Checked = true;
             this.chkTemplate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTemplate.Location = new System.Drawing.Point(116, 432);
+            this.chkTemplate.Location = new System.Drawing.Point(152, 429);
             this.chkTemplate.Name = "chkTemplate";
-            this.chkTemplate.Size = new System.Drawing.Size(72, 16);
+            this.chkTemplate.Size = new System.Drawing.Size(97, 24);
             this.chkTemplate.TabIndex = 5;
             this.chkTemplate.Text = "Template";
             this.chkTemplate.UseVisualStyleBackColor = true;
@@ -126,9 +126,9 @@ namespace CodeBuilder
             this.chkTool.AutoSize = true;
             this.chkTool.Checked = true;
             this.chkTool.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTool.Location = new System.Drawing.Point(194, 432);
+            this.chkTool.Location = new System.Drawing.Point(255, 429);
             this.chkTool.Name = "chkTool";
-            this.chkTool.Size = new System.Drawing.Size(48, 16);
+            this.chkTool.Size = new System.Drawing.Size(61, 24);
             this.chkTool.TabIndex = 6;
             this.chkTool.Text = "Tool";
             this.chkTool.UseVisualStyleBackColor = true;
@@ -137,16 +137,14 @@ namespace CodeBuilder
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 433);
+            this.label1.Location = new System.Drawing.Point(12, 430);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 12);
+            this.label1.Size = new System.Drawing.Size(43, 20);
             this.label1.TabIndex = 7;
             this.label1.Text = "筛选:";
             // 
             // frmPluginShop
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(803, 465);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.chkTool);

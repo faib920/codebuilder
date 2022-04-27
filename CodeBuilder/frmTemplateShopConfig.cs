@@ -5,12 +5,14 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using System;
 using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmTemplateShopConfig : Form
+    public partial class frmTemplateShopConfig : FormBase
     {
         public frmTemplateShopConfig()
         {

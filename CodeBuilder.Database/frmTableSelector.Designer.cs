@@ -69,9 +69,9 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(458, 428);
+            this.btnCancel.Location = new System.Drawing.Point(453, 425);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(80, 28);
             this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "取消(&C)";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -79,9 +79,9 @@
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(377, 428);
+            this.btnOk.Location = new System.Drawing.Point(367, 425);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(80, 28);
             this.btnOk.TabIndex = 5;
             this.btnOk.Text = "确定(&O)";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -90,9 +90,9 @@
             // btnInv
             // 
             this.btnInv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnInv.Location = new System.Drawing.Point(99, 428);
+            this.btnInv.Location = new System.Drawing.Point(105, 425);
             this.btnInv.Name = "btnInv";
-            this.btnInv.Size = new System.Drawing.Size(75, 23);
+            this.btnInv.Size = new System.Drawing.Size(80, 28);
             this.btnInv.TabIndex = 8;
             this.btnInv.Text = "反选(&I)";
             this.btnInv.UseVisualStyleBackColor = true;
@@ -101,9 +101,9 @@
             // btnAll
             // 
             this.btnAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAll.Location = new System.Drawing.Point(18, 428);
+            this.btnAll.Location = new System.Drawing.Point(19, 425);
             this.btnAll.Name = "btnAll";
-            this.btnAll.Size = new System.Drawing.Size(75, 23);
+            this.btnAll.Size = new System.Drawing.Size(80, 28);
             this.btnAll.TabIndex = 7;
             this.btnAll.Text = "全选(&A)";
             this.btnAll.UseVisualStyleBackColor = true;
@@ -135,9 +135,9 @@
             // 
             // txtKeyword
             // 
-            this.txtKeyword.Location = new System.Drawing.Point(58, 12);
+            this.txtKeyword.Location = new System.Drawing.Point(61, 14);
             this.txtKeyword.Name = "txtKeyword";
-            this.txtKeyword.Size = new System.Drawing.Size(289, 21);
+            this.txtKeyword.Size = new System.Drawing.Size(289, 24);
             this.txtKeyword.TabIndex = 9;
             this.txtKeyword.WaterMarkText = "输入关键字或正则表达式，停留1秒或回车后筛选";
             this.txtKeyword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtKeyword_KeyDown);
@@ -147,16 +147,16 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(17, 17);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 12);
+            this.label1.Size = new System.Drawing.Size(38, 19);
             this.label1.TabIndex = 10;
             this.label1.Text = "过滤:";
             // 
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSave.Location = new System.Drawing.Point(195, 428);
+            this.btnSave.Location = new System.Drawing.Point(191, 425);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.Size = new System.Drawing.Size(80, 28);
             this.btnSave.TabIndex = 12;
             this.btnSave.Text = "暂存(&S)";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -165,9 +165,9 @@
             // btnClear
             // 
             this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClear.Location = new System.Drawing.Point(19, 428);
+            this.btnClear.Location = new System.Drawing.Point(19, 425);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(75, 23);
+            this.btnClear.Size = new System.Drawing.Size(80, 28);
             this.btnClear.TabIndex = 13;
             this.btnClear.Text = "清空(&C)";
             this.btnClear.UseVisualStyleBackColor = true;
@@ -207,7 +207,7 @@
             // 
             this.btnSQL.Location = new System.Drawing.Point(421, 12);
             this.btnSQL.Name = "btnSQL";
-            this.btnSQL.Size = new System.Drawing.Size(112, 23);
+            this.btnSQL.Size = new System.Drawing.Size(112, 28);
             this.btnSQL.TabIndex = 15;
             this.btnSQL.Text = "SQL 构造器";
             this.btnSQL.UseVisualStyleBackColor = true;
@@ -215,8 +215,6 @@
             // 
             // frmTableSelector
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 464);
             this.Controls.Add(this.btnSQL);
             this.Controls.Add(this.lstSaved);

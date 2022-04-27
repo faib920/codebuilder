@@ -5,6 +5,7 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core.Forms;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder.Core
 {
-    public partial class frmProcessor : Form
+    public partial class frmProcessor : FormBase
     {
         private Task task;
         private CancellationTokenSource cancelToken;

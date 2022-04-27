@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
 using CodeBuilder.Core.Template;
+using CodeBuilder.Core.Forms;
 using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
 using System;
@@ -17,11 +18,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 
 namespace CodeBuilder
 {
-    public partial class frmEditor : DockContent, IClosableDockManaged, IChangeManager
+    public partial class frmEditor : DockFormBase, IClosableDockManaged, IChangeManager
     {
         private string _caption = "未命名";
         private bool _isChanged = false;

@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using System;
+using System.ComponentModel;
 using System.Reflection;
 
 namespace CodeBuilder.Core.Variable
@@ -20,21 +21,32 @@ namespace CodeBuilder.Core.Variable
             Name = property.Name;
             Type = property.PropertyType;
             TypeName = Util.GetTypeName(Type);
+
+            var desc = property.GetCustomAttribute<DescriptionAttribute>();
+            if (desc != null)
+            {
+                Description = desc.Description;
+            }
         }
 
         /// <summary>
-        /// 获取或设置属性名称。
+        /// 获取属性名称。
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         /// <summary>
-        /// 获取或设置属性类型。
+        /// 获取属性类型。
         /// </summary>
-        public Type Type { get; set; }
+        public Type Type { get; private set; }
 
         /// <summary>
-        /// 获取或设置属性描述名称。
+        /// 获取描述名称。
         /// </summary>
-        public string TypeName { get; set; }
+        public string TypeName { get; private set; }
+
+        /// <summary>
+        /// 获取描述。
+        /// </summary>
+        public string Description { get; private set; }
     }
 }

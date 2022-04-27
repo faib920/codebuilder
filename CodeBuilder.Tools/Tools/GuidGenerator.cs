@@ -55,5 +55,6 @@ namespace CodeBuilder.Tools.Tools
         {
             textBox2.Enabled = radioButton6.Checked;
         }
+
     }
 }

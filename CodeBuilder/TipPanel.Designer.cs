@@ -32,8 +32,6 @@
             // 
             // TipPanel
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::CodeBuilder.Properties.Resources.help;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Cursor = System.Windows.Forms.Cursors.Hand;

@@ -38,6 +38,7 @@ namespace CodeBuilder.Core.Source
         /// <summary>
         /// 获取关联的数据表。
         /// </summary>
+        [Description("关联的数据表。")]
         [Browsable(false)]
         public Table FkTable { get; private set; }
 
@@ -45,18 +46,21 @@ namespace CodeBuilder.Core.Source
         /// 获取关联的字段。
         /// </summary>
         [Browsable(false)]
+        [Description("关联的字段。")]
         public Column FkColumn { get; private set; }
 
         /// <summary>
         /// 获取主表。
         /// </summary>
         [Browsable(false)]
+        [Description("主表。")]
         public Table PkTable { get; private set; }
 
         /// <summary>
         /// 获取主表字段。
         /// </summary>
         [Browsable(false)]
+        [Description("主表字段。")]
         public Column PkColumn { get; private set; }
 
         /// <summary>

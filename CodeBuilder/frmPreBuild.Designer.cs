@@ -51,9 +51,9 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(476, 478);
+            this.btnOk.Location = new System.Drawing.Point(466, 476);
             this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(75, 23);
+            this.btnOk.Size = new System.Drawing.Size(80, 28);
             this.btnOk.TabIndex = 5;
             this.btnOk.Text = "确定(&O)";
             this.btnOk.UseVisualStyleBackColor = true;
@@ -62,18 +62,18 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(557, 478);
+            this.btnCancel.Location = new System.Drawing.Point(552, 476);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(80, 28);
             this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "取消(&C)";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnSelectPath
             // 
-            this.btnSelectPath.Location = new System.Drawing.Point(367, 478);
+            this.btnSelectPath.Location = new System.Drawing.Point(367, 476);
             this.btnSelectPath.Name = "btnSelectPath";
-            this.btnSelectPath.Size = new System.Drawing.Size(61, 23);
+            this.btnSelectPath.Size = new System.Drawing.Size(80, 28);
             this.btnSelectPath.TabIndex = 14;
             this.btnSelectPath.Text = "浏览(&B)";
             this.btnSelectPath.UseVisualStyleBackColor = true;
@@ -82,16 +82,16 @@
             // txtPath
             // 
             this.txtPath.BackColor = System.Drawing.SystemColors.Window;
-            this.txtPath.Location = new System.Drawing.Point(79, 480);
+            this.txtPath.Location = new System.Drawing.Point(91, 477);
             this.txtPath.Name = "txtPath";
             this.txtPath.ReadOnly = true;
-            this.txtPath.Size = new System.Drawing.Size(272, 21);
+            this.txtPath.Size = new System.Drawing.Size(270, 21);
             this.txtPath.TabIndex = 13;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(14, 483);
+            this.label2.Location = new System.Drawing.Point(12, 480);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(59, 12);
             this.label2.TabIndex = 12;
@@ -100,7 +100,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 13);
+            this.label1.Location = new System.Drawing.Point(12, 10);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 12);
             this.label1.TabIndex = 11;
@@ -140,8 +140,6 @@
             // 
             // frmPreBuild
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(646, 515);
             this.Controls.Add(this.btnSelectPath);

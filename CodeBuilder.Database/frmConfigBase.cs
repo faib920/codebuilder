@@ -5,15 +5,15 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core.Forms;
 using Fireasy.Data;
 using Fireasy.Data.Provider;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace CodeBuilder.Database
 {
-    public partial class frmConfigBase : Form, IConnectionConfig
+    public partial class frmConfigBase : FormBase, IConnectionConfig
     {
         public frmConfigBase()
         {

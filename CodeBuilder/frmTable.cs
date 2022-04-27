@@ -9,6 +9,7 @@ using CodeBuilder.Core;
 using CodeBuilder.Core.Initializers;
 using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Template;
+using CodeBuilder.Core.Forms;
 using Fireasy.Common.Extensions;
 using Fireasy.Windows.Forms;
 using System;
@@ -19,7 +20,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmTable : DockForm
+    public partial class frmTable : DockFormBase
     {
         private readonly IDevHosting _hosting;
 

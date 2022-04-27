@@ -5,13 +5,15 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmTip : Form
+    public partial class frmTip : FormBase
     {
         public frmTip()
         {

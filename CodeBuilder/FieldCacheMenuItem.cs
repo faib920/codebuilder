@@ -38,6 +38,7 @@ namespace CodeBuilder
             foreach (var p in properties)
             {
                 var item = new ToolStripMenuItem(string.Format("{0} ({1})", p.Name, p.TypeName));
+                item.ToolTipText = p.Description;
                 item.Tag = p.Name;
                 item.Click += (o, e) =>
                     {

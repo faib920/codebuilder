@@ -1,11 +1,12 @@
-﻿using CodeBuilder.Core.Source;
+﻿using CodeBuilder.Core.Forms;
+using CodeBuilder.Core.Source;
 using Fireasy.Windows.Forms;
 using System;
 using System.Windows.Forms;
 
 namespace CodeBuilder.Core.Designer
 {
-    public partial class ForeignKeyEditorForm : Form
+    public partial class ForeignKeyEditorForm : FormBase
     {
         private Column _column;
 

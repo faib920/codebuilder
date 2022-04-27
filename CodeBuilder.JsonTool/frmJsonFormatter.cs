@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using Fireasy.Common.Extensions;
 using Fireasy.Common.Serialization;
 using Fireasy.Windows.Forms;
@@ -17,11 +18,10 @@ using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 
 namespace CodeBuilder.JsonTool
 {
-    public partial class frmJsonFormatter : DockContent, IClosableDockManaged
+    public partial class frmJsonFormatter : DockFormBase, IClosableDockManaged
     {
         private bool _isNew = false;
         private List<TreeListItem> _searchItems;
@@ -408,6 +408,25 @@ namespace CodeBuilder.JsonTool
             {
                 var item = treeList1.SelectedItems[0];
                 item.BackgroundColor = Color.Empty;
+            }
+        }
+
+        private void mnuExpand_Click(object sender, EventArgs e)
+        {
+            ExpandNodes(treeList1.Items, true);
+        }
+
+        private void mnuCollapse_Click(object sender, EventArgs e)
+        {
+            ExpandNodes(treeList1.Items, false);
+        }
+
+        private void ExpandNodes(TreeListItemCollection items, bool isExpand)
+        {
+            foreach (var item in items)
+            {
+                item.Expended = isExpand;
+                ExpandNodes(item.Items, isExpand);
             }
         }
     }

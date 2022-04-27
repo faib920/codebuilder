@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using System;
@@ -15,7 +16,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmFindAndReplace : Form
+    public partial class frmFindAndReplace : FormBase
     {
         private TextEditorSearcher _search;
         private TextEditorControl _editor;
@@ -37,13 +38,13 @@ namespace CodeBuilder
             {
                 _editor = value;
                 _search.Document = _editor.Document;
-                UpdateTitleBar();
+                UpdateTitleBar(false);
             }
         }
 
-        private void UpdateTitleBar()
+        private void UpdateTitleBar(bool replaceMode)
         {
-            Text = ReplaceMode ? "查找替换" : "查找";
+            Text = replaceMode ? "查找替换" : "查找";
         }
 
         public void ShowFor(TextEditorControl editor, bool replaceMode)
@@ -93,18 +94,18 @@ namespace CodeBuilder
                 AcceptButton = value ? btnReplace : btnFindNext;
                 if (value)
                 {
-                    btnCancel.Top = 124;
-                    chkMatchCase.Top = chkMatchWholeWord.Top = 77;
-                    Height = 205;
+                    chkMatchCase.Top = chkMatchWholeWord.Top = 85;
+                    Height = 235;
+                    btnCancel.Top = 149;
                 }
                 else
                 {
-                    btnCancel.Top = 97;
-                    chkMatchCase.Top = chkMatchWholeWord.Top = 47;
-                    Height = 177;
+                    btnCancel.Top = 115;
+                    chkMatchCase.Top = chkMatchWholeWord.Top = 52;
+                    Height = 198;
                 }
 
-                UpdateTitleBar();
+                UpdateTitleBar(value);
             }
         }
 
@@ -137,7 +138,7 @@ namespace CodeBuilder
             {
                 // user moved outside of the originally selected region
                 _search.ClearScanRegion();
-                UpdateTitleBar();
+                UpdateTitleBar(txtReplaceWith.Visible);
             }
 
             var startFrom = caret.Offset - (searchBackward ? 1 : 0);

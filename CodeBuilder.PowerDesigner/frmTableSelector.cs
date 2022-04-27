@@ -6,20 +6,21 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using CodeBuilder.Core.Source;
 using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace CodeBuilder.PowerDesigner
 {
-    public partial class frmTableSelector : Form
+    public partial class frmTableSelector : FormBase
     {
         private PdmDefinition _definition;
         private readonly IDevHosting _hosting;
 
         public frmTableSelector(IDevHosting hosting)
+            : base()
         {
             InitializeComponent();
             Icon = Util.GetIcon();

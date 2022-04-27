@@ -40,41 +40,40 @@ namespace CodeBuilder.JsonTool
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(32, 33);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 12);
+            this.label1.Size = new System.Drawing.Size(38, 19);
             this.label1.TabIndex = 0;
             this.label1.Text = "网址:";
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(73, 30);
+            this.textBox1.Location = new System.Drawing.Point(77, 31);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(359, 21);
+            this.textBox1.Size = new System.Drawing.Size(359, 24);
             this.textBox1.TabIndex = 1;
             // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(477, 22);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(80, 28);
             this.button1.TabIndex = 2;
-            this.button1.Text = "确定";
+            this.button1.Text = "确定(&O)";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(477, 54);
+            this.button2.Location = new System.Drawing.Point(477, 58);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(80, 28);
             this.button2.TabIndex = 3;
-            this.button2.Text = "取消";
+            this.button2.Text = "取消(&C)";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // frmWeburl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.button2;
             this.ClientSize = new System.Drawing.Size(592, 104);
             this.Controls.Add(this.button2);

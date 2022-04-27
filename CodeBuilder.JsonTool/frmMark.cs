@@ -5,12 +5,13 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core.Forms;
 using System;
 using System.Windows.Forms;
 
 namespace CodeBuilder.JsonTool
 {
-    public partial class frmMark : Form
+    public partial class frmMark : FormBase
     {
         public frmMark()
         {

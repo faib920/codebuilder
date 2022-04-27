@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using Fireasy.Common.Composition;
 using Fireasy.Common.Extensions;
 using Fireasy.Windows.Forms;
@@ -16,7 +17,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmOption : Form
+    public partial class frmOption : FormBase
     {
         private bool _isNeedRestart;
         private List<string> _pluginRemoved = new List<string>();
