@@ -413,12 +413,16 @@ namespace CodeBuilder.JsonTool
 
         private void mnuExpand_Click(object sender, EventArgs e)
         {
+            treeList1.BeginUpdate();
             ExpandNodes(treeList1.Items, true);
+            treeList1.EndUpdate();
         }
 
         private void mnuCollapse_Click(object sender, EventArgs e)
         {
+            treeList1.BeginUpdate();
             ExpandNodes(treeList1.Items, false);
+            treeList1.EndUpdate();
         }
 
         private void ExpandNodes(TreeListItemCollection items, bool isExpand)

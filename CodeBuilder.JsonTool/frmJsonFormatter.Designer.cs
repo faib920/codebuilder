@@ -303,7 +303,7 @@ namespace CodeBuilder.JsonTool
             // mnuView
             // 
             this.mnuView.Name = "mnuView";
-            this.mnuView.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.mnuView.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
             this.mnuView.Size = new System.Drawing.Size(210, 24);
             this.mnuView.Text = "预览和美化";
             this.mnuView.Click += new System.EventHandler(this.mnuView_Click);
