@@ -192,7 +192,7 @@ namespace CodeBuilder
             }
             catch (Exception exp)
             {
-                _hosting.ShowError("无法连接到模板路径。");
+                _hosting.ShowError("无法连接到模板路径。" + exp.Message);
             }
             finally
             {
@@ -212,7 +212,11 @@ namespace CodeBuilder
                     var fileName = Path.GetFileName(entry.Name);
                     var path = string.Empty;
 
-                    if (directoryName.StartsWith("extension.profile"))
+                    if (directoryName.StartsWith("extension.common"))
+                    {
+                        path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "extensions", "common");
+                    }
+                    else if (directoryName.StartsWith("extension.profile"))
                     {
                         path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "extensions", "profile");
                     }

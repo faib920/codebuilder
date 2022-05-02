@@ -178,7 +178,7 @@ internal class SchemaHelper
                 propertyType = "Guid";
                 break;
             case DbType.Binary:
-                propertyType = "byte[]";
+                propertyType = column.DataType == "timestamp" ? "DateTime" : "byte[]";
                 break;
         }
 

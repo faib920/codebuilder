@@ -114,6 +114,7 @@
     <Compile Include="Initializers\IProfileInitializer.cs" />
     <Compile Include="RequiredCheckAttribute.cs" />
     <Compile Include="SchemaUnity.cs" />
+    <Compile Include="Template\TemplateExtension.cs" />
     <Compile Include="Tool\MultipleToolProviderBase.cs" />
     <Compile Include="ValidationUnity.cs" />
     <Compile Include="TemplateUnity.cs" />

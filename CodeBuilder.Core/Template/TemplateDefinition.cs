@@ -89,6 +89,16 @@ namespace CodeBuilder.Core.Template
         public List<string> Resources { get; private set; }
 
         /// <summary>
+        /// 获取或设置模板扩展。
+        /// </summary>
+        public TemplateExtension Extension { get; set; }
+
+        /// <summary>
+        /// 获取或设置分组。
+        /// </summary>
+        public string Category { get; set; }
+
+        /// <summary>
         /// 获取所有部件列表。
         /// </summary>
         /// <returns></returns>
