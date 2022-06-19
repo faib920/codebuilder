@@ -23,6 +23,7 @@ namespace CodeBuilder.Database
         private List<Table> _tables;
         private List<Table> _saved;
         private readonly IDevHosting _hosting;
+        private readonly List<string> _selectedNames;
 
         public frmTableSelector()
         {
@@ -30,11 +31,12 @@ namespace CodeBuilder.Database
             Icon = Util.GetIcon();
         }
 
-        public frmTableSelector(IDevHosting hosting, IEnumerable<Table> tables)
+        public frmTableSelector(IDevHosting hosting, IEnumerable<Table> tables, List<string> selectedNames)
             : this()
         {
             _tables = tables.ToList();
             _saved = new List<Table>();
+            _selectedNames = selectedNames;
             FillTables(string.Empty);
             _hosting = hosting;
         }
@@ -71,9 +73,19 @@ namespace CodeBuilder.Database
 
                 item.Cells[0].Value = t.Name;
                 item.Cells[1].Value = t.Description;
+
+                if (_selectedNames.Contains(t.Name))
+                {
+                    item.Checked = true;
+                }
             }
 
             lstTable.EndUpdate();
+
+            if (lstTable.Items.Count == 1)
+            {
+                lstTable.Items[0].Checked = true;
+            }
         }
 
         private void txtKeyword_KeyDown(object sender, KeyEventArgs e)

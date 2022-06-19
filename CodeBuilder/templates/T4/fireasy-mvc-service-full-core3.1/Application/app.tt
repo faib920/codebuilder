@@ -1,0 +1,130 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Fireasy.Common.Extensions;
+using Fireasy.Common.Ioc;
+using Fireasy.Common.Mapper;
+using Fireasy.Data;
+using Fireasy.Data.Entity;
+using Fireasy.Data.Entity.Linq;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Entities;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain.Infrastructure;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.Dtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.QueryDtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Services<#= CheckDot(host.Profile.SubNameSpace) #>
+{
+    /// <summary>
+    /// <#= table.Description #>应用服务类
+    /// </summary>
+    public class <#= table.ClassName #>AppService : I<#= table.ClassName #>AppService, ITransientService
+    {
+        private readonly <#= CheckNull(host.Profile.Module) #>DbContext _dbContext;
+        private readonly IObjectMapper _objectMapper;
+
+        public <#= table.ClassName #>AppService(<#= CheckNull(host.Profile.Module) #>DbContext dbContext, IObjectMapper objectMapper)
+        {
+            _dbContext = dbContext;
+            _objectMapper = objectMapper;
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        public async Task<(int Total, List<<#= table.ClassName #>Dto> Items)> GetListAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+            var pager = new DataPager(queryDto.PageSize, queryDto.PageIndex);
+            var list = await GetQueryable(_dbContext.<#= StringExtension.ToPlural(table.ClassName) #>, queryDto)
+                .Segment(pager)
+                .ToListAsync();
+            return (pager.RecordCount, _objectMapper.Map<List<<#= table.ClassName #>>, List<<#= table.ClassName #>Dto>>(list));
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<<#= table.ClassName #>Dto> GetAsync(<#= ptype #> id)
+        {
+            var entity = await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.GetAsync(id);
+            return _objectMapper.Map<<#= table.ClassName #>, <#= table.ClassName #>Dto>(entity);
+        }
+
+        /// <summary>
+        /// 保存<#= table.Description #>
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        public async Task<<#= table.ClassName #>Dto> SaveAsync(<#= table.ClassName #>SaveDto dto)
+        {
+            <#= table.ClassName #> entity;
+<#
+    if (ptype == "string")
+    {
+#>
+            if (string.IsNullOrEmpty(dto.<#= pk #>))
+            {
+                entity = _objectMapper.Map<<#= table.ClassName #>SaveDto, <#= table.ClassName #>>(dto);
+                entity.<#= pk #> = Guid.NewGuid().ToString();
+                await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.InsertAsync(entity);
+            }
+<#
+    }
+    else
+    {
+#>
+            if (dto.<#= pk #> == 0 || dto.<#= pk #> == null)
+            {
+                entity = _objectMapper.Map<<#= table.ClassName #>SaveDto, <#= table.ClassName #>>(dto);
+                await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.InsertAsync(entity);
+            }
+<#
+    }
+#>
+            else
+            {
+                entity = await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.FirstOrDefaultAsync(s => s.<#= pk #> == dto.<#= pk #>);
+                _objectMapper.Map(dto, entity);
+                await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.UpdateAsync(entity);
+            }
+
+            return _objectMapper.Map<<#= table.ClassName #>, <#= table.ClassName #>Dto>(entity);
+        }
+
+        /// <summary>
+        /// 删除<#= table.Description #>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<bool> DeleteAsync(<#= ptype #> id)
+        {
+            await _dbContext.<#= StringExtension.ToPlural(table.ClassName) #>.DeleteAsync(new PropertyValue[] { id });
+            return true;
+        }
+        
+        /// <summary>
+        /// 拼接查询条件
+        /// </summary>
+        /// <param name="queryable"></param>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        private IQueryable<<#= table.ClassName #>> GetQueryable(IQueryable<<#= table.ClassName #>> queryable, <#= table.ClassName #>QueryDto queryDto)
+        {
+            return queryable;
+        }
+    }
+}

@@ -1,0 +1,227 @@
+﻿{
+    "Name": "Fireasy for Mvc+Service 完整项目(.net core3.1)",
+    "Author": "Fireasy",
+    "Version": 1,
+    "Description": "基于 Fireasy 框架的 MVC 项目代码，包括实体模型、服务层、数据传输对象、控制器、列表视图和编辑视图。",
+    "Language": "CSharp",
+    "Partitions": [
+        {
+            "Name": "解决方案",
+            "FileName": "solution.tt",
+            "Output": "{ProjectCode}.sln",
+            "Loop": "None",
+            "Syntax": "C#",
+            "Color": "0,0,255"
+        }
+    ],
+    "Groups": [
+        {
+            "Name": "Web",
+            "Color": null,
+            "Groups": [],
+            "Partitions": [
+                {
+                    "Name": "Web项目文件",
+                    "FileName": "Web\\web_proj.tt",
+                    "Output": "{ProjectCode}.Web\\{ProjectCode}.Web.csproj",
+                    "Loop": "None",
+                    "Syntax": "C#",
+                    "Color": "0,0,255"
+                },
+                {
+                    "Name": "Startup",
+                    "FileName": "Web\\startup.tt",
+                    "Output": "{ProjectCode}.Web\\Startup.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Program",
+                    "FileName": "Web\\program.tt",
+                    "Output": "{ProjectCode}.Web\\Program.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Controller",
+                    "FileName": "Web\\controller.tt",
+                    "Output": "{ProjectCode}.Web\\Areas\\{Module}\\Controllers\\{ClassName}Controller.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#",
+                    "Color": null
+                },
+                {
+                    "Name": "Index视图",
+                    "FileName": "Web\\indexview.tt",
+                    "Output": "{ProjectCode}.Web\\Areas\\{Module}\\Views\\{ClassName}\\Index.cshtml",
+                    "Loop": "Tables",
+                    "Syntax": "C#",
+                    "Color": null
+                },
+                {
+                    "Name": "Edit视图",
+                    "FileName": "Web\\editview.tt",
+                    "Output": "{ProjectCode}.Web\\Areas\\{Module}\\Views\\{ClassName}\\Edit.cshtml",
+                    "Loop": "Tables",
+                    "Syntax": "C#",
+                    "Color": null
+                },
+                {
+                    "Name": "HomeController",
+                    "FileName": "Web\\controller_home.tt",
+                    "Output": "{ProjectCode}.Web\\Controllers\\HomeController.cs",
+                    "Loop": "None",
+                    "Syntax": "C#",
+                    "Color": null
+                },
+                {
+                    "Name": "HomeIndex视图",
+                    "FileName": "Web\\indexview_home.tt",
+                    "Output": "{ProjectCode}.Web\\Views\\Home\\Index.cshtml",
+                    "Loop": "None",
+                    "Syntax": "C#",
+                    "Color": null
+                }
+            ]
+        },
+        {
+            "Name": "Application",
+            "Color": null,
+            "Groups": [],
+            "Partitions": [
+                {
+                    "Name": "Application项目文件",
+                    "FileName": "Application\\app_proj.tt",
+                    "Output": "{ProjectCode}{.Module}.Application\\{ProjectCode}{.Module}.Application.csproj",
+                    "Loop": "None",
+                    "Syntax": "C#",
+                    "Color": "0,0,255"
+                },
+                {
+                    "Name": "AppService",
+                    "FileName": "Application\\app.tt",
+                    "Output": "{ProjectCode}{.Module}.Application\\Services\\{SubNameSpace}\\{ClassName}AppService.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#",
+                    "Color": null
+                },
+                {
+                    "Name": "AutoMapperProfile",
+                    "FileName": "Application\\profile.tt",
+                    "Output": "{ProjectCode}{.Module}.Application\\AutoMapperProfiles\\{SubNameSpace}Profile.cs",
+                    "Loop": "None",
+                    "Syntax": "C#",
+                    "Color": null
+                }
+            ]
+        },
+        {
+            "Name": "Application.Contracts",
+            "Color": null,
+            "Groups": [],
+            "Partitions": [
+                {
+                    "Name": "Contracts项目文件",
+                    "FileName": "Contracts\\contract_proj.tt",
+                    "Output": "{ProjectCode}{.Module}.Application.Contracts\\{ProjectCode}{.Module}.Application.Contracts.csproj",
+                    "Loop": "None",
+                    "Syntax": "C#",
+                    "Color": "0,0,255"
+                },
+                {
+                    "Name": "IAppService",
+                    "FileName": "Contracts\\iapp.tt",
+                    "Output": "{ProjectCode}{.Module}.Application.Contracts\\{SubNameSpace}\\I{ClassName}AppService.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#",
+                    "Color": null
+                }
+            ]
+        },
+        {
+            "Name": "Domain",
+            "Color": null,
+            "Groups": [],
+            "Partitions": [
+                {
+                    "Name": "Domain项目文件",
+                    "FileName": "Domain\\domain_proj.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\{ProjectCode}{.Module}.Domain.csproj",
+                    "Loop": "None",
+                    "Syntax": "C#",
+                    "Color": "0,0,255"
+                },
+                {
+                    "Name": "Entity",
+                    "FileName": "Domain\\entity.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\{SubNameSpace}\\Entities\\{ClassName}.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#",
+                    "Color": null
+                },
+                {
+                    "Name": "Entity扩展",
+                    "FileName": "Domain\\entity_ex.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\{SubNameSpace}\\Entities\\{ClassName}_Ext.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#",
+                    "Color": null
+                },
+                {
+                    "Name": "DbContext",
+                    "FileName": "Domain\\dbcontext.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\Infrastructure\\{Module}DbContext.cs",
+                    "Loop": "None",
+                    "Syntax": "C#",
+                    "Color": null
+                }
+            ]
+        },
+        {
+            "Name": "Shared",
+            "Color": null,
+            "Groups": [],
+            "Partitions": [
+                {
+                    "Name": "Shared项目文件",
+                    "FileName": "Shared\\shared_proj.tt",
+                    "Output": "{ProjectCode}{.Module}.Shared\\{ProjectCode}{.Module}.Shared.csproj",
+                    "Loop": "None",
+                    "Syntax": "C#",
+                    "Color": "0,0,255"
+                },
+                {
+                    "Name": "Dto",
+                    "FileName": "Shared\\dto.tt",
+                    "Output": "{ProjectCode}{.Module}.Shared\\Dtos\\{SubNameSpace}\\{ClassName}Dto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#",
+                    "Color": null
+                },
+                {
+                    "Name": "SaveDto",
+                    "FileName": "Shared\\savedto.tt",
+                    "Output": "{ProjectCode}{.Module}.Shared\\Dtos\\{SubNameSpace}\\{ClassName}SaveDto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#",
+                    "Color": null
+                },
+                {
+                    "Name": "QueryDto",
+                    "FileName": "Shared\\querydto.tt",
+                    "Output": "{ProjectCode}{.Module}.Shared\\QueryDtos\\{SubNameSpace}\\{ClassName}QueryDto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#",
+                    "Color": null
+                }
+            ]
+        }
+    ],
+    "Extension": {
+        "UseBase": true,
+        "Common": [],
+        "Schema": ["template.t4.fireasy-mvc.cs"],
+        "Profile": ["base.cs","template.t4.fireasy-std.cs"]
+    },
+    "Category": null
+}

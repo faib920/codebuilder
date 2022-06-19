@@ -1,0 +1,14 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace><#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared</RootNamespace>
+  </PropertyGroup>
+
+</Project>

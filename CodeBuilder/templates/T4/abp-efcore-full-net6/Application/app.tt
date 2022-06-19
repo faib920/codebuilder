@@ -1,0 +1,261 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Entities;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Models;
+<#
+    if (host.HasPartition("DomainService"))
+    {
+#>
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Managers;
+<#
+    }
+    else
+    {
+#>
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Repositories;
+<#
+    }
+#>
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.Dtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.QueryDtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Services<#= CheckDot(host.Profile.SubNameSpace) #>
+{
+    /// <summary>
+    /// <#= table.Description #>应用服务类
+    /// </summary>
+    public class <#= table.ClassName #>AppService : ApplicationService, I<#= table.ClassName #>AppService
+    {
+<#
+    if (host.HasPartition("DomainService"))
+    {
+#>
+        private readonly <#= table.ClassName #>Manager _<#= ToCamel(table.ClassName) #>Manager;
+
+        public <#= table.ClassName #>AppService(<#= table.ClassName #>Manager <#= ToCamel(table.ClassName) #>Manager)
+        {
+            _<#= ToCamel(table.ClassName) #>Manager = <#= ToCamel(table.ClassName) #>Manager;
+        }
+<#
+    }
+    else
+    {
+#>
+        private readonly <#= table.ClassName #>Repository _<#= ToCamel(table.ClassName) #>Repository;
+
+        public <#= table.ClassName #>AppService(<#= table.ClassName #>Repository <#= ToCamel(table.ClassName) #>Repository)
+        {
+            _<#= ToCamel(table.ClassName) #>Repository = <#= ToCamel(table.ClassName) #>Repository;
+        }
+<#
+    }
+#>
+
+        /// <summary>
+        /// 分页获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="queryDto">查询参数</param>
+        /// <returns></returns>
+        public async Task<PagedResultDto<<#= table.ClassName #>Dto>> QueryPagedListAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+<#
+    if (host.HasPartition("DomainService"))
+    {
+
+#>
+            var list = await _<#= ToCamel(table.ClassName) #>Manager.GetPagedListAsync(queryDto);
+            var count = await _<#= ToCamel(table.ClassName) #>Manager.QueryCountAsync(queryDto);
+<#
+    }
+    else
+    {
+#>
+            var list = await _<#= ToCamel(table.ClassName) #>Repository.GetPagedListAsync(queryDto);
+            var count = await _<#= ToCamel(table.ClassName) #>Repository.QueryCountAsync(queryDto);
+<#
+    }
+#>
+            var dtos = ObjectMapper.Map<List<<#= table.ClassName #>>, List<<#= table.ClassName #>Dto>>(list);
+            return new PagedResultDto<<#= table.ClassName #>Dto>(count, dtos);
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>数据条数
+        /// </summary>
+        /// <param name="queryDto">查询参数</param>
+        /// <returns></returns>
+        public async Task<int> QueryCountAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+<#
+    if (host.HasPartition("DomainService"))
+    {
+#>
+            return await _<#= ToCamel(table.ClassName) #>Manager.QueryCountAsync(queryDto);
+<#
+    }
+    else
+    {
+#>
+            return await _<#= ToCamel(table.ClassName) #>Repository.QueryCountAsync(queryDto);
+<#
+    }
+#>
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        public async Task<List<<#= table.ClassName #>Dto>> GetListAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+<#
+    if (host.HasPartition("DomainService"))
+    {
+#>
+            var list = await _<#= ToCamel(table.ClassName) #>Manager.GetListAsync(queryDto);
+<#
+    }
+    else
+    {
+#>
+            var list = await _<#= ToCamel(table.ClassName) #>Repository.GetListAsync(queryDto);
+<#
+    }
+#>
+            return ObjectMapper.Map<List<<#= table.ClassName #>>, List<<#= table.ClassName #>Dto>>(list);
+        }
+
+        /// <summary>
+        /// 根据一组ID获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task<List<<#= table.ClassName #>Dto>> GetListByIdsAsync(List<<#= ptype #>> ids)
+        {
+<#
+    if (host.HasPartition("DomainService"))
+    {
+#>
+            var list = await _<#= ToCamel(table.ClassName) #>Manager.GetListByIdsAsync(ids);
+<#
+    }
+    else
+    {
+#>
+            var list = await _<#= ToCamel(table.ClassName) #>Repository.GetListByIdsAsync(ids);
+<#
+    }
+#>
+            return ObjectMapper.Map<List<<#= table.ClassName #>>, List<<#= table.ClassName #>Dto>>(list);
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<<#= table.ClassName #>Dto> GetAsync(<#= ptype #> id)
+        {
+<#
+    if (host.HasPartition("DomainService"))
+    {
+#>
+            var entity = await _<#= ToCamel(table.ClassName) #>Manager.GetAsync(id);
+<#
+    }
+    else
+    {
+#>
+            var entity = await _<#= ToCamel(table.ClassName) #>Repository.GetAsync(id);
+<#
+    }
+#>
+            return ObjectMapper.Map<<#= table.ClassName #>, <#= table.ClassName #>Dto>(entity);
+        }
+
+        /// <summary>
+        /// 保存<#= table.Description #>
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        public async Task<<#= table.ClassName #>Dto> SaveAsync(<#= table.ClassName #>SaveDto dto)
+        {
+            var model = ObjectMapper.Map<<#= table.ClassName #>SaveDto, <#= table.ClassName #>SaveModel>(dto);
+<#
+    if (host.HasPartition("DomainService"))
+    {
+#>
+            var entity = await _<#= ToCamel(table.ClassName) #>Manager.SaveAsync(model);
+<#
+    }
+    else
+    {
+#>
+            <#= table.ClassName #> entity;
+<#
+    if (ptype == "string")
+    {
+#>
+            if (string.IsNullOrEmpty(model.<#= pk #>))
+<#
+    } else {
+#>
+            if (model.<#= pk #> == 0)
+<#
+    }
+#>
+
+            {
+                entity = <#= table.ClassName #>.Create(model);
+                entity = await _<#= ToCamel(table.ClassName) #>Repository.InsertAsync(entity, true);
+            }
+            else
+            {
+                entity = await _<#= ToCamel(table.ClassName) #>Repository.GetByIdAsync(model.<#= pk #>, true);
+                entity.Update(model);
+            }
+<#
+    }
+#>
+            return ObjectMapper.Map<<#= table.ClassName #>, <#= table.ClassName #>Dto>(entity);
+        }
+
+        /// <summary>
+        /// 删除<#= table.Description #>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<bool> DeleteAsync(<#= ptype #> id)
+        {
+<#
+    if (host.HasPartition("DomainService"))
+    {
+#>
+            return await _<#= ToCamel(table.ClassName) #>Manager.DeleteAsync(id);
+<#
+    }
+    else
+    {
+#>
+            await _<#= ToCamel(table.ClassName) #>Repository.DeleteAsync(id);
+            return true;
+<#
+    }
+#>
+        }
+    }
+}

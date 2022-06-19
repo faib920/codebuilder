@@ -1,0 +1,155 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var pk = GetPrimaryKey(table);
+#>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><#= table.Name #> - <#= host.Profile.ProjectName #></title>
+    <script src="~/scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/scripts/jquery.easyui.min.js"></script>
+    <script src="~/scripts/locale/easyui-lang-zh_CN.js"></script>
+    <script src="~/scripts/jquery.easyui.extend.js"></script>
+    <script src="~/scripts/lhgdialog.js"></script>
+    <script src="~/scripts/common.js"></script>
+    <link href="~/content/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="~/content/skins/flat.css" rel="stylesheet" />
+    <link href="~/content/themes/icon.css" rel="stylesheet" />
+    <script type="text/javascript">
+        $(function () {
+            loadData();
+        })
+    
+        //加载数据
+        function loadData() {
+            $('#dg').datagrid({
+                url: '@Url.Action("Data")',
+                fit: true,//自动填充
+                singleSelect: true,//单选
+                pagination: true,//分页信息
+                rownumbers: true,//显示行号
+                pageNumber: 1,//默认显示第一页
+                pageSize:20,//每页的行数
+                idField: '<#= pk #>',
+                columns: [[
+    <#
+    foreach (dynamic column in table.Columns)
+    {
+        if (column.IsPrimaryKey || !column.GenerateField)
+        {
+            continue;
+        }
+    #>
+                    { field: '<#= column.Name #>', title: '<#= string.IsNullOrEmpty(column.Description) ? column.Name : column.Description #>', width: 200 }<#= column.Index < table.Columns.Count ? ",": "" #>
+    <#
+    }
+    #>
+                ]],
+                onDblClickRow: function () {
+                    if ($('a[key="edit"]').length == 1) {
+                        editInfo();
+                    }
+                }
+            })
+        }
+    
+        //工具栏单击事件
+        function toolbarClick(key) {
+            switch (key) {
+                case "add":
+                    addInfo();
+                    break;
+                case "edit":
+                    editInfo();
+                    break;
+                case "delete":
+                    deleteInfo();
+                    break;
+            }
+        }
+    
+        //添加信息
+        function addInfo() {
+            common.showDialog('@Url.Action("Edit")', '新增<#= table.Description #>', 600, 400, function () {
+                $('#dg').datagrid('reload');
+            });
+        }
+    
+        //修改信息
+        function editInfo() {
+            var row = $('#dg').datagrid('getSelected');
+            if (row == null) {
+                common.alert('请先选择一条记录。');
+                return;
+            }
+    
+            common.showDialog('@Url.Action("Edit")?id=' + row.<#= pk #>, '修改<#= table.Description #>', 600, 400, function () {
+                $('#dg').datagrid('reload');
+            });
+        }
+    
+        //删除信息
+        function deleteInfo() {
+            var row = $('#dg').datagrid('getSelected');
+            if (row == null) {
+                common.alert('请先选择一条记录。');
+                return;
+            }
+    
+            common.confirm('你确认要删除该信息吗?', function () {
+                $.post('@Url.Action("Delete")?id=' + row.<#= pk #>, null, function (result) {
+                    common.processResult(result, function () {
+                        $('#dg').datagrid('reload');
+                    });
+                });
+            });
+        }
+    
+        //查询
+        function query() {
+            $('#dg').datagrid('unselectAll');
+            $('#dg').datagrid({
+                queryParams: {
+                    keyword: $('#txtKeyword').val()
+                }
+            });
+        }
+    </script>
+</head>
+<body class="easyui-layout">
+    <form id="form1">
+        <div data-options="region:'center',border:true" title="<#= table.Description #>管理">
+            <div class="easyui-layout" data-options="fit:true" style="width: 100%; height: 100%">
+                <div data-options="region:'north',border:false">
+                    <div class="datagrid-toolbar">
+                        <a class="easyui-linkbutton" onclick="addInfo()" key="add" data-options="iconCls:'icon-add',plain:true">添加</a>
+                        <a class="easyui-linkbutton" onclick="editInfo()" key="edit" data-options="iconCls:'icon-edit',plain:true">修改</a>
+                        <a class="easyui-linkbutton" onclick="deleteInfo()" key="delete" data-options="iconCls:'icon-remove',plain:true">删除</a>
+                    </div>
+                    <div class="query">
+                        <table>
+                            <tr>
+                                <td>快速查询</td>
+                                <td>
+                                    <input id="txtKeyword" type="text" class="easyui-textbox enterQuery" data-options="prompt:'名称或拼音首字母'" style="width: 160px" /></td>
+                                <td><a class="easyui-linkbutton" onclick="query()" data-options="iconCls:'icon-search'">查询</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div data-options="region:'center',border:false">
+                    <table id="dg">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

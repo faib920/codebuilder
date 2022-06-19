@@ -19,7 +19,7 @@ namespace CodeBuilder.Core.Variable
     {
         static AssemblyReferenceManager()
         {
-            var fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "assemblies.cfg");
+            var fileName = Path.Combine(DevHostingHolder.Instance.WorkPath, "config", "assemblies.cfg");
             if (File.Exists(fileName))
             {
                 var json = File.ReadAllText(fileName);

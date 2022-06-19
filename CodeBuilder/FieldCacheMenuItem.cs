@@ -40,6 +40,7 @@ namespace CodeBuilder
                 var item = new ToolStripMenuItem(string.Format("{0} ({1})", p.Name, p.TypeName));
                 item.ToolTipText = p.Description;
                 item.Tag = p.Name;
+                item.Name = "mnuInsert";
                 item.Click += (o, e) =>
                     {
                         OnFieldInsert?.Invoke(item.Tag as string);

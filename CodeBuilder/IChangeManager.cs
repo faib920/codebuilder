@@ -17,6 +17,6 @@ namespace CodeBuilder
         /// <summary>
         /// 保存文件。
         /// </summary>
-        void SaveFile();
+        bool SaveFile(bool notify);
     }
 }

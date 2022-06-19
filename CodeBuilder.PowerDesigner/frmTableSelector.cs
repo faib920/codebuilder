@@ -18,17 +18,19 @@ namespace CodeBuilder.PowerDesigner
     {
         private PdmDefinition _definition;
         private readonly IDevHosting _hosting;
+        private readonly List<string> _selectedNames;
 
-        public frmTableSelector(IDevHosting hosting)
+        public frmTableSelector(IDevHosting hosting, List<string> selectedNames)
             : base()
         {
             InitializeComponent();
             Icon = Util.GetIcon();
             _hosting = hosting;
+            _selectedNames = selectedNames;
         }
 
-        public frmTableSelector(IDevHosting hosting, PdmDefinition definition)
-            : this(hosting)
+        public frmTableSelector(IDevHosting hosting, PdmDefinition definition, List<string> selectedNames)
+            : this(hosting, selectedNames)
         {
             _definition = definition;
         }
@@ -74,6 +76,11 @@ namespace CodeBuilder.PowerDesigner
                 item.ImageIndex = 2;
                 items.Add(item);
                 item.Cells[1].Value = t.Description;
+
+                if (_selectedNames.Contains(t.Name))
+                {
+                    item.Checked = true;
+                }
             }
         }
 

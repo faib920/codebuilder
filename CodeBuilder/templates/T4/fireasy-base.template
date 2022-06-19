@@ -1,4 +1,4 @@
-{
+﻿{
     "Name": "Fireasy 基本",
     "Author": null,
     "Version": 1,
@@ -12,7 +12,7 @@
             "Loop": "Tables",
             "Syntax": "C#"
         },
-		{
+        {
             "Name": "实体类_扩展",
             "FileName": "entity_ex.tt",
             "Output": "Models\\{ClassName}_Ex.cs",
@@ -33,5 +33,13 @@
             "Loop": "None",
             "Syntax": "C#"
         }
-    ]
+    ],
+    "Groups": [],
+    "Extension": {
+        "UseBase": true,
+        "Common": [],
+        "Schema": ["template.t4.fireasy-base.cs"],
+        "Profile": ["template.t4.fireasy-base.cs"]
+    },
+    "Category": null
 }

@@ -1,0 +1,103 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Volo.Abp.DependencyInjection;
+using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Entities;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.QueryDtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain.EfCore;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Repositories
+{
+    /// <summary>
+    /// <#= table.Description #>仓储类
+    /// </summary>
+    public class <#= table.ClassName #>Repository : EfCoreRepository<EfCore.<#= CheckNull(host.Profile.Module) #>DbContext, <#= table.ClassName #>, <#= ptype #>>, ITransientDependency
+    {
+        public <#= table.ClassName #>Repository(IDbContextProvider<EfCore.<#= CheckNull(host.Profile.Module) #>DbContext> dbContextProvider) 
+            : base(dbContextProvider)
+        {
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>列表（分页）
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        public async Task<List<<#= table.ClassName #>>> GetPagedListAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+            queryDto.PageIndex = Math.Max(1, queryDto.PageIndex);
+            queryDto.PageSize = Math.Min(100, queryDto.PageSize);
+            return await (await GetListQueryableAsync(queryDto))
+               .Skip(queryDto.PageSize * (queryDto.PageIndex - 1))
+               .Take(queryDto.PageSize)
+               .ToListAsync();
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>数据条数
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        public async Task<int> QueryCountAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+            return await  (await GetListQueryableAsync(queryDto)).CountAsync();
+        }
+
+        /// <summary>
+        /// 获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        public async Task<List<<#= table.ClassName #>>> GetListAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+            return await  (await GetListQueryableAsync(queryDto))
+               .ToListAsync();
+        }
+
+        /// <summary>
+        /// 根据一组ID获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task<List<<#= table.ClassName #>>> GetListByIdsAsync(List<<#= ptype #>> ids)
+        {
+            return await (await GetDbSetAsync()).AsQueryable().AsNoTracking()
+               .Where(c => ids.Contains(c.<#= GetPrimaryKey(table) #>))
+               .ToListAsync();
+        }
+
+        /// <summary>
+        /// 根据ID查询
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isAsTracking">是否跟踪</param>
+        /// <returns></returns>
+        public async Task<<#= table.ClassName #>> GetByIdAsync(<#= ptype #> id, bool isAsTracking = false)
+        {
+            var query = isAsTracking ? (await GetDbSetAsync()).AsQueryable().AsTracking() : (await GetDbSetAsync()).AsQueryable().AsNoTracking();
+            return await query.FirstOrDefaultAsync(c => c.<#= GetPrimaryKey(table) #> == id);
+        }
+
+        #region 内部方法
+        private async Task<IQueryable<<#= table.ClassName #>>> GetListQueryableAsync(<#= table.ClassName #>QueryDto queryDto)
+        {
+            var query = (await GetDbSetAsync()).AsQueryable().AsNoTracking();
+            //TODO 处理过滤条件
+            return query;
+        }
+        #endregion
+    }
+}

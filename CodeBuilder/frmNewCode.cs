@@ -27,7 +27,12 @@ namespace CodeBuilder
 
         private void frmNewCode_Load(object sender, EventArgs e)
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "projects");
+            var path = Path.Combine(_hosting.WorkPath, "projects");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             foreach (var file in Directory.GetFiles(path, "*.project", SearchOption.AllDirectories))
             {
                 var info = new FileInfo(file);

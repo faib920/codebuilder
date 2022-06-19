@@ -5,6 +5,7 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core.Initializers;
 using System.IO;
 
 namespace CodeBuilder.Core.Template
@@ -31,9 +32,10 @@ namespace CodeBuilder.Core.Template
         /// <param name="schema">架构对象。</param>
         /// <param name="profile">变量对象。</param>
         /// <param name="output">输出的文件路径。</param>
-        public static void Write(GenerateResult result, object schema, object profile, string output)
+        /// <param name="overFile">是否覆盖原文件。</param>
+        public static void Write(GenerateResult result, object schema, object profile, string output, bool overFile)
         {
-            var fileName = result.Partition.Output;
+            var fileName = Parser.PreParse(result.Partition.Output, schema, profile);
             fileName = _paser.Parse(schema, profile, fileName);
 
             var path = Path.Combine(output, fileName);
@@ -41,6 +43,11 @@ namespace CodeBuilder.Core.Template
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
+            }
+
+            if (!overFile && File.Exists(path))
+            {
+                return;
             }
 
             File.WriteAllText(path, result.Content, StaticUnity.Encoding);

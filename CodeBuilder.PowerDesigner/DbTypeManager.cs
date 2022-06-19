@@ -5,6 +5,7 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core;
 using Fireasy.Common.Serialization;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace CodeBuilder.PowerDesigner
 
         static DbTypeManager()
         {
-            var configFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "pd.cfg");
+            var configFileName = Path.Combine(DevHostingHolder.Instance.WorkPath, "config", "pd.cfg");
             var json = new JsonSerializer();
             _cache = json.Deserialize<Dictionary<string, Dictionary<string, string>>>(File.ReadAllText(configFileName));
         }

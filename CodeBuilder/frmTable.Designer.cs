@@ -41,12 +41,14 @@
             this.mnuSelInvColumn = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuBuild = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBuildPart = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lstObject
             // 
             this.lstObject.AlternateBackColor = System.Drawing.Color.Empty;
+            this.lstObject.CheckAllChecked = false;
             this.lstObject.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1,
             this.treeListColumn2});
@@ -101,54 +103,61 @@
             this.mnuSelAllColumn,
             this.mnuSelInvColumn,
             this.toolStripMenuItem2,
-            this.mnuBuild});
+            this.mnuBuild,
+            this.mnuBuildPart});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 158);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(219, 182);
             // 
             // mnuSelAllTable
             // 
             this.mnuSelAllTable.Name = "mnuSelAllTable";
-            this.mnuSelAllTable.Size = new System.Drawing.Size(180, 24);
+            this.mnuSelAllTable.Size = new System.Drawing.Size(218, 24);
             this.mnuSelAllTable.Text = "选择所有表";
             this.mnuSelAllTable.Click += new System.EventHandler(this.mnuSelAllTable_Click);
             // 
             // mnuSelInvTable
             // 
             this.mnuSelInvTable.Name = "mnuSelInvTable";
-            this.mnuSelInvTable.Size = new System.Drawing.Size(180, 24);
+            this.mnuSelInvTable.Size = new System.Drawing.Size(218, 24);
             this.mnuSelInvTable.Text = "反向选择表";
             this.mnuSelInvTable.Click += new System.EventHandler(this.mnuSelInvTable_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(215, 6);
             // 
             // mnuSelAllColumn
             // 
             this.mnuSelAllColumn.Name = "mnuSelAllColumn";
-            this.mnuSelAllColumn.Size = new System.Drawing.Size(180, 24);
+            this.mnuSelAllColumn.Size = new System.Drawing.Size(218, 24);
             this.mnuSelAllColumn.Text = "选择所有列";
             this.mnuSelAllColumn.Click += new System.EventHandler(this.mnuSelAllColumn_Click);
             // 
             // mnuSelInvColumn
             // 
             this.mnuSelInvColumn.Name = "mnuSelInvColumn";
-            this.mnuSelInvColumn.Size = new System.Drawing.Size(180, 24);
+            this.mnuSelInvColumn.Size = new System.Drawing.Size(218, 24);
             this.mnuSelInvColumn.Text = "反向选择列";
             this.mnuSelInvColumn.Click += new System.EventHandler(this.mnuSelInvColumn_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(215, 6);
             // 
             // mnuBuild
             // 
             this.mnuBuild.Name = "mnuBuild";
-            this.mnuBuild.Size = new System.Drawing.Size(180, 24);
+            this.mnuBuild.Size = new System.Drawing.Size(218, 24);
             this.mnuBuild.Text = "生成预览";
             this.mnuBuild.Click += new System.EventHandler(this.mnuBuild_Click);
+            // 
+            // mnuBuildPart
+            // 
+            this.mnuBuildPart.Name = "mnuBuildPart";
+            this.mnuBuildPart.Size = new System.Drawing.Size(218, 24);
+            this.mnuBuildPart.Text = "生成预览（单一部件）";
             // 
             // frmTable
             // 
@@ -180,5 +189,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuSelInvColumn;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem mnuBuild;
+        private System.Windows.Forms.ToolStripMenuItem mnuBuildPart;
     }
 }

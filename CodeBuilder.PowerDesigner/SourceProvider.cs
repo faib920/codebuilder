@@ -45,7 +45,7 @@ namespace CodeBuilder.PowerDesigner
             }
 
             var pdm = PdmParser.Parse(_pdmFileName);
-            using (var frm = new frmTableSelector(_hosting, pdm))
+            using (var frm = new frmTableSelector(_hosting, pdm, option.Selected))
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {

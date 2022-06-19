@@ -35,6 +35,7 @@
             this.mnuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuSaveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuOption = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,12 +43,14 @@
             this.mnuBuild = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuQuit = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSource = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTemplate = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTool = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuProfileWnd = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuPropertyWnd = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuProfileWnd = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuExtensionWnd = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTemplateWnd = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOutputWnd = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -89,6 +92,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
+            this.mnuEdit,
             this.mnuSource,
             this.mnuTemplate,
             this.mnuTool,
@@ -106,6 +110,7 @@
             this.mnuNew,
             this.mnuOpen,
             this.mnuSave,
+            this.mnuSaveAll,
             this.mnuSaveAs,
             this.toolStripSeparator1,
             this.mnuOption,
@@ -114,14 +119,14 @@
             this.toolStripSeparator3,
             this.mnuQuit});
             this.mnuFile.Name = "mnuFile";
-            this.mnuFile.Size = new System.Drawing.Size(69, 24);
+            this.mnuFile.Size = new System.Drawing.Size(66, 24);
             this.mnuFile.Text = "文件(&F)";
             // 
             // mnuNew
             // 
             this.mnuNew.Name = "mnuNew";
             this.mnuNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.mnuNew.Size = new System.Drawing.Size(223, 24);
+            this.mnuNew.Size = new System.Drawing.Size(225, 24);
             this.mnuNew.Text = "新建";
             this.mnuNew.Click += new System.EventHandler(this.mnuNew_Click);
             // 
@@ -130,7 +135,7 @@
             this.mnuOpen.Image = global::CodeBuilder.Properties.Resources.open1;
             this.mnuOpen.Name = "mnuOpen";
             this.mnuOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.mnuOpen.Size = new System.Drawing.Size(223, 24);
+            this.mnuOpen.Size = new System.Drawing.Size(225, 24);
             this.mnuOpen.Text = "打开";
             this.mnuOpen.Click += new System.EventHandler(this.mnuOpen_Click);
             // 
@@ -139,78 +144,95 @@
             this.mnuSave.Image = global::CodeBuilder.Properties.Resources.save1;
             this.mnuSave.Name = "mnuSave";
             this.mnuSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuSave.Size = new System.Drawing.Size(223, 24);
+            this.mnuSave.Size = new System.Drawing.Size(225, 24);
             this.mnuSave.Text = "保存";
             this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
+            // 
+            // mnuSaveAll
+            // 
+            this.mnuSaveAll.Name = "mnuSaveAll";
+            this.mnuSaveAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.mnuSaveAll.Size = new System.Drawing.Size(225, 24);
+            this.mnuSaveAll.Text = "全部保存";
+            this.mnuSaveAll.Click += new System.EventHandler(this.mnuSaveAll_Click);
             // 
             // mnuSaveAs
             // 
             this.mnuSaveAs.Name = "mnuSaveAs";
-            this.mnuSaveAs.Size = new System.Drawing.Size(223, 24);
+            this.mnuSaveAs.Size = new System.Drawing.Size(225, 24);
             this.mnuSaveAs.Text = "另存为";
             this.mnuSaveAs.Click += new System.EventHandler(this.mnuSaveAs_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(220, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(222, 6);
             // 
             // mnuOption
             // 
             this.mnuOption.Name = "mnuOption";
-            this.mnuOption.Size = new System.Drawing.Size(223, 24);
+            this.mnuOption.Size = new System.Drawing.Size(225, 24);
             this.mnuOption.Text = "首选项";
             this.mnuOption.Click += new System.EventHandler(this.mnuOption_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(220, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(222, 6);
             // 
             // mnuBuild
             // 
             this.mnuBuild.Image = global::CodeBuilder.Properties.Resources.build;
             this.mnuBuild.Name = "mnuBuild";
             this.mnuBuild.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.mnuBuild.Size = new System.Drawing.Size(223, 24);
+            this.mnuBuild.Size = new System.Drawing.Size(225, 24);
             this.mnuBuild.Text = "生成代码文件";
             this.mnuBuild.Click += new System.EventHandler(this.mnuBuild_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(220, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(222, 6);
             // 
             // mnuQuit
             // 
             this.mnuQuit.Name = "mnuQuit";
-            this.mnuQuit.Size = new System.Drawing.Size(223, 24);
+            this.mnuQuit.Size = new System.Drawing.Size(225, 24);
             this.mnuQuit.Text = "退出";
             this.mnuQuit.Click += new System.EventHandler(this.mnuQuit_Click);
+            // 
+            // mnuEdit
+            // 
+            this.mnuEdit.Name = "mnuEdit";
+            this.mnuEdit.Size = new System.Drawing.Size(67, 24);
+            this.mnuEdit.Text = "编辑(&E)";
+            this.mnuEdit.Visible = false;
             // 
             // mnuSource
             // 
             this.mnuSource.Name = "mnuSource";
-            this.mnuSource.Size = new System.Drawing.Size(85, 24);
+            this.mnuSource.Size = new System.Drawing.Size(81, 24);
             this.mnuSource.Text = "数据源(&S)";
             // 
             // mnuTemplate
             // 
             this.mnuTemplate.Name = "mnuTemplate";
-            this.mnuTemplate.Size = new System.Drawing.Size(70, 24);
+            this.mnuTemplate.Size = new System.Drawing.Size(67, 24);
             this.mnuTemplate.Text = "模板(&T)";
             // 
             // mnuTool
             // 
             this.mnuTool.Name = "mnuTool";
-            this.mnuTool.Size = new System.Drawing.Size(73, 24);
+            this.mnuTool.Size = new System.Drawing.Size(70, 24);
             this.mnuTool.Text = "工具(&O)";
             // 
             // mnuWindow
             // 
             this.mnuWindow.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuProfileWnd,
             this.mnuPropertyWnd,
+            this.mnuProfileWnd,
+            this.mnuExtensionWnd,
             this.mnuTemplateWnd,
             this.mnuOutputWnd,
             this.toolStripMenuItem1,
@@ -218,60 +240,67 @@
             this.mnuCloseAll,
             this.mnuCloseOther});
             this.mnuWindow.Name = "mnuWindow";
-            this.mnuWindow.Size = new System.Drawing.Size(76, 24);
+            this.mnuWindow.Size = new System.Drawing.Size(73, 24);
             this.mnuWindow.Text = "窗口(&W)";
-            // 
-            // mnuProfileWnd
-            // 
-            this.mnuProfileWnd.Name = "mnuProfileWnd";
-            this.mnuProfileWnd.Size = new System.Drawing.Size(198, 24);
-            this.mnuProfileWnd.Text = "变量窗口";
-            this.mnuProfileWnd.Click += new System.EventHandler(this.mnuProfileWnd_Click);
             // 
             // mnuPropertyWnd
             // 
             this.mnuPropertyWnd.Name = "mnuPropertyWnd";
-            this.mnuPropertyWnd.Size = new System.Drawing.Size(198, 24);
+            this.mnuPropertyWnd.Size = new System.Drawing.Size(190, 24);
             this.mnuPropertyWnd.Text = "属性窗口";
             this.mnuPropertyWnd.Click += new System.EventHandler(this.mnuPropertyWnd_Click);
+            // 
+            // mnuProfileWnd
+            // 
+            this.mnuProfileWnd.Name = "mnuProfileWnd";
+            this.mnuProfileWnd.Size = new System.Drawing.Size(190, 24);
+            this.mnuProfileWnd.Text = "变量窗口";
+            this.mnuProfileWnd.Click += new System.EventHandler(this.mnuProfileWnd_Click);
+            // 
+            // mnuExtensionWnd
+            // 
+            this.mnuExtensionWnd.Name = "mnuExtensionWnd";
+            this.mnuExtensionWnd.Size = new System.Drawing.Size(190, 24);
+            this.mnuExtensionWnd.Text = "扩展窗口";
+            this.mnuExtensionWnd.Click += new System.EventHandler(this.mnuExtensionWnd_Click);
             // 
             // mnuTemplateWnd
             // 
             this.mnuTemplateWnd.Name = "mnuTemplateWnd";
-            this.mnuTemplateWnd.Size = new System.Drawing.Size(198, 24);
+            this.mnuTemplateWnd.Size = new System.Drawing.Size(190, 24);
             this.mnuTemplateWnd.Text = "模板窗口";
             this.mnuTemplateWnd.Click += new System.EventHandler(this.mnuTemplateWnd_Click);
             // 
             // mnuOutputWnd
             // 
             this.mnuOutputWnd.Name = "mnuOutputWnd";
-            this.mnuOutputWnd.Size = new System.Drawing.Size(198, 24);
+            this.mnuOutputWnd.Size = new System.Drawing.Size(190, 24);
             this.mnuOutputWnd.Text = "输出窗口";
             this.mnuOutputWnd.Click += new System.EventHandler(this.mnuOutputWnd_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(195, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(187, 6);
             // 
             // mnuCloseCurrent
             // 
             this.mnuCloseCurrent.Name = "mnuCloseCurrent";
-            this.mnuCloseCurrent.Size = new System.Drawing.Size(198, 24);
+            this.mnuCloseCurrent.Size = new System.Drawing.Size(190, 24);
             this.mnuCloseCurrent.Text = "关闭当前";
             this.mnuCloseCurrent.Click += new System.EventHandler(this.mnuCloseCurrent_Click);
             // 
             // mnuCloseAll
             // 
             this.mnuCloseAll.Name = "mnuCloseAll";
-            this.mnuCloseAll.Size = new System.Drawing.Size(198, 24);
+            this.mnuCloseAll.Size = new System.Drawing.Size(190, 24);
             this.mnuCloseAll.Text = "关闭所有";
             this.mnuCloseAll.Click += new System.EventHandler(this.mnuCloseAll_Click);
             // 
             // mnuCloseOther
             // 
             this.mnuCloseOther.Name = "mnuCloseOther";
-            this.mnuCloseOther.Size = new System.Drawing.Size(198, 24);
+            this.mnuCloseOther.Size = new System.Drawing.Size(190, 24);
             this.mnuCloseOther.Text = "除此之外全部关闭";
             this.mnuCloseOther.Click += new System.EventHandler(this.mnuCloseOther_Click);
             // 
@@ -284,39 +313,39 @@
             this.toolStripSeparator4,
             this.mnuAbout});
             this.mnuHelp.Name = "mnuHelp";
-            this.mnuHelp.Size = new System.Drawing.Size(73, 24);
+            this.mnuHelp.Size = new System.Drawing.Size(70, 24);
             this.mnuHelp.Text = "帮助(&H)";
             // 
             // mnuTopic
             // 
             this.mnuTopic.Name = "mnuTopic";
-            this.mnuTopic.Size = new System.Drawing.Size(160, 24);
+            this.mnuTopic.Size = new System.Drawing.Size(155, 24);
             this.mnuTopic.Text = "在线文档(&O)";
             this.mnuTopic.Click += new System.EventHandler(this.mnuTopic_Click);
             // 
             // mnuFeedback
             // 
             this.mnuFeedback.Name = "mnuFeedback";
-            this.mnuFeedback.Size = new System.Drawing.Size(160, 24);
+            this.mnuFeedback.Size = new System.Drawing.Size(155, 24);
             this.mnuFeedback.Text = "问题反馈(&F)";
             this.mnuFeedback.Click += new System.EventHandler(this.mnuFeedback_Click);
             // 
             // mnuUpdate
             // 
             this.mnuUpdate.Name = "mnuUpdate";
-            this.mnuUpdate.Size = new System.Drawing.Size(160, 24);
+            this.mnuUpdate.Size = new System.Drawing.Size(155, 24);
             this.mnuUpdate.Text = "检查更新(&U)";
             this.mnuUpdate.Click += new System.EventHandler(this.mnuUpdate_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(157, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(152, 6);
             // 
             // mnuAbout
             // 
             this.mnuAbout.Name = "mnuAbout";
-            this.mnuAbout.Size = new System.Drawing.Size(160, 24);
+            this.mnuAbout.Size = new System.Drawing.Size(155, 24);
             this.mnuAbout.Text = "关于(&A)";
             this.mnuAbout.Click += new System.EventHandler(this.mnuAbout_Click);
             // 
@@ -392,7 +421,7 @@
             this.tlbOpen.Image = global::CodeBuilder.Properties.Resources.open1l;
             this.tlbOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tlbOpen.Name = "tlbOpen";
-            this.tlbOpen.Size = new System.Drawing.Size(67, 28);
+            this.tlbOpen.Size = new System.Drawing.Size(65, 28);
             this.tlbOpen.Text = "打开";
             this.tlbOpen.Click += new System.EventHandler(this.tlbOpen_Click);
             // 
@@ -401,7 +430,7 @@
             this.tlbSave.Image = global::CodeBuilder.Properties.Resources.save1l;
             this.tlbSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tlbSave.Name = "tlbSave";
-            this.tlbSave.Size = new System.Drawing.Size(67, 28);
+            this.tlbSave.Size = new System.Drawing.Size(65, 28);
             this.tlbSave.Text = "保存";
             this.tlbSave.Click += new System.EventHandler(this.tlbSave_Click);
             // 
@@ -410,7 +439,7 @@
             this.tlbBuild.Image = global::CodeBuilder.Properties.Resources.buildl;
             this.tlbBuild.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tlbBuild.Name = "tlbBuild";
-            this.tlbBuild.Size = new System.Drawing.Size(67, 28);
+            this.tlbBuild.Size = new System.Drawing.Size(65, 28);
             this.tlbBuild.Text = "生成";
             this.tlbBuild.Click += new System.EventHandler(this.tlbBuild_Click);
             // 
@@ -442,6 +471,7 @@
             this.dockMgr.Size = new System.Drawing.Size(1044, 516);
             this.dockMgr.TabIndex = 5;
             this.dockMgr.ContentAdded += new System.EventHandler<WeifenLuo.WinFormsUI.Docking.DockContentEventArgs>(this.dockMgr_ContentAdded);
+            this.dockMgr.ActiveDocumentChanged += new System.EventHandler(this.dockMgr_ActiveDocumentChanged);
             // 
             // contextMenuStrip1
             // 
@@ -451,39 +481,40 @@
             this.toolStripMenuItem4,
             this.toolStripMenuItem5});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(199, 100);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(191, 122);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(198, 24);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(190, 24);
             this.toolStripMenuItem2.Text = "关闭当前";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.mnuCloseCurrent_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(198, 24);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(190, 24);
             this.toolStripMenuItem3.Text = "关闭所有";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.mnuCloseAll_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(198, 24);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(190, 24);
             this.toolStripMenuItem4.Text = "除此之外全部关闭";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.mnuCloseOther_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(198, 24);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(190, 24);
             this.toolStripMenuItem5.Text = "不允许被关闭";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.mnuClosable_Click);
             // 
             // frmMain
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(1047, 600);
             this.Controls.Add(this.dockMgr);
             this.Controls.Add(this.splitter1);
@@ -558,6 +589,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem mnuExtensionWnd;
+        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
+        private System.Windows.Forms.ToolStripMenuItem mnuSaveAll;
     }
 }
 

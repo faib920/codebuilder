@@ -85,7 +85,7 @@
             this.txtPath.Location = new System.Drawing.Point(91, 477);
             this.txtPath.Name = "txtPath";
             this.txtPath.ReadOnly = true;
-            this.txtPath.Size = new System.Drawing.Size(270, 21);
+            this.txtPath.Size = new System.Drawing.Size(270, 24);
             this.txtPath.TabIndex = 13;
             // 
             // label2
@@ -93,7 +93,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 480);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(59, 12);
+            this.label2.Size = new System.Drawing.Size(64, 19);
             this.label2.TabIndex = 12;
             this.label2.Text = "输出目录:";
             // 
@@ -102,13 +102,14 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 12);
+            this.label1.Size = new System.Drawing.Size(64, 19);
             this.label1.TabIndex = 11;
             this.label1.Text = "生成部件:";
             // 
             // lstPart
             // 
             this.lstPart.AlternateBackColor = System.Drawing.Color.Empty;
+            this.lstPart.CheckAllChecked = true;
             this.lstPart.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1,
             this.treeListColumn2});
@@ -120,13 +121,15 @@
             this.lstPart.Name = "lstPart";
             this.lstPart.NoneItemText = "没有可显示的数据";
             this.lstPart.RowNumberIndex = 0;
+            this.lstPart.ShowCheckAllBoxOnHeader = true;
             this.lstPart.ShowCheckBoxes = true;
             this.lstPart.ShowGridLines = false;
-            this.lstPart.Size = new System.Drawing.Size(619, 427);
+            this.lstPart.Size = new System.Drawing.Size(619, 428);
             this.lstPart.SortKey = null;
             this.lstPart.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstPart.TabIndex = 10;
             this.lstPart.AfterItemCheckChange += new Fireasy.Windows.Forms.TreeListItemAfterCheckedEventHandler(this.lstPart_AfterItemCheckChange);
+            this.lstPart.CheckAllChanged += new Fireasy.Windows.Forms.TreeListCheckAllEventHandler(this.lstPart_CheckAllChanged);
             // 
             // treeListColumn2
             // 
@@ -140,6 +143,7 @@
             // 
             // frmPreBuild
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(646, 515);
             this.Controls.Add(this.btnSelectPath);

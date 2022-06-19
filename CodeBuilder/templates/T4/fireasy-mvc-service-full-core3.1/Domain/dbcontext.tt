@@ -1,0 +1,87 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+using System;
+using Fireasy.Data.Entity;
+using Fireasy.Data.Entity.Metadata.Builders;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Entities;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain.Infrastructure
+{
+    public class <#= CheckNull(host.Profile.Module) #>DbContext : EntityContext
+    {
+        public <#= CheckNull(host.Profile.Module) #>DbContext(EntityContextOptions<<#= CheckNull(host.Profile.Module) #>DbContext> options) : base(options)
+        {
+        }
+<#
+	foreach (var table in host.Tables)
+	{
+#>
+        /// <summary>
+        /// 获取或设置 <#= table.Description #> 实体仓储。
+        /// </summary> 
+        public EntityRepository<<#= table.ClassName #>> <#= StringExtension.ToPlural(table.ClassName) #> { get; set; }
+        
+<#
+    }
+#>
+<#
+if (host.Profile.Fluent)
+{
+#>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+<#
+	foreach (var table in host.Tables)
+	{
+#>
+            modelBuilder.Entity<<#= table.ClassName #>>(entity =>
+            {
+                entity.ToTable("<#= table.Name #>");
+                entity.HasDescription("<#= table.Description #>");
+
+<#         
+        foreach (dynamic fk in table.ForeignKeys)
+	    {
+#>
+                entity.HasOne(e => e.<#= fk.PkTable.ClassName #>)
+                    .WithMany()
+                    .HasHasForeignKey(e => e.<#= fk.FkColumn.PropertyName #>);
+<#
+        }
+#>
+
+<#         
+        foreach (dynamic column in table.Columns)
+	    {
+#>
+                entity.Property(e => e.<#= column.PropertyName #>)
+                    .HasColumnName("<#= column.Name #>")
+<# if (column.IsPrimaryKey == true) { #>
+                    .IsPrimaryKey()
+<# } #>
+<# if (column.DbType == DbType.String && column.Length != 0) { #>
+                    .HasMaxLength(<#= column.Length #>)
+<# } #>
+<# if (column.IsNullable == true) { #>
+                    .IsNullable()
+<# } #>
+                    .HasDescription("<#= column.Description #>");
+                    
+<#
+	    }
+#>
+            });
+<#
+	}
+#>
+
+        }
+<#
+}
+#>
+    }
+}

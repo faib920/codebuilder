@@ -32,7 +32,6 @@ namespace CodeBuilder
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Util.ClearTempFiles();
-            WriteRegistryPath();
             CheckVersion();
 
             Application.Run(new frmMain());
@@ -64,18 +63,6 @@ namespace CodeBuilder
                 node.InnerText = DateTime.Today.ToShortDateString();
 
                 xml.Save(file);
-            }
-        }
-
-        static void WriteRegistryPath()
-        {
-            var regpath = "Software\\Fireasy\\CodeBuilder";
-            var reg = Registry.CurrentUser.OpenSubKey(regpath);
-            if (reg == null)
-            {
-                reg = Registry.CurrentUser.CreateSubKey(regpath, RegistryKeyPermissionCheck.ReadWriteSubTree);
-
-                reg.SetValue("Path", AppDomain.CurrentDomain.BaseDirectory);
             }
         }
 

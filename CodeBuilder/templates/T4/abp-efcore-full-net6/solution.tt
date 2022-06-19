@@ -1,0 +1,26 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("<#= host.Guids["solution"] #>") = "<#= host.Profile.ProjectCode #>.WebApi", "<#= host.Profile.ProjectCode #>.WebApi\\<#= host.Profile.ProjectCode #>.WebApi.csproj", "<#= host.Guids["webapi"] #>"
+EndProject
+Project("<#= host.Guids["solution"] #>") = "<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application", "<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.csproj", "<#= host.Guids["application"] #>"
+EndProject
+Project("<#= host.Guids["solution"] #>") = "<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Contracts", "<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts.csproj", "<#= host.Guids["contracts"] #>"
+EndProject
+Project("<#= host.Guids["solution"] #>") = "<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain", "<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain.csproj", "<#= host.Guids["domain"] #>"
+EndProject
+Project("<#= host.Guids["solution"] #>") = "<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared", "<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.csproj", "<#= host.Guids["shared"] #>"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+EndGlobal

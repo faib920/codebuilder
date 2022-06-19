@@ -20,7 +20,7 @@ namespace CodeBuilder.Database
 {
     public partial class frmSourceMgr : FormBase
     {
-        private string _sourceFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "datasources.cfg");
+        private string _sourceFileName = null;
         private List<DbSourceStruct> _sources = null;
         private readonly IDevHosting _hosting;
 
@@ -28,6 +28,7 @@ namespace CodeBuilder.Database
         {
             InitializeComponent();
             Icon = Util.GetIcon();
+            _sourceFileName = Path.Combine(hosting.WorkPath, "config", "datasources.cfg");
             _hosting = hosting;
         }
 

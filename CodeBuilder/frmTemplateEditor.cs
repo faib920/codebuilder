@@ -76,6 +76,12 @@ namespace CodeBuilder
 
                 lstRes.EndUpdate();
             }
+
+            tlbUseBase.Checked = Template?.Extension?.UseBase ?? false;
+
+            FillExtensions(lstExt.Items.Add("common"), Template?.Extension?.Common);
+            FillExtensions(lstExt.Items.Add("profile"), Template?.Extension?.Profile);
+            FillExtensions(lstExt.Items.Add("schema"), Template?.Extension?.Schema);
         }
 
         private void FillItems(TreeListItemCollection items, List<GroupDefinition> groups, List<PartitionDefinition> partitions)
@@ -102,8 +108,23 @@ namespace CodeBuilder
                 item.Cells[2].Value = part.Output;
                 item.Cells[3].Value = part.Loop.ToString();
                 item.Cells[4].Value = part.Syntax;
-                item.Image = Properties.Resources.file;
+                item.Image = Properties.Resources.fileT;
             }
+        }
+
+        private void FillExtensions(TreeListItem item, List<string> files)
+        {
+            if (files != null)
+            {
+                foreach (var s in files)
+                {
+                    var subitem = item.Items.Add(s);
+                    subitem.Image = Properties.Resources.codefile;
+                }
+            }
+
+            item.Expended = true;
+            item.Image = Properties.Resources.category;
         }
 
         private TreeListItem GetGroupItem()
@@ -225,6 +246,7 @@ namespace CodeBuilder
             Template.Partitions.Clear();
 
             InitPartitions(lstPart.Items, Template.Groups, Template.Partitions);
+            InitExtensions(lstExt.Items, Template.Extension);
             InitResources(lstRes.Items, Template.Resources);
             SaveTemplate(root);
 
@@ -305,6 +327,32 @@ namespace CodeBuilder
                     partitions.Add(part);
                 }
             }
+        }
+
+        private void InitExtensions(TreeListItemCollection items, TemplateExtension ext)
+        {
+            ext.UseBase = tlbUseBase.Checked;
+
+            foreach (var item in items)
+            {
+                if (item.Text == "common")
+                {
+                    ext.Common = GetExtensions(item.Items);
+                }
+                else if (item.Text == "profile")
+                {
+                    ext.Profile = GetExtensions(item.Items);
+                }
+                else if (item.Text == "schema")
+                {
+                    ext.Schema = GetExtensions(item.Items);
+                }
+            }
+        }
+
+        private List<string> GetExtensions(TreeListItemCollection items)
+        {
+            return items.Where(s => !string.IsNullOrWhiteSpace(s.Text)).Select(s => s.Text).ToList();
         }
 
         private void InitResources(TreeListItemCollection items, List<string> resources)
@@ -436,6 +484,92 @@ namespace CodeBuilder
                 _removeResources.Add(lstRes.SelectedItems[0].Text);
                 lstRes.Items.Remove(lstRes.SelectedItems[0]);
             }
+        }
+
+        private void mnuAddExt_Click(object sender, EventArgs e)
+        {
+            if (lstExt.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            var item = lstExt.SelectedItems[0];
+            if (item.Level == 1)
+            {
+                item = item.Parent;
+            }
+
+            var subitem = item.Items.Add("");
+            subitem.Image = Properties.Resources.codefile;
+            lstExt.BeginEdit(subitem.Cells[0]);
+        }
+
+        private void lstExt_BeforeCellEditing(object sender, TreeListBeforeCellEditingEventArgs e)
+        {
+            if (e.Cell.Item.Level == 0)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void mnuDelExt_Click(object sender, EventArgs e)
+        {
+            if (lstExt.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            lstExt.EndEdit();
+
+            var item = lstExt.SelectedItems[0];
+            if (item.Level == 0)
+            {
+                return;
+            }
+
+            item.Parent.Items.Remove(item);
+        }
+
+        private void tlbUseBase_Click(object sender, EventArgs e)
+        {
+            tlbUseBase.Checked = !tlbUseBase.Checked;
+        }
+
+        private void mnuSelect_Click(object sender, EventArgs e)
+        {
+            if (lstExt.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            var item = lstExt.SelectedItems[0];
+            if (item.Level == 1)
+            {
+                item = item.Parent;
+            }
+
+            using (var dialog = new OpenFileDialog()
+            {
+                InitialDirectory = Path.Combine(_hosting.WorkPath, "extensions", item.Text),
+                Filter = "C#代码文件(*.cs)|*.cs|VB代码文件(*.vb)|*.vb"
+            })
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    var name = new FileInfo(dialog.FileName).Name;
+                    if (!item.Items.Any(s => s.Text.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        var subitem = item.Items.Add(name);
+                        subitem.Image = Properties.Resources.codefile;
+                    }
+                }
+            }
+        }
+
+        private void lstExt_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
+        {
+            mnuAddExt.Enabled = mnuSelect.Enabled = tlbAddExt.Enabled = tlbSelect.Enabled = lstExt.SelectedItems.Count > 0;
+            mnuDelExt.Enabled = tlbDelExt.Enabled = lstExt.SelectedItems.Count > 0 && lstExt.SelectedItems[0].Level == 1;
         }
     }
 

@@ -1,0 +1,193 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var pk = GetPrimaryKey(table);
+#>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><#= table.Name #> - <#= host.Profile.ProjectName #></title>
+    <script src="~/scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/scripts/jquery.easyui.min.js"></script>
+    <script src="~/scripts/locale/easyui-lang-zh_CN.js"></script>
+    <script src="~/scripts/jquery.easyui.extend.js"></script>
+    <script src="~/scripts/common.js"></script>
+    <link href="~/content/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="~/content/themes/icon.css" rel="stylesheet" />
+    <script type="text/javascript">
+        var id = '@Context.Request.Query["id"]';
+        $(function () {
+            loadInfo();
+        });
+    
+        //加载信息
+        function loadInfo() {
+            if (id != '') {
+                $.getJSON('@Url.Action("Get")?id=' + id, function (data) {
+                    common.processResult(data, function () {
+                        $('#form1').form('load', data);
+                    });
+                });
+    
+                $('#btnSaveAndNew').remove();
+            }
+        }
+    
+        //保存信息
+        function saveInfo(isNew) {
+            if (!$('#form1').form('validate')) {
+                return;
+            }
+    
+            var postData = new Object();
+    
+            //将表单填充的内容序列化为json
+            var data = $('#form1').form('save');
+            data.<#= pk #> = id;
+            postData["dto"] = JSON.stringify(data);
+    
+            common.showProcess();
+            $.post('@Url.Action("Save")', postData, function (result) {
+                common.processResult(result, function () {
+                    if (isNew) {
+                        $('#form1').form('clear');
+                    }
+    
+                    id = isNew ? '' : result.<#= pk #>;
+                    common.setReturnValue(true);
+                });
+            });
+        }
+    </script>
+    <style>
+        .form-body {
+            border-collapse: collapse;
+            border-spacing: 2px;
+            margin-top: 20px;
+            margin-left: 30px;
+        }
+
+        .form-body td {
+            padding: 8px 5px 8px 5px
+        }
+
+        .form-body td.addon {
+            width: 100px;
+            text-align: right;
+            vertical-align: top;
+            padding-top: 10px;
+            height: 22px;
+        }
+
+        .form-body td.label {
+            width: 80px;
+            text-align: right;
+            vertical-align: top;
+            padding-top: 6px;
+        }
+
+        .form-button {
+            height: 45px;
+            padding-right: 10px;
+            padding-top: 15px;
+            text-align: right;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eeeeee;
+        }
+
+        .form-body .group {
+            padding-left: 32px;
+        }
+
+        .form-body .group div {
+            height: 24px;
+            width: 100%;
+            font-weight: bold;
+            color: #0081c2;
+            padding-left: 20px;
+            background: url(images/group.png) no-repeat 0px 2px;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .form-body td.label {
+            width: 80px;
+            text-align: right;
+            vertical-align: top;
+            padding-top: 6px;
+        }
+
+        .form-button a.l-btn {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body class="easyui-layout">
+    <form id="form1">
+        <div data-options="region:'center',border:false">
+            <table class="form-body">
+        <#
+        foreach (dynamic column in table.Columns)
+        {
+            if (column.IsPrimaryKey || !column.GenerateField)
+            {
+                continue;
+            }
+        #>
+                <tr>
+                    <td class="addon"><#= string.IsNullOrEmpty(column.Description) ? column.Name : column.Description #></td>
+                    <td><input id="txt<#= column.Name #>" name="<#= column.Name #>" data-options="<#= GetOptions(column) #>" class="<#= GetEasyUIClassName(column) #>" /></td>
+                </tr>
+        <#
+        }
+        #>        
+            </table>
+        </div>
+        <div data-options="region:'south',border:false" class="form-button">
+            <a class="easyui-linkbutton" onclick="saveInfo()" id="btnSave" data-options="iconCls:'icon-save'">保存</a>
+            <a class="easyui-linkbutton" onclick="saveInfo(true)" id="btnSaveAndNew" data-options="iconCls:'icon-save'">保存并新建</a>
+            <a class="easyui-linkbutton" onclick="common.closeWindow()" id="btnClose" data-options="iconCls:'icon-cancel'">关闭</a>
+        </div>
+    </form>
+</body>
+</html>
+
+<#+
+private static string GetEasyUIClassName(dynamic column)
+{
+    switch ((int)column.ControlType)
+    {
+        case 1:
+            return "easyui-numberbox";
+        case 4:
+        case 5:
+            return "easyui-datebox";
+        default:
+            return "easyui-textbox";
+    }
+}
+
+private static string GetOptions(dynamic column)
+{
+    var str = "";
+    var val = "";
+    if (!column.IsNullable)
+    {
+        str += "required: true";
+    }
+    if (column.PropertyType.ToLower() == "string" && column.Length != null)
+    {
+        val += "'length[0," + column.Length + "]'";
+    }
+    if (val != "")
+    {
+        if (str != "") str += ",";
+        str += "validType:[" + val + "]";
+    }
+    return str;
+ }
+#>

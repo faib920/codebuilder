@@ -57,6 +57,7 @@ namespace CodeBuilder
 
             chkCheckUpdate.Checked = Config.Instance.CheckUpdate;
             chkView.Checked = Config.Instance.Source_View;
+            chkOverFile.Checked = Config.Instance.SkipWhenFileExists;
         }
 
         private void LoadPlugins()
@@ -122,6 +123,7 @@ namespace CodeBuilder
 
             Config.Instance.CheckUpdate = chkCheckUpdate.Checked;
             Config.Instance.Source_View = chkView.Checked;
+            Config.Instance.SkipWhenFileExists = chkOverFile.Checked;
             Config.Save();
 
             if (_pluginRemoved.Count > 0)

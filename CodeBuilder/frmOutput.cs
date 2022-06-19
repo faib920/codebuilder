@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------
 using CodeBuilder.Core.Forms;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -61,6 +62,11 @@ namespace CodeBuilder
             {
                 Clipboard.SetText(richTextBox1.SelectedText);
             }
+        }
+
+        private void tlbHelp_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://fireasy.cn/docs/codebuilder-output");
         }
     }
 }

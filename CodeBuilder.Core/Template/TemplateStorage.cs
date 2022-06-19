@@ -45,13 +45,14 @@ namespace CodeBuilder.Core.Template
             foreach (var p in groups)
             {
                 var dir = new TemplateDirectory(p.Name);
+                dir.Color = p.Color;
                 dItems.Add(dir);
                 FillFiles(dir.Directories, dir.Files, p.Groups, p.Partitions);
             }
 
             foreach (var p in partitions)
             {
-                fItems.Add(new TemplateFile(string.Format("{1} ({0})", p.Name, p.FileName), p.FilePath, "C#"));
+                fItems.Add(new TemplateFile(string.Format("{1} ({0})", p.Name, p.FileName), p.FilePath, "C#") {  Color = p.Color });
             }
         }
 

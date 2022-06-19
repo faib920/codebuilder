@@ -58,7 +58,7 @@ namespace CodeBuilder.Database
                 return null;
             }
 
-            using (var frm = new frmTableSelector(_hosting, tables))
+            using (var frm = new frmTableSelector(_hosting, tables, option.Selected))
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
@@ -99,7 +99,8 @@ namespace CodeBuilder.Database
                         continue;
                     }
 
-                    var table = new Table { Description = string.Empty };
+                    var table = SchemaExtensionManager.Build<Table>();
+                    table.Description = string.Empty;
 
                     var gotoIndex = sql.IndexOf("=>");
                     if (gotoIndex != -1)
@@ -117,8 +118,11 @@ namespace CodeBuilder.Database
                         var schema = reader.GetSchemaTable();
                         foreach (DataRow row in schema.Rows)
                         {
-                            var column = new Column(table)
-                                .TrySetValue(row, "ColumnName", (c, s) => c.Name = s.ToString())
+                            var column = SchemaExtensionManager.Build<Column>(table);
+
+                            column.Description = string.Empty;
+                            column.ColumnType = string.Empty;
+                            column = column.TrySetValue(row, "ColumnName", (c, s) => c.Name = s.ToString())
                                 .TrySetValue<bool>(row, "IsAutoIncrement", (c, s) => c.AutoIncrement = s)
                                 .TrySetValue<long?>(row, "ColumnSize", (c, s) => c.Length = s)
                                 .TrySetValue<int?>(row, "NumericPrecision", (c, s) => c.Precision = s)
@@ -273,7 +277,7 @@ namespace CodeBuilder.Database
                 column.IsPrimaryKey = c.IsPrimaryKey;
                 column.DbType = ConvertDbType(column, dbTypes, providerName);
                 column.DefaultValue = c.Default.ToStringSafely();
-                column.ColumnType = c.ColumnType;
+                column.ColumnType = c.ColumnType ?? string.Empty;
                 column.Index = ++index;
 
                 yield return column;

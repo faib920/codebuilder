@@ -44,5 +44,10 @@ namespace CodeBuilder.Core.Template
         /// 获取或设置文件使用的语言。
         /// </summary>
         public string Language { get; set; }
+
+        /// <summary>
+        /// 获取或设置颜色。
+        /// </summary>
+        public string Color { get; set; }
     }
 }

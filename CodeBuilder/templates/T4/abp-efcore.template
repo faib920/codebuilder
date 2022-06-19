@@ -4,6 +4,10 @@
     "Version": 1,
     "Description": "基于 Abp + EntityFrameworkCore 的 DDD 模型，包括应用层、领域层、数据传输对象等等。",
     "Language": "CSharp",
+    "Extension": {
+        "UseBase": true,
+        "Profile": [ "base.cs", "template.t4.abp-efcore.cs" ]
+    },
     "Groups": [
         {
             "Name": "Application",

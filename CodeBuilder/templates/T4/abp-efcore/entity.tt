@@ -9,10 +9,10 @@
 #>
 using System;
 using System.Collections.Generic;
-using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Models;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Models;
 using Volo.Abp.Domain.Entities;
 
-namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Entities
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Entities
 {
     /// <summary>
     /// <#= table.Description #>
@@ -62,7 +62,7 @@ namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= 
         public static <#= table.ClassName #> Create(<#= table.ClassName #>SaveModel model)
         {
             Validate(model);
-            //TODO:Someone 修改要赋值的项
+            //TODO 修改要赋值的项
             return new <#= table.ClassName #>
             {
 <#
@@ -97,7 +97,7 @@ namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= 
         {
             Validate(model);
 
-            //TODO:Someone 检查更新项
+            //TODO 检查更新项
 <#
         foreach (dynamic column in table.Columns)
         {
@@ -114,12 +114,7 @@ namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= 
 
         private static void Validate(<#= table.ClassName #>SaveModel model)
         {
-            var validationResultList = new List<WmpValidationResult>();
-            //TODO:Someone 验证数据
-            if (validationResultList.HasItems())
-            {
-                throw new WmpValidationException(validationResultList.ToArray());
-            }
+            //TODO 验证数据
         }
         #endregion
     }

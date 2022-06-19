@@ -4,6 +4,9 @@
     "Version": 1,
     "Description": "基于 Fireasy 框架的三层结构，包括实体模型、业务逻辑层、数据访问层。",
     "Language": "CSharp",
+    "Extension": {
+        "UseBase": true
+    },
     "Partitions": [
         {
             "Name": "Model",

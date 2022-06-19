@@ -178,7 +178,7 @@ namespace CodeBuilder
                 var client = new HttpClient();
                 var bytes = await client.GetByteArrayAsync(tmp.PackageUrl);
 
-                UnzipPackage(provider, bytes);
+                TemplateHelper.UnzipPackage(_hosting, provider, bytes);
 
                 tmp.IsInstalled = true;
                 tmp.NeedUpdate = false;
@@ -197,65 +197,6 @@ namespace CodeBuilder
             finally
             {
                 Cursor = Cursors.Default;
-            }
-        }
-
-        private void UnzipPackage(ITemplateProvider provider, byte[] bytes)
-        {
-            using (var memory = new MemoryStream(bytes))
-            using (var archive = new ZipInputStream(memory))
-            {
-                ZipEntry entry;
-                while ((entry = archive.GetNextEntry()) != null)
-                {
-                    var directoryName = Path.GetDirectoryName(entry.Name);
-                    var fileName = Path.GetFileName(entry.Name);
-                    var path = string.Empty;
-
-                    if (directoryName.StartsWith("extension.common"))
-                    {
-                        path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "extensions", "common");
-                    }
-                    else if (directoryName.StartsWith("extension.profile"))
-                    {
-                        path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "extensions", "profile");
-                    }
-                    else if (directoryName.StartsWith("extension.schema"))
-                    {
-                        path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "extensions", "schema");
-                    }
-                    else if (directoryName.StartsWith("template"))
-                    {
-                        path = provider.WorkDir;
-                    }
-
-                    directoryName = directoryName.IndexOf('\\') != -1 ? string.Join("\\", directoryName.Split('\\').Skip(1)) : null;
-
-                    if (!string.IsNullOrEmpty(directoryName))
-                    {
-                        path = Path.Combine(path, directoryName);
-                        if (!Directory.Exists(path))
-                        {
-                            Directory.CreateDirectory(path);
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(fileName))
-                    {
-                        var fullName = Path.Combine(path, fileName);
-
-                        using (var writer = File.Create(fullName))
-                        {
-                            var bufferSize = 2048;
-                            var buffer = new byte[2048];
-
-                            while ((bufferSize = archive.Read(buffer, 0, buffer.Length)) > 0)
-                            {
-                                writer.Write(buffer, 0, bufferSize);
-                            }
-                        }
-                    }
-                }
             }
         }
 

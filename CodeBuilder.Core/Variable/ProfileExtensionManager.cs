@@ -6,15 +6,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core.Initializers;
+using CodeBuilder.Core.Template;
 using Fireasy.Common.Emit;
 using Fireasy.Common.Extensions;
-using Microsoft.CSharp;
-using Microsoft.VisualBasic;
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -23,30 +20,27 @@ namespace CodeBuilder.Core.Variable
     /// <summary>
     /// 变量扩展管理类。
     /// </summary>
-    public class ProfileExtensionManager
+    public class ProfileExtensionManager : BaseExtensionManager
     {
         private static Type _wrapType;
         private static List<Type> _extendTypes = new List<Type>();
         private static List<PropertyMap> _propertyCache = null;
-        private static string _templateUId = string.Empty;
 
         /// <summary>
         /// 编译生成一个变量。
         /// </summary>
-        /// <param name="templateUId">模板UID。</param>
-        /// <returns></returns>
-        public static Profile Build(string templateUId)
+        /// <param name="definition">模板定义。</param>
+        public static Profile Build(TemplateDefinition definition)
         {
-            if (_templateUId != templateUId)
+            if (definition != null)
             {
                 _propertyCache = null;
                 _wrapType = null;
-                _extendTypes = ComplileExtensionTypes(templateUId);
+                _extendTypes = ComplileExtensionTypes(definition);
                 _wrapType = GetWrapType();
-                _templateUId = templateUId;
             }
 
-            return InitializeDefaultValue(_wrapType?.New<Profile>());
+            return InitializeDefaultValue(_wrapType?.New<Profile>(), _wrapType) ?? new Profile();
         }
 
         /// <summary>
@@ -90,104 +84,25 @@ namespace CodeBuilder.Core.Variable
         /// <summary>
         /// 动态编译扩展动态类。
         /// </summary>
+        /// <param name="definition">模板定义。</param>
         /// <returns></returns>
-        private static List<Type> ComplileExtensionTypes(string templateUId)
+        private static List<Type> ComplileExtensionTypes(TemplateDefinition definition)
         {
-            var pluginTypes = new List<Type>();
-            foreach (var ext in new[] { ".cs", ".vb" })
+            var files = GetExtensionFiles(definition, "profile", s => s.Profile);
+
+            if (files.Length == 0)
             {
-                var files = GetExtensionFiles(templateUId, ext);
-
-                if (files.Length == 0)
-                {
-                    continue;
-                }
-
-                var fileName = Util.GenerateTempFileName();
-                StaticUnity.DynamicAssemblies.Add(fileName);
-
-                var compiler = new Fireasy.Common.Compiler.CodeCompiler();
-
-                compiler.OutputAssembly = fileName;
-                compiler.CodeProvider = GetCodeProvider(ext);
-                foreach (var ass in AssemblyReferenceManager.ProfileAssemblies)
-                {
-                    compiler.Assemblies.Add(ass);
-                }
-                compiler.Assemblies.AddRange(CommonExtensionManager.GetCommonDynamicAssemblies());
-                pluginTypes.AddRange(compiler.CompileAssembly(files).GetExportedTypes());
+                return new List<Type>();
             }
 
+            return Initialize(CompileTypes(definition, files, AssemblyReferenceManager.ProfileAssemblies));
+        }
+
+        private static List<Type> Initialize(List<Type> pluginTypes)
+        {
+            pluginTypes.Where(s => typeof(IPartitionOutputParser).IsAssignableFrom(s)).ForEach(s => Parser.AddParser(s.New<IPartitionOutputParser>()));
             pluginTypes.Where(s => typeof(IProfileInitializer).IsAssignableFrom(s)).ForEach(s => InitializerUnity.Register(s.New<IProfileInitializer>()));
-
             return pluginTypes;
-        }
-
-        /// <summary>
-        /// 获取目录下的可扩展的代码文件。
-        /// </summary>
-        /// <param name="ext"></param>
-        /// <returns></returns>
-        private static string[] GetExtensionFiles(string templateUId, string ext)
-        {
-            var list = new List<string>();
-
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "extensions\\profile");
-            if (Directory.Exists(path))
-            {
-                if (string.IsNullOrEmpty(templateUId))
-                {
-                    return Directory.GetFiles(path, "*" + ext).Where(s => !Path.GetFileName(s).StartsWith("template.", StringComparison.OrdinalIgnoreCase)).ToArray();
-                }
-                else
-                {
-                    return Directory.GetFiles(path, "*" + ext).Where(s => !Path.GetFileName(s).StartsWith("template.", StringComparison.OrdinalIgnoreCase) || Path.GetFileName(s).Equals("template." + templateUId + ext, StringComparison.OrdinalIgnoreCase)).ToArray();
-                }
-            }
-
-            return new string[0];
-        }
-
-        /// <summary>
-        /// 根据文件扩展名获取相应的 <see cref="CodeDomProvider"/>。
-        /// </summary>
-        /// <param name="ext"></param>
-        /// <returns></returns>
-        private static CodeDomProvider GetCodeProvider(string ext)
-        {
-            if (ext == ".vb")
-            {
-                return new VBCodeProvider();
-            }
-
-            return new CSharpCodeProvider();
-        }
-
-        /// <summary>
-        /// 初始化对象的默认值。
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        private static Profile InitializeDefaultValue(Profile obj)
-        {
-            if (obj == null)
-            {
-                return null;
-            }
-
-            var map = _wrapType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(s => s.CanWrite)
-                .Select(s => new { Property = s, DefaultValue = s.GetCustomAttributes<DefaultValueAttribute>().FirstOrDefault() })
-                .Where(s => s.DefaultValue != null)
-                .ToArray();
-
-            foreach (var item in map)
-            {
-                item.Property.FastSetValue(obj, item.DefaultValue.Value);
-            }
-
-            return obj;
         }
 
         /// <summary>

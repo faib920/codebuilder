@@ -125,7 +125,7 @@ namespace CodeBuilder.NVelocity
                         var r = new GenerateResult(part, writer.ToString());
                         if (option.WriteToDisk && r.WriteToDisk)
                         {
-                            PartitionWriter.Write(r, table, option.Profile, option.OutputDirectory);
+                            PartitionWriter.Write(r, table, option.Profile, option.OutputDirectory, !option.SkipWhenFileExists);
                         }
 
                         result.Add(r);

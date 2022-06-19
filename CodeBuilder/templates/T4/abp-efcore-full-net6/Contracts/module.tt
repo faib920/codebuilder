@@ -1,0 +1,21 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+using Volo.Abp.Application;
+using Volo.Abp.Modularity;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts
+{
+    [DependsOn(
+        typeof(AbpDddApplicationModule)
+    )]
+    public class ContractModule : AbpModule
+    {
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+        }
+    }
+}

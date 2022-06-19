@@ -91,7 +91,7 @@ namespace CodeBuilder.Core.Template
         /// <summary>
         /// 获取或设置模板扩展。
         /// </summary>
-        public TemplateExtension Extension { get; set; }
+        public TemplateExtension Extension { get; set; } = new TemplateExtension();
 
         /// <summary>
         /// 获取或设置分组。

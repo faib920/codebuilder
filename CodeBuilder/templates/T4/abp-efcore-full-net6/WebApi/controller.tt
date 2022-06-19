@@ -1,0 +1,59 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var svr = ToCamel(table.ClassName);
+#>
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.Dtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.QueryDtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+using Volo.Abp.Application.Dtos;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.WebApi<#= CheckDot(host.Profile.SubNameSpace) #>.Controllers
+{
+    [Route("api/<#= CheckEnd(host.Profile.Module, "/").ToLower() #><#= CheckEnd(host.Profile.SubNameSpace, "/").ToLower() #><#= table.ClassName.ToLower() #>")]
+    public class <#= table.ClassName #>Controller : ControllerBase
+    {
+        private I<#= table.ClassName #>AppService _<#= svr #>Service;
+
+        public <#= table.ClassName #>Controller(I<#= table.ClassName #>AppService <#= svr #>Service)
+        {
+            _<#= svr #>Service = <#= svr #>Service;
+        }
+        
+        [HttpPost("search")]
+        public async Task<PagedResultDto<<#= table.ClassName #>Dto>> QueryAsync([FromBody]<#= table.ClassName #>QueryDto queryDto)
+        {
+            return await _<#= svr #>Service.QueryPagedListAsync(queryDto);
+        }
+        
+        [HttpGet]
+        public async Task<<#= table.ClassName #>Dto> QueryAsync(<#= ptype #> id)
+        {
+            return await _<#= svr #>Service.GetAsync(id);
+        }
+        
+        [HttpPost]
+        public async Task<<#= table.ClassName #>Dto> CreateAsync([FromBody]<#= table.ClassName #>SaveDto dto)
+        {
+            return await _<#= svr #>Service.SaveAsync(dto);
+        }
+        
+        [HttpPut]
+        public async Task<<#= table.ClassName #>Dto> UpdateAsync([FromBody]<#= table.ClassName #>SaveDto dto)
+        {
+            return await _<#= svr #>Service.SaveAsync(dto);
+        }
+        
+        [HttpDelete]
+        public async Task<bool> DeleteAsync(<#= ptype #> id)
+        {
+            return await _<#= svr #>Service.DeleteAsync(id);
+        }
+    }
+}

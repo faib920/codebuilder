@@ -32,6 +32,9 @@
             this.tlbOpen = new System.Windows.Forms.ToolStripButton();
             this.tlbSave = new System.Windows.Forms.ToolStripButton();
             this.tlbSaveAs = new System.Windows.Forms.ToolStripButton();
+            this.tlbHelp = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tlbInfo = new System.Windows.Forms.ToolStripButton();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -42,7 +45,10 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tlbOpen,
             this.tlbSave,
-            this.tlbSaveAs});
+            this.tlbSaveAs,
+            this.tlbHelp,
+            this.toolStripSeparator1,
+            this.tlbInfo});
             this.toolStrip1.Location = new System.Drawing.Point(2, 2);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(351, 25);
@@ -79,6 +85,31 @@
             this.tlbSaveAs.Text = "另存为文件";
             this.tlbSaveAs.Click += new System.EventHandler(this.tlbSaveAs_Click);
             // 
+            // tlbHelp
+            // 
+            this.tlbHelp.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tlbHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlbHelp.Image = global::CodeBuilder.Properties.Resources.help;
+            this.tlbHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlbHelp.Name = "tlbHelp";
+            this.tlbHelp.Size = new System.Drawing.Size(23, 22);
+            this.tlbHelp.Text = "帮助";
+            this.tlbHelp.Click += new System.EventHandler(this.tlbHelp_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tlbInfo
+            // 
+            this.tlbInfo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tlbInfo.Image = global::CodeBuilder.Properties.Resources.info;
+            this.tlbInfo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tlbInfo.Name = "tlbInfo";
+            this.tlbInfo.Size = new System.Drawing.Size(23, 22);
+            this.tlbInfo.Text = "信息";
+            // 
             // propertyGrid1
             // 
             this.propertyGrid1.CategoryForeColor = System.Drawing.SystemColors.InactiveCaptionText;
@@ -99,6 +130,7 @@
             | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
             | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
             | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
+            this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmProfile";
@@ -120,5 +152,8 @@
         private System.Windows.Forms.ToolStripButton tlbSave;
         private System.Windows.Forms.ToolStripButton tlbSaveAs;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.ToolStripButton tlbHelp;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton tlbInfo;
     }
 }

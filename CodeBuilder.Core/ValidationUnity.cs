@@ -36,7 +36,7 @@ namespace CodeBuilder.Core
                 var value = p.GetValue(profile);
                 if (value == null || (value is string @string && string.IsNullOrEmpty(@string)))
                 {
-                    sb.AppendLine(string.Format("Profile 的 {0} 不能为空", p.Name));
+                    sb.AppendLine(string.Format("Profile 的 {0} 不能为空，请在【变量】窗口中设置；", p.Name));
                 }
             }
 
@@ -52,7 +52,7 @@ namespace CodeBuilder.Core
                     var value = p.GetValue(table);
                     if (value == null || (value is string @string && string.IsNullOrEmpty(@string)))
                     {
-                        sb.AppendLine(string.Format("表 {0} 的 {1} 不能为空", table.Name, p.Name));
+                        sb.AppendLine(string.Format("表 {0} 的 {1} 不能为空，请在【属性】窗口中设置；", table.Name, p.Name));
                     }
                 }
 
@@ -68,10 +68,17 @@ namespace CodeBuilder.Core
                         var value = c.GetValue(column);
                         if (value == null || (value is string @string && string.IsNullOrEmpty(@string)))
                         {
-                            sb.AppendLine(string.Format("字段 {0}.{1} 的 {2} 不能为空", table.Name, column.Name, c.Name));
+                            sb.AppendLine(string.Format("字段 {0}.{1} 的 {2} 不能为空，请在【属性】窗口中设置；", table.Name, column.Name, c.Name));
                         }
                     }
                 }
+            }
+
+            if (sb.Length > 0)
+            {
+                sb.Insert(0, "必要字段校验结果：\n");
+                sb.Remove(sb.Length - 3, 3);
+                sb.Append("。");
             }
 
             return sb.ToString();

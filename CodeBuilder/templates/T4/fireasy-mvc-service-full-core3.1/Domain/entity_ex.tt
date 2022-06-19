@@ -1,0 +1,89 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Fireasy.Data.Entity;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Entities
+{
+    /// <summary>
+    /// <#= table.Description #> 实体类。
+    /// </summary>
+    [MetadataType(typeof(<#= table.ClassName #>Metadata))]
+<#
+if(table.IsTree)
+{
+#>
+    [EntityTreeMapping(InnerSign = "Code")]
+<#
+}
+#>
+    public partial class <#= table.ClassName #> <#= table.IsTree ? ": ITreeNode<" + table.ClassName + ">" : string.Empty #>
+    {
+<#
+if(table.IsTree)
+{
+#>
+        public System.Collections.Generic.List<SystemModule> Children { get; set; }
+
+        System.Collections.IList ITreeNode.Children
+        {
+            get { return Children; }
+            set { Children = (System.Collections.Generic.List<<#= table.ClassName #>>)value; }
+        }
+
+        public bool HasChildren { get; set; }
+
+        public object ITreeNode.Id
+        {
+            get { return <#= GetPrimaryKey(table) #>; }
+        }
+
+        public bool IsLoaded { get; set; }
+<#
+}
+#>
+    }
+
+
+    public class <#= table.ClassName #>Metadata
+    {
+<#
+	foreach (var column in table.Columns)
+	{
+#>
+        /// <summary>
+        /// 属性 <#= column.PropertyName #> 的验证特性。
+        /// </summary><#= GetValidationAttribute(column) #>
+        public object <#= column.PropertyName #> { get; set; }
+
+<#
+	}
+#>
+    }
+}
+
+<#+
+//获取列的验证特性
+private static string GetValidationAttribute(Column column)
+{
+    var sb = new StringBuilder();
+    if (!column.IsNullable && column.Name.ToLower() != "delflag" && string.IsNullOrEmpty(column.DefaultValue))
+    {
+        sb.Append("\r\n        [Required]");
+    }
+    if (column.PropertyType.ToLower() == "string" && column.Length != null)
+    {
+        sb.Append("\r\n        [StringLength(" + column.Length + ")]");
+    }
+    return sb.ToString();
+ }
+#>

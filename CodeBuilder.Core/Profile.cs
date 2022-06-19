@@ -11,7 +11,15 @@ namespace CodeBuilder.Core
     /// <summary>
     /// 变量。
     /// </summary>
-    public class Profile
+    public class Profile : IProfileInfo
     {
+        private string _fileName;
+
+        string IProfileInfo.FileName { get => _fileName; set => _fileName = value; }
+    }
+
+    public interface IProfileInfo
+    {
+        string FileName { get; set; }
     }
 }

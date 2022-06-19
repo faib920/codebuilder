@@ -41,8 +41,13 @@ namespace CodeBuilder.Core
         public Profile Profile { get; set; }
 
         /// <summary>
-        /// 是否输出到磁盘。
+        /// 获取或设置是否输出到磁盘。
         /// </summary>
         public bool WriteToDisk { get; set; }
+
+        /// <summary>
+        /// 获取或设置文件存在时是否跳过。
+        /// </summary>
+        public bool SkipWhenFileExists { get; set; }
     }
 }

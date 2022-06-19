@@ -1,0 +1,221 @@
+﻿{
+    "Name": "Abp + EfCore 完整项目(.net6)",
+    "Author": "Fireasy",
+    "Version": 1,
+    "Description": "基于 Abp + EntityFrameworkCore 的 DDD 模型，包括应用层、领域层、数据传输对象等等。",
+    "Language": "CSharp",
+    "Extension": {
+        "UseBase": true,
+        "Profile": [ "base.cs", "template.t4.abp-efcore.cs" ]
+    },
+    "Partitions": [
+        {
+            "Name": "解决方案",
+            "FileName": "solution.tt",
+            "Output": "{ProjectCode}.sln",
+            "Loop": "None",
+            "Color": "0,0,255",
+            "Syntax": "C#"
+        }
+    ],
+    "Groups": [
+        {
+            "Name": "WebApi",
+            "Partitions": [
+                {
+                    "Name": "WebApi项目文件",
+                    "FileName": "WebApi\\webapi_proj.tt",
+                    "Output": "{ProjectCode}.WebApi\\{ProjectCode}.WebApi.csproj",
+                    "Loop": "None",
+                    "Color": "0,0,255",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Startup",
+                    "FileName": "WebApi\\startup.tt",
+                    "Output": "{ProjectCode}.WebApi\\Startup.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Program",
+                    "FileName": "WebApi\\program.tt",
+                    "Output": "{ProjectCode}.WebApi\\Program.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Controller",
+                    "FileName": "WebApi\\controller.tt",
+                    "Output": "{ProjectCode}.WebApi\\{Module}\\{SubNameSpace}\\Controllers\\{ClassName}Controller.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Module",
+                    "FileName": "WebApi\\module.tt",
+                    "Output": "{ProjectCode}.WebApi\\WebApiModule.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                }
+            ]
+        },
+        {
+            "Name": "Application",
+            "Partitions": [
+                {
+                    "Name": "Application项目文件",
+                    "FileName": "Application\\app_proj.tt",
+                    "Output": "{ProjectCode}{.Module}.Application\\{ProjectCode}{.Module}.Application.csproj",
+                    "Loop": "None",
+                    "Color": "0,0,255",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "AppService",
+                    "FileName": "Application\\app.tt",
+                    "Output": "{ProjectCode}{.Module}.Application\\Services\\{SubNameSpace}\\{ClassName}AppService.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "AutoMapperProfile",
+                    "FileName": "Application\\profile.tt",
+                    "Output": "{ProjectCode}{.Module}.Application\\AutoMapperProfiles\\{SubNameSpace}Profile.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Module",
+                    "FileName": "Application\\module.tt",
+                    "Output": "{ProjectCode}{.Module}.Application\\ApplicationModule.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                }
+            ]
+        },
+        {
+            "Name": "Application.Contracts",
+            "Partitions": [
+                {
+                    "Name": "Contracts项目文件",
+                    "FileName": "Contracts\\contract_proj.tt",
+                    "Output": "{ProjectCode}{.Module}.Application.Contracts\\{ProjectCode}{.Module}.Application.Contracts.csproj",
+                    "Loop": "None",
+                    "Color": "0,0,255",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "IAppService",
+                    "FileName": "Contracts\\iapp.tt",
+                    "Output": "{ProjectCode}{.Module}.Application.Contracts\\{SubNameSpace}\\I{ClassName}AppService.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Module",
+                    "FileName": "Contracts\\module.tt",
+                    "Output": "{ProjectCode}{.Module}.Application.Contracts\\ContractModule.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                }
+            ]
+        },
+        {
+            "Name": "Domain",
+            "Partitions": [
+                 {
+                    "Name": "Domain项目文件",
+                    "FileName": "Domain\\domain_proj.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\{ProjectCode}{.Module}.Domain.csproj",
+                    "Loop": "None",
+                    "Color": "0,0,255",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Entity",
+                    "FileName": "Domain\\entity.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\{SubNameSpace}\\Entities\\{ClassName}.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "SaveModel",
+                    "FileName": "Domain\\savemodel.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\{SubNameSpace}\\Models\\{ClassName}SaveModel.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Repository",
+                    "FileName": "Domain\\repos.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\{SubNameSpace}\\Repositories\\{ClassName}Repository.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "DomainService",
+                    "FileName": "Domain\\manager.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\{SubNameSpace}\\Managers\\{ClassName}Manager.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "DbContext",
+                    "FileName": "Domain\\dbcontext.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\EfCore\\{Module}DbContext.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "ModelCreatingExtensions",
+                    "FileName": "Domain\\modecreating.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\EfCore\\{Module}DbContextModelCreatingExtensions.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Module",
+                    "FileName": "Domain\\module.tt",
+                    "Output": "{ProjectCode}{.Module}.Domain\\DomainModule.cs",
+                    "Loop": "None",
+                    "Syntax": "C#"
+                }
+            ]
+        },
+        {
+            "Name": "Shared",
+            "Partitions": [
+                 {
+                    "Name": "Shared项目文件",
+                    "FileName": "Shared\\shared_proj.tt",
+                    "Output": "{ProjectCode}{.Module}.Shared\\{ProjectCode}{.Module}.Shared.csproj",
+                    "Loop": "None",
+                    "Color": "0,0,255",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "Dto",
+                    "FileName": "Shared\\dto.tt",
+                    "Output": "{ProjectCode}{.Module}.Shared\\Dtos\\{SubNameSpace}\\{ClassName}Dto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "SaveDto",
+                    "FileName": "Shared\\savedto.tt",
+                    "Output": "{ProjectCode}{.Module}.Shared\\Dtos\\{SubNameSpace}\\{ClassName}SaveDto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                },
+                {
+                    "Name": "QueryDto",
+                    "FileName": "Shared\\querydto.tt",
+                    "Output": "{ProjectCode}{.Module}.Shared\\QueryDtos\\{SubNameSpace}\\{ClassName}QueryDto.cs",
+                    "Loop": "Tables",
+                    "Syntax": "C#"
+                }
+            ]
+        }
+    ]
+}

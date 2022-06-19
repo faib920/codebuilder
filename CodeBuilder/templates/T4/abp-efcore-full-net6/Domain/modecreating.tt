@@ -1,0 +1,50 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+using System;
+using Microsoft.EntityFrameworkCore;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Entities;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain.EfCore
+{
+    public static class <#= CheckNull(host.Profile.Module) #>DbContextModelCreatingExtensions
+    {
+        public static void Configure<#=CheckNull(host.Profile.Module) #>Service(this ModelBuilder builder)
+        {
+<#
+	foreach (var table in host.Tables)
+	{
+#>
+            builder.Entity<<#= table.ClassName #>>(o =>
+            {
+                o.ToTable("<#= table.Name #>");
+                o.HasComment("<#= table.Description #>");
+                o.HasKey(a => a.Id);
+<#
+		var pk = GetPrimaryKey(table);
+		if (pk != "Id")
+		{
+#>
+                o.Property(a => a.Id).HasColumnName("<#= pk #>");
+<#
+		}
+
+        foreach (dynamic fk in table.ForeignKeys)
+	    {
+#>
+                o.HasOne(e => e.<#= fk.PkTable.ClassName #>)
+                    .WithMany()
+                    .HasForeignKey(e => e.<#= fk.FkColumn.PropertyName #>);
+<#
+        }
+#>
+            });
+<#
+	}
+#>
+        }
+    }
+}

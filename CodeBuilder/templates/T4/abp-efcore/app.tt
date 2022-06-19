@@ -12,27 +12,27 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Application.Contracts.<#= host.Profile.SubNameSpace #>;
-using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Entities;
-using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Models;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Entities;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Models;
 <#
     if (host.HasPartition("DomainService"))
     {
 #>
-using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Managers;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Managers;
 <#
     }
     else
     {
 #>
-using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Repositories;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Repositories;
 <#
     }
 #>
-using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Shared.Dtos.<#= host.Profile.SubNameSpace #>;
-using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Shared.QueryDtos.<#= host.Profile.SubNameSpace #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.Dtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.QueryDtos<#= CheckDot(host.Profile.SubNameSpace) #>;
 
-namespace <#= host.Profile.ProjectName #><#= host.Profile.Module #>.Application.Services.<#= host.Profile.SubNameSpace #>
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Services<#= CheckDot(host.Profile.SubNameSpace) #>
 {
     /// <summary>
     /// <#= table.Description #>应用服务类
@@ -204,7 +204,19 @@ namespace <#= host.Profile.ProjectName #><#= host.Profile.Module #>.Application.
     {
 #>
             <#= table.ClassName #> entity;
+<#
+    if (ptype == "string")
+    {
+#>
+            if (string.IsNullOrEmpty(model.<#= pk #>))
+<#
+    } else {
+#>
             if (model.<#= pk #> == 0)
+<#
+    }
+#>
+
             {
                 entity = <#= table.ClassName #>.Create(model);
                 entity = await _<#= ToCamel(table.ClassName) #>Repository.InsertAsync(entity, true);

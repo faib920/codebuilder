@@ -27,6 +27,11 @@ namespace CodeBuilder.Core.Template
         public string Name { get; set; }
 
         /// <summary>
+        /// 获取或设置颜色。
+        /// </summary>
+        public string Color { get; set; }
+
+        /// <summary>
         /// 获取子目录列表。
         /// </summary>
         public List<TemplateDirectory> Directories { get; private set; }

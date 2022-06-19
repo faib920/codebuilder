@@ -30,6 +30,8 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.chkOverFile = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkView = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -49,6 +51,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -71,16 +74,39 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox4);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.groupBox3);
             this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Location = new System.Drawing.Point(4, 29);
+            this.tabPage1.Location = new System.Drawing.Point(4, 28);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(460, 406);
+            this.tabPage1.Size = new System.Drawing.Size(460, 418);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "常规";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.chkOverFile);
+            this.groupBox4.Location = new System.Drawing.Point(17, 305);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(423, 77);
+            this.groupBox4.TabIndex = 9;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "生成";
+            // 
+            // chkOverFile
+            // 
+            this.chkOverFile.AutoSize = true;
+            this.chkOverFile.Location = new System.Drawing.Point(31, 33);
+            this.chkOverFile.Name = "chkOverFile";
+            this.chkOverFile.Size = new System.Drawing.Size(171, 23);
+            this.chkOverFile.TabIndex = 0;
+            this.chkOverFile.Text = "文件存在时不覆盖原文件";
+            this.chkOverFile.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -89,7 +115,7 @@
             this.groupBox1.Controls.Add(this.chkView);
             this.groupBox1.Location = new System.Drawing.Point(17, 209);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(423, 90);
+            this.groupBox1.Size = new System.Drawing.Size(423, 77);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "数据源";
@@ -97,9 +123,9 @@
             // chkView
             // 
             this.chkView.AutoSize = true;
-            this.chkView.Location = new System.Drawing.Point(66, 38);
+            this.chkView.Location = new System.Drawing.Point(31, 33);
             this.chkView.Name = "chkView";
-            this.chkView.Size = new System.Drawing.Size(88, 24);
+            this.chkView.Size = new System.Drawing.Size(80, 23);
             this.chkView.TabIndex = 0;
             this.chkView.Text = "读取视图";
             this.chkView.UseVisualStyleBackColor = true;
@@ -111,7 +137,7 @@
             this.groupBox3.Controls.Add(this.chkCheckUpdate);
             this.groupBox3.Location = new System.Drawing.Point(17, 113);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(423, 90);
+            this.groupBox3.Size = new System.Drawing.Size(423, 77);
             this.groupBox3.TabIndex = 7;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "其他";
@@ -119,9 +145,9 @@
             // chkCheckUpdate
             // 
             this.chkCheckUpdate.AutoSize = true;
-            this.chkCheckUpdate.Location = new System.Drawing.Point(66, 38);
+            this.chkCheckUpdate.Location = new System.Drawing.Point(31, 33);
             this.chkCheckUpdate.Name = "chkCheckUpdate";
-            this.chkCheckUpdate.Size = new System.Drawing.Size(148, 24);
+            this.chkCheckUpdate.Size = new System.Drawing.Size(132, 23);
             this.chkCheckUpdate.TabIndex = 0;
             this.chkCheckUpdate.Text = "启动时检测新版本";
             this.chkCheckUpdate.UseVisualStyleBackColor = true;
@@ -147,7 +173,7 @@
             this.cboEncoding.IntegralHeight = false;
             this.cboEncoding.Location = new System.Drawing.Point(66, 34);
             this.cboEncoding.Name = "cboEncoding";
-            this.cboEncoding.Size = new System.Drawing.Size(240, 28);
+            this.cboEncoding.Size = new System.Drawing.Size(240, 27);
             this.cboEncoding.TabIndex = 2;
             // 
             // label4
@@ -155,7 +181,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(19, 37);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(39, 20);
+            this.label4.Size = new System.Drawing.Size(35, 19);
             this.label4.TabIndex = 1;
             this.label4.Text = "编码";
             // 
@@ -163,10 +189,10 @@
             // 
             this.tabPage2.Controls.Add(this.lstPlugin);
             this.tabPage2.Controls.Add(this.toolStrip1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 29);
+            this.tabPage2.Location = new System.Drawing.Point(4, 28);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(460, 417);
+            this.tabPage2.Size = new System.Drawing.Size(460, 418);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "插件";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -174,6 +200,7 @@
             // lstPlugin
             // 
             this.lstPlugin.AlternateBackColor = System.Drawing.Color.Empty;
+            this.lstPlugin.CheckAllChecked = false;
             this.lstPlugin.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1,
             this.treeListColumn2,
@@ -188,7 +215,7 @@
             this.lstPlugin.NoneItemText = "没有可显示的数据";
             this.lstPlugin.RowNumberIndex = 0;
             this.lstPlugin.ShowGridLines = false;
-            this.lstPlugin.Size = new System.Drawing.Size(454, 386);
+            this.lstPlugin.Size = new System.Drawing.Size(454, 387);
             this.lstPlugin.SortKey = null;
             this.lstPlugin.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstPlugin.TabIndex = 1;
@@ -278,6 +305,7 @@
             // 
             // frmOption
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(492, 509);
             this.Controls.Add(this.btnCancel);
@@ -292,6 +320,8 @@
             this.Load += new System.EventHandler(this.frmOption_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -327,5 +357,7 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton mnuShop;
         private System.Windows.Forms.ToolStripButton mnuRemove;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.CheckBox chkOverFile;
     }
 }

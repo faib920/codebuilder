@@ -33,12 +33,13 @@ namespace CodeBuilder.JsonTool
             this.textBox1 = new Fireasy.Windows.Forms.ComplexTextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(29, 38);
+            this.label1.Location = new System.Drawing.Point(29, 33);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 19);
             this.label1.TabIndex = 0;
@@ -46,7 +47,7 @@ namespace CodeBuilder.JsonTool
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(102, 35);
+            this.textBox1.Location = new System.Drawing.Point(102, 30);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(199, 24);
             this.textBox1.TabIndex = 1;
@@ -72,11 +73,22 @@ namespace CodeBuilder.JsonTool
             this.button2.Text = "取消(&C)";
             this.button2.UseVisualStyleBackColor = true;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.Blue;
+            this.label2.Location = new System.Drawing.Point(98, 63);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(156, 19);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "多个标记可使用竖线|分隔";
+            // 
             // frmMark
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.button2;
             this.ClientSize = new System.Drawing.Size(448, 107);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
@@ -100,5 +112,6 @@ namespace CodeBuilder.JsonTool
         private Fireasy.Windows.Forms.ComplexTextBox textBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label2;
     }
 }

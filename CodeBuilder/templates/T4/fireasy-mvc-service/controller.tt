@@ -28,7 +28,7 @@ using <#= host.Profile.Namespace #>.Models;
     var service = ToCamel(table.ClassName);
 #>
 
-namespace <#= host.Profile.Namespace #>.Web.Areas.<#= host.Profile.MvcArea #>.Controllers
+namespace <#= host.Profile.Namespace #>.Web.Areas.<#= CheckDot(host.Profile.MvcArea) #>.Controllers
 {
     public partial class <#= table.ClassName #>Controller : Controller
     {

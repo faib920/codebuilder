@@ -8,6 +8,7 @@
 using CodeBuilder.Core;
 using CodeBuilder.Core.Forms;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
@@ -16,15 +17,16 @@ namespace CodeBuilder
     public partial class frmProfile : DockFormBase
     {
         private string _profileName;
-        private string _profileDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "profiles");
+        private string _profileDir = string.Empty;
         private const string FILTER = "Profile Files(*.profile)|*.profile";
         private const string CAPTION = "CodeBuilder Preview";
-        private readonly IDevHosting _hosting;
+        private readonly DevHosting _hosting;
 
-        public frmProfile(IDevHosting hosting)
+        public frmProfile(DevHosting hosting)
         {
             InitializeComponent();
             Icon = Properties.Resources.profile;
+            _profileDir = Path.Combine(hosting.WorkPath, "profiles");
             _hosting = hosting;
         }
 
@@ -33,11 +35,13 @@ namespace CodeBuilder
         public void ReloadProfile()
         {
             propertyGrid1.SelectedObject = _hosting.Profile;
+            RefreshInfo();
         }
 
         private void frmProfile_Load(object sender, EventArgs e)
         {
             propertyGrid1.SelectedObject = _hosting.Profile;
+            RefreshInfo();
         }
 
         private void tlbOpen_Click(object sender, EventArgs e)
@@ -50,9 +54,10 @@ namespace CodeBuilder
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     _profileName = dialog.FileName;
-                    //StaticUnity.Profile = ProfileUnity.LoadFile(profileName);
-                    //propertyGrid1.SelectedObject = StaticUnity.Profile;
+                    _hosting.Profile = ProfileUnity.LoadProfile(_hosting, _hosting.Template, _profileName);
+                    propertyGrid1.SelectedObject = _hosting.Profile;
                     PropertyChangeAct?.Invoke();
+                    RefreshInfo();
                 }
             }
         }
@@ -61,7 +66,7 @@ namespace CodeBuilder
         {
             if (string.IsNullOrEmpty(_profileName))
             {
-                ProfileUnity.SaveFile(_hosting.Template?.TId, _hosting.Profile);
+                ProfileUnity.SaveFile(_hosting, _hosting.Template?.TId, _hosting.Profile);
             }
             else
             {
@@ -90,6 +95,19 @@ namespace CodeBuilder
             {
                 PropertyChangeAct();
             }
+        }
+
+        private void RefreshInfo()
+        {
+            if (_hosting.Profile is IProfileInfo info)
+            {
+                tlbInfo.ToolTipText = info.FileName;
+            }
+        }
+
+        private void tlbHelp_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://fireasy.cn/docs/codebuilder-profile");
         }
     }
 }

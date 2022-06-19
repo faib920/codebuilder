@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using CodeBuilder.Core;
 using CodeBuilder.Core.Template;
 using CodeBuilder.Core.Initializers;
@@ -8,6 +8,10 @@ public class ProfileBaseExt
     [Description("命名空间。")]
     public string Namespace { get; set; }
 	
+    [Description("项目编码。")]
+    [RequiredCheck]
+    public string ProjectCode { get; set; }
+    
     [Description("项目名称。")]
     public string ProjectName { get; set; }
 	

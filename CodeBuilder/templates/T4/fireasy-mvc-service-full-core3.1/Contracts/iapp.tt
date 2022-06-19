@@ -1,0 +1,51 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var pk = GetPrimaryKey(table);
+#>
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.Dtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.QueryDtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts<#= CheckDot(host.Profile.SubNameSpace) #>
+{
+    /// <summary>
+    /// <#= table.Description #>应用服务接口
+    /// </summary>
+    public interface I<#= table.ClassName #>AppService
+    {
+        /// <summary>
+        /// 分页获取<#= table.Description #>列表
+        /// </summary>
+        /// <param name="queryDto"></param>
+        /// <returns></returns>
+        Task<(int Total, List<<#= table.ClassName #>Dto> Items)> GetListAsync(<#= table.ClassName #>QueryDto queryDto);
+
+        /// <summary>
+        /// 获取<#= table.Description #>详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<<#= table.ClassName #>Dto> GetAsync(<#= ptype #> id);
+
+        /// <summary>
+        /// 保存<#= table.Description #>
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        Task<<#= table.ClassName #>Dto> SaveAsync(<#= table.ClassName #>SaveDto dto);
+        
+        /// <summary>
+        /// 删除<#= table.Description #>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<bool> DeleteAsync(<#= ptype #> id);
+    }
+}

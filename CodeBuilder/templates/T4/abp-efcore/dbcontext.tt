@@ -1,4 +1,4 @@
-<#@ template hostSpecific="true" debug="true" #>
+﻿<#@ template hostSpecific="true" debug="true" #>
 <#@ output extension=".cs" #>
 <#@ include file="public\base.tt" #>
 <# 
@@ -7,12 +7,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.<#= host.Profile.SubNameSpace #>.Entities;
+using Volo.Abp.Data;
+using Volo.Abp.EntityFrameworkCore;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Entities;
 
-namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.EfCore
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain.EfCore
 {
-    public class <#= host.Profile.Module #>DbContext : DbContext
+    [ConnectionStringName("DefaultConnection")]
+    public class <#= CheckNull(host.Profile.Module) #>DbContext : AbpDbContext<<#= CheckNull(host.Profile.Module) #>DbContext>
     {
+        public <#= CheckNull(host.Profile.Module) #>DbContext(DbContextOptions<<#= CheckNull(host.Profile.Module) #>DbContext> options) : base(options)
+        {
+        }
 <#
 	foreach (var table in host.Tables)
 	{
@@ -27,7 +33,7 @@ namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Domain.EfCo
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Configure<#= host.Profile.Module #>();
+            modelBuilder.Configure<#= CheckNull(host.Profile.Module) #>();
         }
     }
 }

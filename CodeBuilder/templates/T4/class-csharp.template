@@ -4,6 +4,9 @@
     "Version": 1,
     "Description": "C# 基本类。",
     "Language": "CSharp",
+    "Extension": {
+        "UseBase": true
+    },
     "Partitions": [
         {
             "Name": "类",

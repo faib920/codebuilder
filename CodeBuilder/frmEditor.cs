@@ -6,12 +6,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
-using CodeBuilder.Core.Template;
 using CodeBuilder.Core.Forms;
+using CodeBuilder.Core.Template;
 using ICSharpCode.TextEditor.Actions;
 using ICSharpCode.TextEditor.Document;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -21,27 +22,30 @@ using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmEditor : DockFormBase, IClosableDockManaged, IChangeManager
+    public partial class frmEditor : DockFormBase, IClosableDockManaged, IChangeManager, IEditMenuManager, IContextMenuManager
     {
         private string _caption = "未命名";
         private bool _isChanged = false;
         private readonly frmFindAndReplace _findForm;
         private readonly IDevHosting _hosting;
 
-        public frmEditor(IDevHosting hosting)
+        public frmEditor(IDevHosting hosting, CodeCategory category = CodeCategory.None)
         {
             InitializeComponent();
+            Category = category;
             _hosting = hosting;
             _findForm = new frmFindAndReplace(_hosting);
         }
 
-        public frmEditor(IDevHosting hosting, string fileName)
-            : this(hosting)
+        public frmEditor(IDevHosting hosting, string fileName, CodeCategory category = CodeCategory.None)
+            : this(hosting, category)
         {
             FileName = fileName;
         }
 
         public string FileName { get; set; }
+
+        public CodeCategory Category { get; set; }
 
         public TemplateFile TemplateFile { get; set; }
 
@@ -101,6 +105,11 @@ namespace CodeBuilder
                 SetSyntax(language);
             }
 
+            if (!File.Exists(FileName))
+            {
+                File.Create(FileName).Close();
+            }
+
             txtEditor.Text = File.ReadAllText(FileName);
 
             _caption = Text = info.Name;
@@ -131,18 +140,18 @@ namespace CodeBuilder
             _caption = Text = GenerateResult.Partition.Name;
         }
 
-        public void SaveFile()
+        public bool SaveFile(bool notify = true)
         {
             if (!_isChanged && !string.IsNullOrEmpty(FileName))
             {
-                return;
+                return false;
             }
 
             if (string.IsNullOrEmpty(FileName))
             {
                 if (!ShowSaveDialog())
                 {
-                    return;
+                    return false;
                 }
             }
 
@@ -153,14 +162,20 @@ namespace CodeBuilder
                 _caption = Text = info.Name;
                 lblFileName.Text = FileName;
 
-                SaveAct?.Invoke();
+                if (notify)
+                {
+                    SaveAct?.Invoke();
+                }
 
                 _isChanged = false;
+                return true;
             }
             catch (Exception exp)
             {
                 _hosting.ShowError("保存文件失败。" + exp.Message);
             }
+
+            return false;
         }
 
         public void SaveAs()
@@ -357,6 +372,79 @@ namespace CodeBuilder
         private void btnOpen_Click(object sender, EventArgs e)
         {
             Process.Start("explorer", "/select,\"" + lblFileName.Text + "\"");
+        }
+
+        ToolStripItemCollection IEditMenuManager.GetEditMenuItems()
+        {
+            return contextMenuStrip1.Items;
+        }
+
+        string IEditMenuManager.Key => Category == CodeCategory.TemplateFile ? _hosting.Template?.TId : "Base";
+
+        void IEditMenuManager.Invoke(string command, object arguments)
+        {
+            switch (command)
+            {
+                case "Undo":
+                    mnuUndo_Click(mnuUndo, new EventArgs());
+                    break;
+                case "Redo":
+                    mnuRedo_Click(mnuRedo, new EventArgs());
+                    break;
+                case "Copy":
+                    mnuCopy_Click(mnuCopy, new EventArgs());
+                    break;
+                case "Cut":
+                    mnuCut_Click(mnuCut, new EventArgs());
+                    break;
+                case "Paste":
+                    mnuPaste_Click(mnuPaste, new EventArgs());
+                    break;
+                case "Find":
+                    mnuFind_Click(mnuFind, new EventArgs());
+                    break;
+                case "Replace":
+                    mnuReplace_Click(mnuReplace, new EventArgs());
+                    break;
+                case "Insert":
+                    txtEditor.ActiveTextAreaControl.TextArea.InsertString(arguments.ToString());
+                    break;
+                case "Save":
+                    SaveFile(true);
+                    break;
+                case "Help":
+                    GotoHelp();
+                    break;
+            }
+        }
+
+        IEnumerable<ToolStripItem> IContextMenuManager.GetContextMenuItems()
+        {
+            if (Category == CodeCategory.None)
+            {
+                yield break;
+            }
+
+            yield return new ToolStripMenuItem("保存", Properties.Resources.save1, (o, e) => SaveFile(true)) { Name = "mnuSave" };
+            yield return new ToolStripMenuItem("帮助", Properties.Resources.help, (o, e) => GotoHelp(), Keys.F1) { Name = "mnuHelp" };
+        }
+
+        private void GotoHelp()
+        {
+            switch (Category)
+            {
+                case CodeCategory.TemplateFile:
+                    Process.Start("http://fireasy.cn/docs/codebuilder-template-edit");
+                    break;
+                case CodeCategory.TemplateDefnition:
+                    Process.Start("http://fireasy.cn/docs/codebuilder-template-definition-edit");
+                    break;
+                case CodeCategory.CommonExtension:
+                case CodeCategory.ProfileExtension:
+                case CodeCategory.SchemaExtension:
+                    Process.Start("http://fireasy.cn/docs/codebuilder-extension-edit");
+                    break;
+            }
         }
     }
 }

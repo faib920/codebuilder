@@ -19,6 +19,38 @@ namespace CodeBuilder.Core.Template
     {
         //缓存
         private Dictionary<string, List<AccessorMap>> _cache = new Dictionary<string, List<AccessorMap>>();
+        private static readonly List<IPartitionOutputParser> _parserCache = new List<IPartitionOutputParser>();
+
+        /// <summary>
+        /// 清理缓存。
+        /// </summary>
+        public static void ClearCache()
+        {
+            _parserCache.Clear();
+        }
+
+        /// <summary>
+        /// 注册解析器。
+        /// </summary>
+        /// <param name="parser">解析器。</param>
+        public static void AddParser(IPartitionOutputParser parser)
+        {
+            if (parser != null)
+            {
+                _parserCache.Add(parser);
+            }
+        }
+
+        public static string PreParse(string output, dynamic schema, dynamic profile)
+        {
+            var context = new OutputParseContext(output, schema, profile);
+            foreach (var p in _parserCache)
+            {
+                p.Parse(context);
+            }
+
+            return context.Result;
+        }
 
         /// <summary>
         /// 使用架构对象及变量对象解析输出的文件路径。
@@ -34,37 +66,40 @@ namespace CodeBuilder.Core.Template
                 var list = new List<AccessorMap>();
                 var schemaType = schema != null ? schema.GetType() : null;
                 var profileType = profile != null ? profile.GetType() : null;
-                var regex = new Regex(@"\{(\w+)\}");
+                var regex = new Regex(@"\{.(\w+)\}");
                 var matches = regex.Matches(output);
                 foreach (Match match in matches)
                 {
                     var group = match.Groups[0];
                     var name = group.Value.Substring(1, group.Value.Length - 2);
+                    var isDot = name[0] == '.';
 
                     if (schemaType != null)
                     {
-                        var property = schemaType.GetProperty(name);
+                        var property = schemaType.GetProperty(name.Replace(".", string.Empty));
                         if (property != null)
                         {
                             list.Add(new AccessorMap
                             {
                                 GroupName = group.Value,
                                 Accessor = ReflectionCache.GetAccessor(property),
-                                ObjectType = ObjectType.Schema
+                                ObjectType = ObjectType.Schema,
+                                IsDot = isDot
                             });
                         }
                     }
 
                     if (profileType != null)
                     {
-                        var property = profileType.GetProperty(name);
+                        var property = profileType.GetProperty(name.Replace(".", string.Empty));
                         if (property != null)
                         {
                             list.Add(new AccessorMap
                             {
                                 GroupName = group.Value,
                                 Accessor = ReflectionCache.GetAccessor(property),
-                                ObjectType = ObjectType.Profile
+                                ObjectType = ObjectType.Profile,
+                                IsDot = isDot
                             });
                         }
                     }
@@ -76,7 +111,15 @@ namespace CodeBuilder.Core.Template
             foreach (var p in mappers)
             {
                 var value = GetPropertyValue(schema, profile, p);
-                output = output.Replace(p.GroupName, value.Replace(".", "\\"));
+
+                if (p.IsDot && !string.IsNullOrEmpty(value))
+                {
+                    output = output.Replace(p.GroupName, (p.IsDot ? "." : string.Empty) + value.Replace(".", "\\"));
+                }
+                else
+                {
+                    output = output.Replace(p.GroupName, value.Replace(".", "\\"));
+                }
             }
 
             return output;
@@ -113,6 +156,8 @@ namespace CodeBuilder.Core.Template
             public PropertyAccessor Accessor { get; set; }
 
             public ObjectType ObjectType { get; set; }
+
+            public bool IsDot { get; set; }
         }
 
         private enum ObjectType

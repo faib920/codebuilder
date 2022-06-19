@@ -1,0 +1,19 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace><#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fireasy.Data.Entity" Version="2.3.0-preview1" />
+    <ProjectReference Include="..\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

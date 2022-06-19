@@ -1,0 +1,21 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace><#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts.csproj" />
+    <ProjectReference Include="..\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.csproj" />
+    <ProjectReference Include="..\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain.csproj" />
+    <PackageReference Include="Volo.Abp.AutoMapper" Version="5.2.1" />
+  </ItemGroup>
+
+</Project>

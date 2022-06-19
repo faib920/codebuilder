@@ -167,7 +167,7 @@ namespace CodeBuilder.Razor
             var result = new GenerateResult(part, content);
             if (option.WriteToDisk && result.WriteToDisk)
             {
-                PartitionWriter.Write(result, schema, profile, option.OutputDirectory);
+                PartitionWriter.Write(result, schema, profile, option.OutputDirectory, !option.SkipWhenFileExists);
             }
 
             return result;

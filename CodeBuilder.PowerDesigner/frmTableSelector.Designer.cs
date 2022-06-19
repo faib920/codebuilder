@@ -91,8 +91,8 @@
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "package_16px_38902_easyicon.net.png");
-            this.imageList1.Images.SetKeyName(1, "48_diagram_16px_14625_easyicon.net.png");
+            this.imageList1.Images.SetKeyName(0, "package.png");
+            this.imageList1.Images.SetKeyName(1, "icons8-picture-16.png");
             this.imageList1.Images.SetKeyName(2, "table.png");
             // 
             // treeListColumn1

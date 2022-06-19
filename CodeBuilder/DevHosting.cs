@@ -4,7 +4,7 @@ using CodeBuilder.Core.Template;
 using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Net.Http;
 using System.Windows.Forms;
 
 namespace CodeBuilder
@@ -16,11 +16,9 @@ namespace CodeBuilder
         internal Action<string> ConsoleErrorAct;
         internal Func<IEnumerable<Table>> GetTablesFunc;
         private ITemplateProvider _templateProvider;
+        private TemplateDefinition _template;
 
-        public string WorkPath
-        {
-            get { return Application.StartupPath; }
-        }
+        public string WorkPath => Util.GetWorkPath();
 
         public IWin32Window MainWindow { get; set; }
 
@@ -38,7 +36,15 @@ namespace CodeBuilder
             }
         }
 
-        public TemplateDefinition Template { get; set; }
+        public TemplateDefinition Template
+        {
+            get { return _template; }
+            set
+            {
+                _template = value;
+                Parser.ClearCache();
+            }
+        }
 
         public Profile Profile { get; set; }
 
@@ -98,6 +104,13 @@ namespace CodeBuilder
         public IEnumerable<Table> GetTables()
         {
             return GetTablesFunc();
+        }
+
+        public void Hit(string key)
+        {
+            var client = new HttpClient();
+            var version = GetType().Assembly.GetName().Version;
+            client.PostAsync("http://www.fireasy.cn/api/hit?softKey=CodeBuilder&key=" + key + "&version=" + version, null);
         }
     }
 }

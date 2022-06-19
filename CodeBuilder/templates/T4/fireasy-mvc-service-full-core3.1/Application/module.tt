@@ -1,0 +1,31 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+using Volo.Abp.Application;
+using Volo.Abp.AutoMapper;
+using Volo.Abp.Modularity;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.AutoMapperProfiles;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application
+{
+    [DependsOn(
+        typeof(AbpAutoMapperModule),
+        typeof(ContractModule),
+        typeof(DomainModule)
+    )]
+    public class ApplicationModule : AbpModule
+    {
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+            Configure<AbpAutoMapperOptions>(options =>
+            {
+                options.AddProfile<<#= GetLastPart(CheckNull(host.Profile.SubNameSpace)) #>Profile>(validate: false);
+            });
+        }
+    }
+}

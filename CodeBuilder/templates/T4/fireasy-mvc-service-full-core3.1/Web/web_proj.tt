@@ -1,0 +1,21 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace><#= host.Profile.ProjectCode #>.Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts.csproj" />
+    <ProjectReference Include="..\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.csproj" />
+    <ProjectReference Include="..\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application\\<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.csproj" />
+ 	<PackageReference Include="Fireasy.Web.Mvc" Version="2.3.0-preview1" />
+  </ItemGroup>
+
+</Project>

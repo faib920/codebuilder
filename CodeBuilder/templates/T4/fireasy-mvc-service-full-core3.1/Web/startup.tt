@@ -1,0 +1,80 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using Fireasy.Data.Entity;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Services<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain.Infrastructure;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.AutoMapperProfiles;
+
+namespace <#= host.Profile.ProjectCode #>.Web
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+        
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddFireasy(Configuration)
+                .AddServices(typeof(<#= host.Tables[0].ClassName #>AppService).Assembly)
+                .AddIoc();
+                
+            services.AddControllersWithViews()
+                .ConfigureFireasyMvc(options =>
+                    {
+                        options.UseErrorHandleFilter = false;
+                        options.UseJsonModelBinder = false;
+                    });
+            //todo 根据项目实际情况，将UseSqlServer改成相应的UseMySql或UseSQLite等等，后面换成实际的连接字符串
+            //todo 可参考在线文档 http://fireasy.cn/docs/entity-context-initialize
+            //todo 安装对应的驱动，可参考在线文档 http://fireasy.cn/docs/data-provider
+            services.AddEntityContext<<#= CheckNull(host.Profile.Module) #>DbContext>(op => op.UseSqlServer("server=(local);user id=sa;password=xx"));
+            services.AddSession();
+            services.AddAutoMapper(op => op.AddProfile<<#= GetLastPart(CheckNull(host.Profile.SubNameSpace)) #>Profile>());
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                    {
+                        options.LoginPath = new PathString("/login");
+                    });
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+            
+            app.UseStaticFiles();
+            app.UseSession();
+            
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(c =>
+                {
+                    c.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    c.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                });
+        }
+    }
+}

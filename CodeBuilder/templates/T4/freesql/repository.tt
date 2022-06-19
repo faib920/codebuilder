@@ -1,0 +1,30 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using FreeSql;
+using <#= host.Profile.Namespace #>.Entities;
+
+namespace <#= host.Profile.Namespace #>.Repositories
+{
+    /// <summary>
+    /// <#= table.Description #>仓储
+    /// </summary>
+    public partial class <#= table.ClassName #>Repository : BaseRepository<<#= table.ClassName #>, <#= GetPrimaryKeyPTypeNonNullable(table) #>>
+    {
+        public <#= table.ClassName #>Repository(IFreeSql fsql)
+          : base (fsql, null, null)
+        {
+        }
+    }
+}

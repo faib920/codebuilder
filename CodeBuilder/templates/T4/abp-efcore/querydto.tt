@@ -10,7 +10,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace <#= host.Profile.ProjectName #>.<#= host.Profile.Module #>.Shared.QueryDtos.<#= host.Profile.SubNameSpace #>
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.QueryDtos<#= CheckDot(host.Profile.SubNameSpace) #>
 {
     /// <summary>
     /// <#= table.Description #>QueryDto

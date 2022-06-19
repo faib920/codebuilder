@@ -10,6 +10,10 @@ using CodeBuilder.Core.Forms;
 using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace CodeBuilder
 {
@@ -37,6 +41,7 @@ namespace CodeBuilder
                 return;
             }
 
+            tlbEdit.Enabled = false;
             _hosting.Template = TemplateParser.Parse(_hosting.Template.ConfigFileName);
 
             var storage = _hosting.TemplateProvider.GetStorage(_hosting.Template);
@@ -58,6 +63,11 @@ namespace CodeBuilder
 
                 item.Image = Properties.Resources.category;
 
+                if (!string.IsNullOrEmpty(dir.Color))
+                {
+                    item.ForeColor = FromColor(dir.Color);
+                }
+
                 FillItems(item.Items, dir.Directories, dir.Files);
 
                 item.Expended = true;
@@ -68,7 +78,12 @@ namespace CodeBuilder
                 var item = new TreeListItem(file.Name);
                 items.Add(item);
                 item.Tag = file;
-                item.Image = Properties.Resources.file;
+                item.Image = Properties.Resources.fileT;
+
+                if (!string.IsNullOrEmpty(file.Color))
+                {
+                    item.ForeColor = FromColor(file.Color);
+                }
             }
         }
 
@@ -87,6 +102,11 @@ namespace CodeBuilder
             OpenAct?.Invoke(file);
         }
 
+        private void lstPart_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
+        {
+            tlbEdit.Enabled = lstPart.SelectedItems.Count > 0 && lstPart.SelectedItems[0].Tag is TemplateFile;
+        }
+
         private void tlbNew_Click(object sender, EventArgs e)
         {
             using (var frm = new frmTemplateEditor(_hosting))
@@ -100,28 +120,33 @@ namespace CodeBuilder
 
         private void tlbEdit_Click(object sender, EventArgs e)
         {
-            if (_hosting.TemplateProvider == null || _hosting.Template == null)
+            if (lstPart.SelectedItems.Count == 0)
             {
-                _hosting.ShowInfo("当前没有选择模板。");
+                return;
             }
 
-            using (var frm = new frmTemplateEditor(_hosting) { Template = _hosting.Template })
+            var item = lstPart.SelectedItems[0];
+            if (!(item.Tag is TemplateFile file))
             {
-                if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    TemplateAct();
-                    Reload();
-                }
+                return;
             }
+
+            OpenAct?.Invoke(file);
         }
 
-        private void mnuRefresh_Click(object sender, EventArgs e)
+        private void tlbRefresh_Click(object sender, EventArgs e)
         {
             Reload();
         }
 
         private void tlbCopy_Click(object sender, EventArgs e)
         {
+            if (_hosting.TemplateProvider == null || _hosting.Template == null)
+            {
+                _hosting.ShowInfo("当前没有选定模板，请从【模板】菜单中选择。");
+                return;
+            }
+
             using (var frm = new frmTemplateCopy(_hosting) { Template = _hosting.Template })
             {
                 if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -134,10 +159,69 @@ namespace CodeBuilder
 
         private void tlbEditAsCode_Click(object sender, EventArgs e)
         {
+            if (_hosting.TemplateProvider == null || _hosting.Template == null)
+            {
+                _hosting.ShowInfo("当前没有选定模板，请从【模板】菜单中选择。");
+                return;
+            }
+
             if (OpenTemplateAct != null && _hosting.Template != null)
             {
                 OpenTemplateAct(_hosting.Template);
             }
+        }
+
+        private void tlbEditTemp_Click(object sender, EventArgs e)
+        {
+            if (_hosting.TemplateProvider == null || _hosting.Template == null)
+            {
+                _hosting.ShowInfo("当前没有选定模板，请从【模板】菜单中选择。");
+                return;
+            }
+
+            using (var frm = new frmTemplateEditor(_hosting) { Template = _hosting.Template })
+            {
+                if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    TemplateAct();
+                    Reload();
+                }
+            }
+        }
+
+        private void tlbHelp_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://fireasy.cn/docs/codebuilder-template");
+        }
+
+        private void tlbExport_Click(object sender, EventArgs e)
+        {
+            if (_hosting.TemplateProvider == null || _hosting.Template == null)
+            {
+                _hosting.ShowInfo("当前没有选定模板，请从【模板】菜单中选择。");
+                return;
+            }
+
+            using (var dialog = new SaveFileDialog()
+            {
+                Filter = "模板定义包(*.tdp)|*.tdp",
+                Title = "导出模板",
+                FileName = _hosting.Template.Name + ".tdp"
+            })
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    var bytes = TemplateHelper.ZipPackage(_hosting, _hosting.Template);
+
+                    File.WriteAllBytes(dialog.FileName, bytes);
+                }
+            }
+        }
+
+        private Color FromColor(string color)
+        {
+            var d = color.Split(',');
+            return Color.FromArgb(int.Parse(d[0]), int.Parse(d[1]), int.Parse(d[2]));
         }
     }
 }

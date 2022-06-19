@@ -1,0 +1,36 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+#>
+using System;
+using System.Collections.Generic;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.Dtos<#= CheckDot(host.Profile.SubNameSpace) #>
+{
+    /// <summary>
+    /// <#= table.Description #>SaveDto
+    /// </summary>
+    public class <#= table.ClassName #>SaveDto
+    {
+<#
+	foreach (dynamic column in table.Columns)
+	{
+	    var pt = column.PropertyType;
+	    if (column.IsPrimaryKey && (pt == "int" || pt == "long"))
+	    {
+	        pt += "?";
+	    }
+#>
+        /// <summary>
+        /// <#= column.Description #>
+        /// </summary>
+        public <#= pt #> <#= column.PropertyName #> { get; set; }
+
+<#
+	}
+#>
+    }
+}

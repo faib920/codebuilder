@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CodeBuilder.Core</RootNamespace>
     <AssemblyName>CodeBuilder.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -73,6 +73,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>key.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Fireasy.Common">
       <HintPath>..\lib\Fireasy.Common.dll</HintPath>
@@ -110,11 +116,13 @@
     </Compile>
     <Compile Include="Forms\IClosableDockManaged.cs" />
     <Compile Include="IDevHosting.cs" />
+    <Compile Include="Template\IPartitionOutputParser.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="Initializers\IProfileInitializer.cs" />
     <Compile Include="RequiredCheckAttribute.cs" />
     <Compile Include="SchemaUnity.cs" />
     <Compile Include="Template\TemplateExtension.cs" />
+    <Compile Include="ThreadHelper.cs" />
     <Compile Include="Tool\MultipleToolProviderBase.cs" />
     <Compile Include="ValidationUnity.cs" />
     <Compile Include="TemplateUnity.cs" />
@@ -156,7 +164,9 @@
     <Compile Include="Template\TemplateStorage.cs" />
     <Compile Include="IToolProvider.cs" />
     <Compile Include="Variable\AssemblyReferenceManager.cs" />
+    <Compile Include="Variable\BaseExtensionManager.cs" />
     <Compile Include="Variable\CommonExtensionManager.cs" />
+    <Compile Include="Variable\CompileException.cs" />
     <Compile Include="Variable\PropertyMap.cs" />
     <Compile Include="Variable\SchemaExtensionManager.cs" />
     <Compile Include="Source\Column.cs" />
@@ -193,6 +203,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="key.pfx" />
     <None Include="Resources\App.ico" />
   </ItemGroup>
   <ItemGroup>

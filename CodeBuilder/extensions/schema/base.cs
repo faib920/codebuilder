@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using CodeBuilder.Core;
 using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Initializers;

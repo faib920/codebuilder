@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core.Initializers;
+using CodeBuilder.Core.Template;
 using Fireasy.Common.Extensions;
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
@@ -20,7 +21,7 @@ namespace CodeBuilder.Core.Variable
     /// <summary>
     /// 公共扩展管理类。
     /// </summary>
-    public class CommonExtensionManager
+    public class CommonExtensionManager : BaseExtensionManager
     {
         private static List<Type> _extendTypes = new List<Type>();
         private static List<string> _assemblies = null;
@@ -28,13 +29,14 @@ namespace CodeBuilder.Core.Variable
         /// <summary>
         /// 获取公共的动态程序集列表。
         /// </summary>
+        /// <param name="definition">模板定义。</param>
         /// <returns></returns>
-        public static List<string> GetCommonDynamicAssemblies()
+        public static List<string> GetCommonDynamicAssemblies(TemplateDefinition definition)
         {
             if (_assemblies == null)
             {
                 _assemblies = new List<string>();
-                _extendTypes = ComplileExtensionTypes();
+                _extendTypes = ComplileExtensionTypes(definition);
             }
 
             return _assemblies;
@@ -43,35 +45,19 @@ namespace CodeBuilder.Core.Variable
         /// <summary>
         /// 动态编译扩展动态类。
         /// </summary>
+        /// <param name="definition">模板定义。</param>
         /// <returns></returns>
-        private static List<Type> ComplileExtensionTypes()
+        private static List<Type> ComplileExtensionTypes(TemplateDefinition definition)
         {
             var pluginTypes = new List<Type>();
-            foreach (var ext in new[] { ".cs", ".vb" })
+            var files = GetExtensionFiles(definition, "common", s => s.Common);
+
+            if (files.Length == 0)
             {
-                var files = GetExtensionFiles(ext);
-
-                if (files.Length == 0)
-                {
-                    continue;
-                }
-
-                var compiler = new Fireasy.Common.Compiler.CodeCompiler();
-                var fileName = Util.GenerateTempFileName();
-                _assemblies.Add(fileName);
-
-                compiler.OutputAssembly = fileName;
-                compiler.CodeProvider = GetCodeProvider(ext);
-                foreach (var ass in AssemblyReferenceManager.CommonAssemblies)
-                {
-                    compiler.Assemblies.Add(ass);
-                }
-                pluginTypes.AddRange(compiler.CompileAssembly(files).GetExportedTypes());
+                return new List<Type>();
             }
 
-            pluginTypes.Where(s => typeof(IProfileInitializer).IsAssignableFrom(s)).ForEach(s => InitializerUnity.Register(s.New<IProfileInitializer>()));
-
-            return pluginTypes;
+            return CompileTypes(definition, files, AssemblyReferenceManager.CommonAssemblies, true, fileName => _assemblies.Add(fileName));
         }
 
         /// <summary>
@@ -81,28 +67,13 @@ namespace CodeBuilder.Core.Variable
         /// <returns></returns>
         private static string[] GetExtensionFiles(string ext)
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "extensions\\common");
+            var path = Path.Combine(DevHostingHolder.Instance.WorkPath, "extensions", "common");
             if (Directory.Exists(path))
             {
                 return Directory.GetFiles(path, "*" + ext);
             }
 
             return new string[0];
-        }
-
-        /// <summary>
-        /// 根据文件扩展名获取相应的 <see cref="CodeDomProvider"/>。
-        /// </summary>
-        /// <param name="ext"></param>
-        /// <returns></returns>
-        private static CodeDomProvider GetCodeProvider(string ext)
-        {
-            if (ext == ".vb")
-            {
-                return new VBCodeProvider();
-            }
-
-            return new CSharpCodeProvider();
         }
     }
 }

@@ -120,6 +120,10 @@ namespace CodeBuilder
                 {
                     item.Checked = true;
                 }
+                else if (lstPart.CheckAllChecked)
+                {
+                    lstPart.CheckAllChecked = false;
+                }
 
                 item.Expended = true;
             }
@@ -130,7 +134,7 @@ namespace CodeBuilder
             foreach (var part in partitions)
             {
                 var item = new TreeListItem(part.Name);
-                item.Image = Properties.Resources.file;
+                item.Image = Properties.Resources.fileT;
                 item.Tag = part;
                 items.Add(item);
                 item.Cells[1].Value = part.Output;
@@ -138,6 +142,10 @@ namespace CodeBuilder
                 if (_partitions != null && _partitions.Contains(part.Name))
                 {
                     item.Checked = true;
+                }
+                else if (lstPart.CheckAllChecked)
+                {
+                    lstPart.CheckAllChecked = false;
                 }
             }
         }
@@ -161,6 +169,11 @@ namespace CodeBuilder
                 s.Checked = isChecked;
                 CheckItems(s.Items, isChecked);
             });
+        }
+
+        private void lstPart_CheckAllChanged(object sender, TreeListCheckAllEventArgs e)
+        {
+            CheckItems(lstPart.Items, e.Checked);
         }
     }
 }

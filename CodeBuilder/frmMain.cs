@@ -31,23 +31,34 @@ namespace CodeBuilder
         private frmProperty _frmProperty;
         private frmTemplate _frmTemplate;
         private frmProfile _frmProfile;
+        private frmExtension _frmExtension;
         private frmOutput _frmOutput;
         private DevHosting _hosting;
+        private Dictionary<string, ToolStripMenuItem> _menuCache = new Dictionary<string, ToolStripMenuItem>();
 
         public frmMain()
         {
             InitializeComponent();
+
+            var rect = Screen.GetWorkingArea(this);
+            Width = rect.Width / 4 * 3;
+            Height = rect.Height / 4 * 3;
+            Left = (rect.Width - Width) / 2;
+            Top = (rect.Height - Height) / 2; ;
+
             mnuPropertyWnd.Image = Properties.Resources.property.ToBitmap();
             mnuProfileWnd.Image = Properties.Resources.profile.ToBitmap();
+            mnuExtensionWnd.Image = Properties.Resources.extension.ToBitmap();
             mnuTemplateWnd.Image = Properties.Resources.template.ToBitmap();
             mnuOutputWnd.Image = Properties.Resources.output.ToBitmap();
             Icon = Util.GetIcon();
-            _hosting = new DevHosting();
+
+            _hosting = new DevHosting().Hold();
             _hosting.MainWindow = dockMgr;
             _hosting.DockContainer = dockMgr;
         }
 
-        private async void frmMain_Load(object sender, EventArgs e)
+        private void frmMain_Load(object sender, EventArgs e)
         {
             StaticUnity.Encoding = string.IsNullOrWhiteSpace(Config.Instance.Encoding) ?
                 Encoding.Default : Encoding.GetEncoding(Config.Instance.Encoding);
@@ -56,17 +67,20 @@ namespace CodeBuilder
             InitializeTemplateMenus();
             InitializeToolMenus();
 
-            OnTemplateChange();
+            ReBuild();
 
             OpenOutputForm();
             GetTableForm();
             OpenPeopertyForm();
             OpenProfileForm();
+            OpenExtensionForm();
             OpenTemplateForm();
             _frmProperty.Activate();
 
-            CheckPluginUpdate();
-            CheckTemplateUpdate();
+            ThreadHelper.Start(CheckPluginUpdate);
+            ThreadHelper.Start(CheckTemplateUpdate);
+
+            _hosting.Hit("Main");
         }
 
         private frmTable GetTableForm()
@@ -87,7 +101,8 @@ namespace CodeBuilder
                     {
                         spCount.Text = "选择了 " + c + "个";
                     };
-                _hosting.GetTablesFunc = _frmTable.GetCheckedTables;
+                _hosting.GetTablesFunc = () => _frmTable.GetTables(true);
+                _frmTable.InitializeBuildMenu();
                 _frmTable.Show(dockMgr, DockState.Document);
             }
 
@@ -122,7 +137,14 @@ namespace CodeBuilder
                         OpenTemplateFileName(t, () => _frmTemplate.Reload());
                     };
                 _frmTemplate.CloseAct = () => _frmTemplate = null;
-                _frmTemplate.TemplateAct = () => ReInitializeTemplateSubMenus();
+                _frmTemplate.TemplateAct = () =>
+                {
+                    ReInitializeTemplateSubMenus();
+                    if (_frmExtension != null)
+                    {
+                        _frmExtension.Reload();
+                    }
+                };
 
                 _frmTemplate.Show(dockMgr, DockState.DockRight);
             }
@@ -150,6 +172,33 @@ namespace CodeBuilder
             else
             {
                 _frmProfile.Activate();
+            }
+        }
+
+        private void OpenExtensionForm()
+        {
+            if (_frmExtension == null)
+            {
+                _frmExtension = new frmExtension(_hosting);
+                _frmExtension.OpenAct = (t, c) =>
+                    {
+                        OpenExtensionFileName(t, c, () =>
+                        {
+                            if ((c == CodeCategory.CommonExtension || c == CodeCategory.ProfileExtension) && _hosting.ShowConfirm("变量扩展文件已改变，是否立即编译变量?") == ShowMsgButton.Yes)
+                            {
+                                ReBuildProfile();
+                            }
+                            if ((c == CodeCategory.CommonExtension || c == CodeCategory.SchemaExtension) && _hosting.ShowConfirm("架构扩展文件已改变，是否立即编译架构?") == ShowMsgButton.Yes)
+                            {
+                                ReBuildSchema();
+                            }
+                        });
+                    };
+                _frmExtension.Show(dockMgr, DockState.DockRight);
+            }
+            else
+            {
+                _frmExtension.Activate();
             }
         }
 
@@ -231,8 +280,29 @@ namespace CodeBuilder
             mnuReload.Click += (o1, e1) =>
             {
                 InitializeTemplateMenus();
-                OnTemplateChange();
+                ReBuild();
             };
+
+            var mnuImport = new ToolStripMenuItem("导入模板...");
+            mnuTemplate.DropDownItems.Add(mnuImport);
+            mnuImport.Click += (o1, e1) =>
+            {
+                using (var dialog = new OpenFileDialog()
+                {
+                    Filter = "模板定义包(*.tdp)|*.tdp",
+                    Title = "导入模板"
+                })
+                {
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        TemplateHelper.UnzipPackage(_hosting, _hosting.TemplateProvider, dialog.FileName);
+                        InitializeTemplateMenus();
+
+                        _hosting.ShowInfo("已成功从文件 " + dialog.FileName + " 导入模板。");
+                    }
+                }
+            };
+
             var mnuOnline = new ToolStripMenuItem("在线模板商店...");
             mnuTemplate.DropDownItems.Add(mnuOnline);
             mnuOnline.Click += (o1, e1) =>
@@ -246,7 +316,7 @@ namespace CodeBuilder
 
                         if (_hosting.Template != null && form.ChangedTemplates.Any(s => s.Equals(_hosting.Template.Id, StringComparison.OrdinalIgnoreCase)))
                         {
-                            OnTemplateChange();
+                            ReBuild();
                         }
                     }
                 }
@@ -280,19 +350,45 @@ namespace CodeBuilder
             }
         }
 
-        private void OnTemplateChange()
+        private void ReBuild()
         {
-            _hosting.Profile = ProfileUnity.LoadProfile(_hosting, _hosting.Template);
-            SchemaExtensionManager.Initialize(_hosting.Template?.TId);
+            ReBuildProfile();
+            ReBuildSchema();
+        }
 
-            if (_frmTable != null)
+        private void ReBuildProfile()
+        {
+            try
             {
-                _frmTable.ReBuildSchema();
+                _hosting.Profile = ProfileUnity.LoadProfile(_hosting, _hosting.Template);
+            }
+            catch (CompileException exp)
+            {
+                _hosting.ShowError("Profile 扩展代码编译失败。" + exp.FileName + "\r\n" + exp.Message);
+                return;
             }
 
             if (_frmProfile != null)
             {
                 _frmProfile.ReloadProfile();
+            }
+        }
+
+        private void ReBuildSchema()
+        {
+            try
+            {
+                SchemaExtensionManager.Initialize(_hosting.Template);
+            }
+            catch (CompileException exp)
+            {
+                _hosting.ShowError("Schema 扩展代码编译失败。" + exp.FileName + "\r\n" + exp.Message);
+                return;
+            }
+
+            if (_frmTable != null)
+            {
+                _frmTable.ReBuildSchema();
             }
         }
 
@@ -343,6 +439,9 @@ namespace CodeBuilder
         private void LoadSourceStruct(ISourceProvider provider)
         {
             var option = new SourceOption { View = Config.Instance.Source_View };
+
+            option.Selected = _frmTable.GetTableNames();
+
             var tables = provider.Preview(option);
             if (tables == null)
             {
@@ -373,7 +472,7 @@ namespace CodeBuilder
             {
                 tables = source;
             }
-            else 
+            else
             {
                 Processor.Run(this, () =>
                 {
@@ -403,7 +502,7 @@ namespace CodeBuilder
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    var editform = new frmEditor(_hosting) { Template = frm.Templage };
+                    var editform = new frmEditor(_hosting, CodeCategory.None) { Template = frm.Templage };
                     editform.Show(dockMgr, DockState.Document);
                 }
             }
@@ -423,7 +522,7 @@ namespace CodeBuilder
                 }
             }
 
-            var editform = new frmEditor(_hosting) { TemplateFile = fileItem };
+            var editform = new frmEditor(_hosting, CodeCategory.TemplateFile) { TemplateFile = fileItem };
             editform.Show(dockMgr, DockState.Document);
         }
 
@@ -441,7 +540,25 @@ namespace CodeBuilder
                 }
             }
 
-            var editform = new frmEditor(_hosting) { FileName = template.ConfigFileName, Language = "JavaScript", SaveAct = saveAct };
+            var editform = new frmEditor(_hosting, CodeCategory.TemplateDefnition) { FileName = template.ConfigFileName, Language = "JavaScript", SaveAct = saveAct };
+            editform.Show(dockMgr, DockState.Document);
+        }
+
+        private void OpenExtensionFileName(string fileName, CodeCategory category, Action saveAct)
+        {
+            foreach (DockContent content in dockMgr.Documents)
+            {
+                if (content is frmEditor)
+                {
+                    if ((content as frmEditor).FileName == fileName)
+                    {
+                        content.Activate();
+                        return;
+                    }
+                }
+            }
+
+            var editform = new frmEditor(_hosting, fileName, category) { SaveAct = saveAct };
             editform.Show(dockMgr, DockState.Document);
         }
 
@@ -518,10 +635,21 @@ namespace CodeBuilder
                 Config.Instance.TemplateProvider = _hosting.TemplateProvider.Name;
                 Config.Save();
 
+                ReBuild();
+
                 if (_frmTemplate != null)
                 {
-                    OnTemplateChange();
                     _frmTemplate.Reload();
+                }
+
+                if (_frmExtension != null)
+                {
+                    _frmExtension.Reload();
+                }
+
+                if (_frmTable != null)
+                {
+                    _frmTable.InitializeBuildMenu();
                 }
             }
         }
@@ -559,7 +687,7 @@ namespace CodeBuilder
                 return;
             }
 
-            var tables = _frmTable.GetCheckedTables();
+            var tables = _frmTable.GetTables(true);
             if (tables.Count == 0)
             {
                 _hosting.ShowWarn("你还没有选择要生成的对象，请从【数据源】菜单中选择或配置。");
@@ -578,6 +706,7 @@ namespace CodeBuilder
             option.DynamicAssemblies.AddRange(StaticUnity.DynamicAssemblies);
             option.Profile = _hosting.Profile;
             option.WriteToDisk = true;
+            option.SkipWhenFileExists = Config.Instance.SkipWhenFileExists;
 
             using (var frm = new frmPreBuild(_hosting) { Template = _hosting.Template })
             {
@@ -595,6 +724,8 @@ namespace CodeBuilder
 
             var time = Processor.Run(this, () =>
                 {
+                    _hosting.Hit("Build_" + template.TId);
+
                     _hosting.TemplateProvider.GenerateFiles(option, tables, (s, p) =>
                         {
                             Invoke(new Action(() =>
@@ -633,6 +764,11 @@ namespace CodeBuilder
             OpenTemplateForm();
         }
 
+        private void mnuExtensionWnd_Click(object sender, EventArgs e)
+        {
+            OpenExtensionForm();
+        }
+
         private void mnuOutputWnd_Click(object sender, EventArgs e)
         {
             OpenOutputForm();
@@ -661,6 +797,10 @@ namespace CodeBuilder
             {
                 frm.SaveFile();
             }
+            else if (dockMgr.ActiveContent is frmTable frm1)
+            {
+                frm1.SaveFile();
+            }
         }
 
         private void mnuSaveAs_Click(object sender, EventArgs e)
@@ -668,6 +808,38 @@ namespace CodeBuilder
             if (dockMgr.ActiveContent is frmEditor frm)
             {
                 frm.SaveAs();
+            }
+        }
+
+        private void mnuSaveAll_Click(object sender, EventArgs e)
+        {
+            var isChangeProfile = false;
+            var isChangeSchema = false;
+            foreach (var c in dockMgr.Contents)
+            {
+                if (c is frmEditor frm)
+                {
+                    if (frm.SaveFile(false))
+                    {
+                        if (frm.Category == CodeCategory.ProfileExtension && !isChangeProfile)
+                        {
+                            isChangeProfile = true;
+                        }
+                        else if (frm.Category == CodeCategory.SchemaExtension && !isChangeSchema)
+                        {
+                            isChangeSchema = true;
+                        }
+                    }
+                }
+            }
+
+            if (isChangeProfile && _hosting.ShowConfirm("变量扩展文件已改变，是否立即编译变量?") == ShowMsgButton.Yes)
+            {
+                ReBuildProfile();
+            }
+            if (isChangeSchema && _hosting.ShowConfirm("架构扩展文件已改变，是否立即编译架构?") == ShowMsgButton.Yes)
+            {
+                ReBuildSchema();
             }
         }
 
@@ -792,7 +964,7 @@ namespace CodeBuilder
                 var r = _hosting.ShowConfirm("有文档未已修改，是否保存后再退出?", 3);
                 if (r == ShowMsgButton.Yes)
                 {
-                    list.ForEach(s => s.SaveFile());
+                    list.ForEach(s => s.SaveFile(false));
                 }
                 else if (r == ShowMsgButton.Cancel)
                 {
@@ -811,11 +983,115 @@ namespace CodeBuilder
             }
         }
 
+        private void dockMgr_ActiveDocumentChanged(object sender, EventArgs e)
+        {
+            InitializeEditMenu(dockMgr.ActiveDocument);
+            InitializeContextMenu(dockMgr.ActiveDocument);
+        }
+
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (dockMgr.ActiveDocument is DockContent content)
             {
                 toolStripMenuItem5.Checked = !content.CloseButtonVisible;
+            }
+        }
+
+        private void CloneMenuItems(ToolStripItemCollection target, ToolStripItemCollection source, Action<ToolStripItem> initializer = null)
+        {
+            foreach (ToolStripItem item in source)
+            {
+                if (item is ToolStripMenuItem menuItem)
+                {
+                    var newItem = new ToolStripMenuItem();
+                    newItem.Text = item.Text;
+                    newItem.Image = item.Image;
+                    newItem.Name = item.Name;
+                    newItem.ShortcutKeys = menuItem.ShortcutKeys;
+                    newItem.ToolTipText = menuItem.ToolTipText;
+                    newItem.Tag = menuItem.Tag;
+                    newItem.Click += (sender, e) =>
+                    {
+                        var o = sender as ToolStripMenuItem;
+                        if (!string.IsNullOrEmpty(o.Name))
+                        {
+                            (dockMgr.ActiveContent as IEditMenuManager).Invoke(o.Name.Replace("mnu", string.Empty), o.Tag);
+                        }
+                    };
+
+                    initializer?.Invoke(newItem);
+
+                    target.Add(newItem);
+
+                    if (menuItem.HasDropDownItems)
+                    {
+                        CloneMenuItems(newItem.DropDownItems, menuItem.DropDownItems, initializer);
+                    }
+                }
+                else if (item is ToolStripSeparator)
+                {
+                    var sep = new ToolStripSeparator();
+                    initializer?.Invoke(sep);
+                    target.Add(sep);
+                }
+            }
+        }
+
+        private void InitializeEditMenu(IDockContent content)
+        {
+            mnuEdit.DropDownItems.Clear();
+
+            if (content is IEditMenuManager mgr)
+            {
+                ThreadHelper.Start(() =>
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        if (!_menuCache.TryGetValue(mgr.Key, out ToolStripMenuItem col))
+                        {
+                            col = new ToolStripMenuItem { Text = menuStrip1.Items[1].Text };
+                            CloneMenuItems(col.DropDownItems, mgr.GetEditMenuItems());
+                            _menuCache.Add(mgr.Key, col);
+                        }
+
+                        menuStrip1.Items.RemoveAt(1);
+                        menuStrip1.Items.Insert(1, col);
+                        menuStrip1.Items[1].Visible = col.HasDropDownItems;
+                    }));
+                });
+            }
+            else
+            {
+                menuStrip1.Items[1].Visible = false;
+            }
+        }
+
+        private void InitializeContextMenu(IDockContent content)
+        {
+            for (var i = contextMenuStrip1.Items.Count - 1; i >= 0; i--)
+            {
+                if (contextMenuStrip1.Items[i].Tag is string str && str == "Cust")
+                {
+                    contextMenuStrip1.Items.RemoveAt(i);
+                }
+            }
+
+            if (content is IContextMenuManager mgr)
+            {
+                ThreadHelper.Start(() =>
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        var items = mgr.GetContextMenuItems().ToArray();
+                        if (items.Length > 0)
+                        {
+                            var sep = new ToolStripSeparator { Tag = "Cust" };
+                            contextMenuStrip1.Items.Add(sep);
+
+                            CloneMenuItems(contextMenuStrip1.Items, new ToolStripItemCollection(contextMenuStrip1, items), s => s.Tag = "Cust");
+                        }
+                    }));
+                });
             }
         }
 
@@ -869,7 +1145,11 @@ namespace CodeBuilder
                     var frm = new frmPluginShop(_hosting);
                     frm.ShowDialog();
                 };
-                statusStrip1.Items.Add(ss);
+
+                this.Invoke(new Action(() =>
+                {
+                    statusStrip1.Items.Add(ss);
+                }));
             }
         }
 
@@ -922,8 +1202,24 @@ namespace CodeBuilder
                     var frm = new frmTemplateShop(_hosting);
                     frm.ShowDialog();
                 };
-                statusStrip1.Items.Add(ss);
+
+                this.Invoke(new Action(() =>
+                {
+                    statusStrip1.Items.Add(ss);
+                }));
             }
+        }
+
+        private class MyToolStripDropDown : ToolStripDropDown
+        {
+            private readonly ToolStripItemCollection _collection;
+
+            public MyToolStripDropDown(ToolStripItemCollection collection)
+            {
+                _collection = collection;
+            }
+
+            public override ToolStripItemCollection Items => _collection;
         }
     }
 }

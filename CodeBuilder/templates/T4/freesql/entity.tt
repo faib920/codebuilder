@@ -1,0 +1,71 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using FreeSql.DataAnnotations;
+
+namespace <#= host.Profile.Namespace #>.Entities
+{
+    /// <summary>
+    /// <#= table.Description #>
+    /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
+    [Table(Name = "<#= table.Name #>")]
+    public partial class <#= table.ClassName #>
+    {
+<#
+	foreach (dynamic column in table.Columns)
+	{
+#>
+        /// <summary>
+        /// <#= column.Description #>
+        /// </summary>
+        [JsonProperty, Column(Name = "<#= column.Name #>", DbType = "<#= column.ColumnType #>"<#= column.IsPrimaryKey ? ", IsPrimary = true" : "" #><#= column.AutoIncrement ? ", IsIdentity = true" : "" #>)]
+        public <#= column.PropertyType #> <#= column.PropertyName #> { get; set; }
+
+<#
+	}
+        
+#>
+
+        #region 外键 => 导航属性，ManyToOne/OneToOne
+<#
+	foreach (dynamic fk in table.ForeignKeys)
+	{
+#>
+        [Navigate("<#= fk.FkColumn.Name #>")]
+        public virtual <#= fk.PkTable.ClassName #> <#= fk.PkTable.ClassName #> { get; set; }
+
+<#
+	}
+	
+#>
+        #endregion
+
+        #region 外键 => 导航属性，OneToMany
+<#
+	foreach (dynamic fk in table.SubKeys)
+	{
+#>
+        [Navigate("<#= fk.PkColumn.Name #>")]
+        public virtual List<<#= fk.FkTable.ClassName #>> <#= StringExtension.ToPlural(fk.FkTable.ClassName) #> { get; set; }
+
+<#
+	}
+#>
+        #endregion
+    }
+}

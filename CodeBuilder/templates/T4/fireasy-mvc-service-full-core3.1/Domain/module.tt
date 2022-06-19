@@ -1,0 +1,36 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+using Microsoft.Extensions.DependencyInjection;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain.EfCore;
+using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.Modularity;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain
+{
+    [DependsOn(typeof(AbpEntityFrameworkCoreModule))]
+    public class DomainModule : AbpModule
+    {
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+            context.Services.AddAbpDbContext<<#= CheckNull(host.Profile.Module) #>DbContext>(op =>
+            {
+                op.AddDefaultRepositories(true);
+            });
+
+            Configure<AbpDbContextOptions>(options =>
+            {
+                options.Configure<<#= CheckNull(host.Profile.Module) #>DbContext>(opt =>
+                {
+                    //根据使用的数据库，引入相应的nuget包
+                    //比如 Volo.Abp.EntityFrameworkCore.MySql 或 Volo.Abp.EntityFrameworkCore.SqlServer 等等
+                    //var builder = opt.UseMySQL();
+                    //var builder = opt.UseSqlServer();
+                });
+            });
+        }
+    }
+}

@@ -61,14 +61,14 @@
             this.mnuFind,
             this.mnuReplace});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(165, 184);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 206);
             // 
             // mnuUndo
             // 
             this.mnuUndo.Image = global::CodeBuilder.Properties.Resources.undo;
             this.mnuUndo.Name = "mnuUndo";
             this.mnuUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.mnuUndo.Size = new System.Drawing.Size(164, 24);
+            this.mnuUndo.Size = new System.Drawing.Size(180, 24);
             this.mnuUndo.Text = "撤消";
             this.mnuUndo.Click += new System.EventHandler(this.mnuUndo_Click);
             // 
@@ -77,21 +77,21 @@
             this.mnuRedo.Image = global::CodeBuilder.Properties.Resources.redo;
             this.mnuRedo.Name = "mnuRedo";
             this.mnuRedo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.mnuRedo.Size = new System.Drawing.Size(164, 24);
+            this.mnuRedo.Size = new System.Drawing.Size(180, 24);
             this.mnuRedo.Text = "恢复";
             this.mnuRedo.Click += new System.EventHandler(this.mnuRedo_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(161, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuCopy
             // 
             this.mnuCopy.Image = global::CodeBuilder.Properties.Resources.copy;
             this.mnuCopy.Name = "mnuCopy";
             this.mnuCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.mnuCopy.Size = new System.Drawing.Size(164, 24);
+            this.mnuCopy.Size = new System.Drawing.Size(180, 24);
             this.mnuCopy.Text = "复制";
             this.mnuCopy.Click += new System.EventHandler(this.mnuCopy_Click);
             // 
@@ -100,7 +100,7 @@
             this.mnuCut.Image = global::CodeBuilder.Properties.Resources.cut;
             this.mnuCut.Name = "mnuCut";
             this.mnuCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.mnuCut.Size = new System.Drawing.Size(164, 24);
+            this.mnuCut.Size = new System.Drawing.Size(180, 24);
             this.mnuCut.Text = "剪切";
             this.mnuCut.Click += new System.EventHandler(this.mnuCut_Click);
             // 
@@ -108,22 +108,22 @@
             // 
             this.mnuPaste.Image = global::CodeBuilder.Properties.Resources.paste;
             this.mnuPaste.Name = "mnuPaste";
-            this.mnuPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.mnuPaste.Size = new System.Drawing.Size(164, 24);
+            this.mnuPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.mnuPaste.Size = new System.Drawing.Size(180, 24);
             this.mnuPaste.Text = "粘贴";
             this.mnuPaste.Click += new System.EventHandler(this.mnuPaste_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(161, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuFind
             // 
             this.mnuFind.Image = global::CodeBuilder.Properties.Resources.find;
             this.mnuFind.Name = "mnuFind";
             this.mnuFind.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.mnuFind.Size = new System.Drawing.Size(164, 24);
+            this.mnuFind.Size = new System.Drawing.Size(180, 24);
             this.mnuFind.Text = "查找";
             this.mnuFind.Click += new System.EventHandler(this.mnuFind_Click);
             // 
@@ -132,7 +132,7 @@
             this.mnuReplace.Image = global::CodeBuilder.Properties.Resources.replace;
             this.mnuReplace.Name = "mnuReplace";
             this.mnuReplace.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.mnuReplace.Size = new System.Drawing.Size(164, 24);
+            this.mnuReplace.Size = new System.Drawing.Size(180, 24);
             this.mnuReplace.Text = "替换";
             this.mnuReplace.Click += new System.EventHandler(this.mnuReplace_Click);
             // 

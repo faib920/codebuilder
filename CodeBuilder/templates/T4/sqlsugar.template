@@ -1,0 +1,17 @@
+{ 
+    Name : "SqlSugar 基本",
+    "Author": "fireasy",
+    "Version": 1,
+    "Description": "SqlSugar 的实体模型。",
+    "Language": "CSharp",
+	Partitions : 
+	[
+		{ 
+			Name : "实体类",
+			FileName: "entity.tt",
+			Output: "Entities\\{ClassName}.cs",
+			Loop: "Tables",
+			Syntax: "C#"
+		}
+	]
+}

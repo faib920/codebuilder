@@ -1,0 +1,39 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Volo.Abp.Data;
+using Volo.Abp.EntityFrameworkCore;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain<#= CheckDot(host.Profile.SubNameSpace) #>.Entities;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Domain.EfCore
+{
+    [ConnectionStringName("DefaultConnection")]
+    public class <#= CheckNull(host.Profile.Module) #>DbContext : AbpDbContext<<#= CheckNull(host.Profile.Module) #>DbContext>
+    {
+        public <#= CheckNull(host.Profile.Module) #>DbContext(DbContextOptions<<#= CheckNull(host.Profile.Module) #>DbContext> options) : base(options)
+        {
+        }
+<#
+	foreach (var table in host.Tables)
+	{
+#>
+        /// <summary>
+        /// <#= table.Description #>
+        /// </summary> 
+        public DbSet<<#= table.ClassName #>> <#= ToPlural(table.ClassName) #> { get; set; }
+<#
+        }
+#>
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Configure<#= CheckNull(host.Profile.Module) #>Service();
+        }
+    }
+}

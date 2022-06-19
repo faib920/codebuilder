@@ -105,6 +105,8 @@ namespace CodeBuilder.Core
         /// </summary>
         /// <returns></returns>
         IEnumerable<Table> GetTables();
+
+        void Hit(string key);
     }
 
     /// <summary>
@@ -123,5 +125,16 @@ namespace CodeBuilder.Core
         Yes,
         No,
         Cancel
+    }
+
+    public static class DevHostingHolder
+    {
+        public static IDevHosting Instance { get; private set; }
+
+        public static THosting Hold<THosting>(this THosting hosting) where THosting : IDevHosting
+        {
+            Instance = hosting;
+            return hosting;
+        }
     }
 }

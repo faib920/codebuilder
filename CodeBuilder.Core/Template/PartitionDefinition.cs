@@ -48,6 +48,11 @@ namespace CodeBuilder.Core.Template
         public string Syntax { get; set; }
 
         /// <summary>
+        /// 获取或设置颜色。
+        /// </summary>
+        public string Color { get; set; }
+
+        /// <summary>
         /// 获取模板文件的内容。
         /// </summary>
         [NoTextSerializable]

@@ -27,11 +27,14 @@ namespace CodeBuilder.Core.Template
                 return;
             }
 
+            var paser = new Parser();
+
             var path = Path.Combine(template.ConfigFileName.Substring(0, template.ConfigFileName.LastIndexOf(".")), "Resources");
             foreach (var res in template.Resources)
             {
                 var source = Path.Combine(path, res);
-                var desc = new Parser().Parse(null, profile, Path.Combine(output, res));
+                var res1 = Parser.PreParse(res, null, profile);
+                var desc = paser.Parse(null, profile, Path.Combine(output, res1));
                 var descDir = new FileInfo(desc).DirectoryName;
                 if (!Directory.Exists(descDir))
                 {

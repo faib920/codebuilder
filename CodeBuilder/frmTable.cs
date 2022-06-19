@@ -6,10 +6,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
 using CodeBuilder.Core.Initializers;
 using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Template;
-using CodeBuilder.Core.Forms;
 using Fireasy.Common.Extensions;
 using Fireasy.Windows.Forms;
 using System;
@@ -120,7 +120,7 @@ namespace CodeBuilder
         /// 获取勾选的数据表对象。
         /// </summary>
         /// <returns></returns>
-        public List<Table> GetCheckedTables()
+        public List<Table> GetTables(bool filterChecked)
         {
             var list = new List<Table>();
             var rowIndex = 0;
@@ -128,30 +128,60 @@ namespace CodeBuilder
             //循环一级节点（数据表）
             foreach (var titem in lstObject.Items)
             {
-                if (titem.Checked)
+                if (filterChecked && !titem.Checked)
                 {
-                    var clTable = (titem.Tag as Table).Clone();
-                    clTable.Index = ++rowIndex;
-                    clTable.Columns.Clear();
+                    continue;
+                }
+                var clTable = (titem.Tag as Table).Clone();
+                clTable.Index = ++rowIndex;
+                clTable.Columns.Clear();
 
-                    var colIndex = 0;
+                var colIndex = 0;
 
-                    //循环二级节点（字段）
-                    foreach (var citem in titem.Items)
+                //循环二级节点（字段）
+                foreach (var citem in titem.Items)
+                {
+                    if (filterChecked && !citem.Checked)
                     {
-                        if (citem.Checked)
-                        {
-                            var column = citem.Tag as Column;
-                            column.Index = ++colIndex;
-                            clTable.Columns.Add(column);
-                        }
+                        continue;
                     }
 
-                    list.Add(clTable);
+                    var column = citem.Tag as Column;
+                    column.Index = ++colIndex;
+                    clTable.Columns.Add(column);
                 }
+
+                list.Add(clTable);
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// 获取表名称列表。
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetTableNames()
+        {
+            var list = new List<string>();
+
+            foreach (var titem in lstObject.Items)
+            {
+                list.Add(titem.Text);
+            }
+
+            return list;
+        }
+
+        public void InitializeBuildMenu()
+        {
+            mnuBuildPart.DropDownItems.Clear();
+
+            if (_hosting.Template != null)
+            {
+                FillMenuItems(mnuBuildPart.DropDownItems, _hosting.Template.Groups);
+                FillMenuItems(mnuBuildPart.DropDownItems, _hosting.Template.Partitions);
+            }
         }
 
         /// <summary>
@@ -248,6 +278,25 @@ namespace CodeBuilder
             }
 
             SelectItemAct(lstObject.SelectedItems.Count > 0 ? lstObject.SelectedItems[0].Tag : null);
+        }
+
+        public bool SaveFile()
+        {
+            var tables = GetTables(false);
+            if (tables.Count == 0)
+            {
+                return false;
+            }
+
+            using (var dialog = new SaveFileDialog { Filter = "架构文件(*.scm)|*.scm" })
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -365,6 +414,38 @@ namespace CodeBuilder
         /// <param name="e"></param>
         private void mnuBuild_Click(object sender, EventArgs e)
         {
+            Build(_hosting.Template.GetAllPartitions());
+        }
+
+        private void lstObject_ItemCheckChanged(object sender, TreeListItemEventArgs e)
+        {
+            CheckItemsAct(lstObject.CheckedItems.Where(s => s.Tag is Table).Count());
+        }
+
+        private void FillMenuItems(ToolStripItemCollection items, List<PartitionDefinition> partitions)
+        {
+            foreach (var par in partitions)
+            {
+                var menuItem = items.Add(par.Name);
+                menuItem.Tag = par;
+                menuItem.Click += (o, e) => Build(new List<PartitionDefinition> { (PartitionDefinition)((ToolStripMenuItem)o).Tag });
+            }
+        }
+
+        private void FillMenuItems(ToolStripItemCollection items, List<GroupDefinition> groups)
+        {
+            foreach (var g in groups)
+            {
+                var gitem = new ToolStripMenuItem(g.Name);
+                items.Add(gitem);
+
+                FillMenuItems(gitem.DropDownItems, g.Groups);
+                FillMenuItems(gitem.DropDownItems, g.Partitions);
+            }
+        }
+
+        private void Build(List<PartitionDefinition> partitions)
+        {
             TemplateDefinition template;
             if (_hosting.TemplateProvider == null ||
                 (template = _hosting.Template) == null)
@@ -395,7 +476,7 @@ namespace CodeBuilder
 
             var option = new TemplateOption();
             option.Template = template;
-            option.Partitions = _hosting.Template.GetAllPartitions();
+            option.Partitions = partitions;
             option.DynamicAssemblies.AddRange(StaticUnity.DynamicAssemblies);
             option.Profile = _hosting.Profile;
 
@@ -423,7 +504,7 @@ namespace CodeBuilder
                 {
                     foreach (var file in result)
                     {
-                        var editor = new frmEditor (_hosting) { GenerateResult = file };
+                        var editor = new frmEditor(_hosting, CodeCategory.None) { GenerateResult = file };
                         editor.Show(this.DockPanel, WeifenLuo.WinFormsUI.Docking.DockState.Document);
                     }
                 }
@@ -432,11 +513,6 @@ namespace CodeBuilder
             {
                 Cursor = Cursors.Default;
             }
-        }
-
-        private void lstObject_ItemCheckChanged(object sender, TreeListItemEventArgs e)
-        {
-            CheckItemsAct(lstObject.CheckedItems.Where(s => s.Tag is Table).Count());
         }
     }
 }

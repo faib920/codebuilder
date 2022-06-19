@@ -1,0 +1,83 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+#>
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.IO;
+using Volo.Abp;
+using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.Autofac;
+using Volo.Abp.AutoMapper;
+using Volo.Abp.Modularity;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application;
+
+namespace <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.WebApi
+{
+    [DependsOn(
+        typeof(AbpAutofacModule),
+        typeof(AbpAutoMapperModule),
+        typeof(AbpAspNetCoreMvcModule),
+        typeof(ApplicationModule)
+    )]
+    public class WebApiModule : AbpModule
+    {
+        public override void ConfigureServices(ServiceConfigurationContext context)
+        {
+            var configuration = context.Services.GetConfiguration();
+            context.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "<#= host.Profile.ProjectName #>",
+                    Version = "1.0",
+                    Description = "WebApi",
+                    License = new OpenApiLicense
+                    {
+                        Name = "<#= host.Profile.CompanyName #>"
+                    }
+                });
+                
+                LoadXmlComments(c);
+            });
+        }
+        
+        public override void OnApplicationInitialization(ApplicationInitializationContext context)
+        {
+            var app = context.GetApplicationBuilder();
+            app.UseRouting();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.RoutePrefix = string.Empty;
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi");
+            });
+            app.UseEndpoints(builder =>
+            {
+                builder.MapControllerRoute(
+                    name: "WithArea",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                builder.MapDefaultControllerRoute();
+            });
+        }
+        
+        private static void LoadXmlComments(SwaggerGenOptions options)
+        {
+            var path = Path.Combine(AppContext.BaseDirectory, "<#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.WebApi.xml");
+            if (File.Exists(path))
+            {
+                options.IncludeXmlComments(path);
+            }
+
+            foreach (var file in Directory.GetFiles(AppContext.BaseDirectory, "<#= host.Profile.ProjectCode #>.*.Shared.xml"))
+            {
+                options.IncludeXmlComments(file);
+            }
+        }
+    }
+}

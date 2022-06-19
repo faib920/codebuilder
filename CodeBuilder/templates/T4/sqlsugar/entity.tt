@@ -1,0 +1,65 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+#>
+// **************************************
+// 生成：CodeBuilder (http://www.fireasy.cn/codebuilder)
+// 项目：<#= host.Profile.ProjectName #>
+// 版权：Copyright <#= host.Profile.CompanyName #>
+// 作者：<#= host.Profile.Author #>
+// 时间：<#= DateTime.Now #>
+// **************************************
+using System;
+﻿using SqlSugar;
+using System.Collections.Generic;
+
+namespace <#= host.Profile.Namespace #>.Entities
+{
+    /// <summary>
+    /// <#= table.Description #>
+    /// </summary>
+    [SugarTable("<#= table.Name #>")]
+    public partial class <#= table.ClassName #>
+    {
+<#
+	foreach (dynamic column in table.Columns)
+	{
+#>
+        /// <summary>
+        /// <#= column.Description #>
+        /// </summary>
+        [SugarColumn(ColumnName = "<#= column.Name #>", DbType = "<#= column.ColumnType #>"<#= column.IsPrimaryKey ? ", IsPrimary = true" : "" #><#= column.AutoIncrement ? ", IsIdentity = true" : "" #>)]
+        public <#= column.PropertyType #> <#= column.PropertyName #> { get; set; }
+
+<#
+	}
+        
+#>
+
+<#
+	foreach (dynamic fk in table.ForeignKeys)
+	{
+#>
+        [SugarColumn(IsIgnore = true)]
+        public virtual <#= fk.PkTable.ClassName #> <#= fk.PkTable.ClassName #> { get; set; }
+
+<#
+	}
+	
+#>
+
+<#
+	foreach (dynamic fk in table.SubKeys)
+	{
+#>
+        [SugarColumn(IsIgnore = true)]
+        public virtual List<<#= fk.FkTable.ClassName #>> <#= StringExtension.ToPlural(fk.FkTable.ClassName) #> { get; set; }
+
+<#
+	}
+#>
+    }
+}

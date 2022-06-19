@@ -53,6 +53,7 @@ public static string GetPrimaryKeyPTypeNonNullable(Table table)
     return type;
 }
 
+//获取可空类型
 public static string GetNullableType(string type)
 {
     if (type == "string" || type.EndsWith("?"))
@@ -63,6 +64,7 @@ public static string GetNullableType(string type)
     return type + "?";
 }
 
+//转为驼峰命名
 public static string ToCamel(string name)
 {
     if (name.Length <= 1)
@@ -73,6 +75,7 @@ public static string ToCamel(string name)
     return name[0].ToString().ToLower() + name.Substring(1);
 }
 
+//转为复数
 public static string ToPlural(string word)
 {
     if (IsSample(word))
@@ -105,6 +108,7 @@ public static string ToPlural(string word)
     return word;
 }
 
+//是否是需要排除的属性
 public static bool IsExcludeProperty(Column column, string properties)
 {
     foreach (var p in properties.Split('|'))
@@ -118,17 +122,20 @@ public static bool IsExcludeProperty(Column column, string properties)
     return false;
 }
 
+//获取点的最后一部分
 public static string GetLastPart(string path)
 {
     var array = path.Split('.');
     return array.Length > 0 ? array[array.Length - 1] : path;
 }
 
+//新的guid
 public static string NewGuid()
 {
     return Guid.NewGuid().ToString().ToUpper();
 }
 
+//导入命名空间
 public static string Imports(string names)
 {
     if (names == null)
@@ -146,6 +153,61 @@ public static string Imports(string names)
         }
     }
     return str;
+}
+
+//判断字符串str是否为空，如果为空则输出空字符串，否则输出str
+public static string CheckNull(string str)
+{
+    if (string.IsNullOrEmpty(str))
+    {
+        return string.Empty;
+    }
+
+    return str;
+}
+
+//判断字符串str是否为空，如果为空则输出str1，否则输出str
+public static string CheckNull(string str, string str1)
+{
+    if (string.IsNullOrEmpty(str))
+    {
+        return str1 ?? string.Empty;
+    }
+
+    return str;
+}
+
+//判断字符串str是否为空，如果为空则输出空字符串，否则输出str且以点开头
+public static string CheckDot(string str)
+{
+    if (string.IsNullOrEmpty(str))
+    {
+        return string.Empty;
+    }
+
+    return "." + str;
+}
+
+//判断字符串str是否为空，如果为空则输出空字符串，否则输出str且以start开头
+public static string CheckStart(string str, string start)
+{
+    if (string.IsNullOrEmpty(str))
+    {
+        return string.Empty;
+    }
+
+    return start + str;
+}
+
+//判断字符串str是否为空，如果为空则输出空字符串，否则输出str且以end结尾
+public static string CheckEnd(string str, string end)
+{
+    if (string.IsNullOrEmpty(str))
+    {
+        return string.Empty;
+    }
+
+    return str + end;
 }
 
 private static bool IsSample(string word)

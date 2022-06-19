@@ -1,0 +1,67 @@
+﻿<#@ template hostSpecific="true" debug="true" #>
+<#@ output extension=".cs" #>
+<#@ include file="public\base.tt" #>
+<# 
+    TemplateHost host = (TemplateHost)Host;
+    var table = host.Current;
+    var ptype = GetPrimaryKeyPTypeNonNullable(table);
+    var svr = ToCamel(table.ClassName);
+#>
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Fireasy.Web.Mvc;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Application.Contracts<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.Dtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+using <#= host.Profile.ProjectCode #><#= CheckDot(host.Profile.Module) #>.Shared.QueryDtos<#= CheckDot(host.Profile.SubNameSpace) #>;
+
+namespace <#= host.Profile.ProjectCode #>.Web<#= !string.IsNullOrEmpty(host.Profile.Module) ? ".Areas" : "" #><#= CheckDot(host.Profile.Module) #>.Controllers
+{
+    <#= !string.IsNullOrEmpty(host.Profile.Module) ? "[Area(\"" + host.Profile.Module.ToLower() + "\")]" : "" #>
+    public class <#= table.ClassName #>Controller : Controller
+    {
+        private I<#= table.ClassName #>AppService _<#= svr #>Service;
+
+        public <#= table.ClassName #>Controller(I<#= table.ClassName #>AppService <#= svr #>Service)
+        {
+            _<#= svr #>Service = <#= svr #>Service;
+        }
+        
+        public IActionResult Index()
+        {
+            return View();
+        }
+                
+        public IActionResult Edit()
+        {
+            return View();
+        }
+        
+        public async Task<JsonResult> Data(<#= table.ClassName #>QueryDto queryDto, int page = 1, int rows = 20)
+        {
+            queryDto.PageIndex = page - 1;
+            queryDto.PageSize = rows;
+
+            var result = await _<#= svr #>Service.GetListAsync(queryDto);
+            return Json(new { total = result.Total, rows = result.Items });
+        }
+        
+        public async Task<JsonResult> Get(<#= ptype #> id)
+        {
+            var info = await _<#= svr #>Service.GetAsync(id);
+            return Json(info);
+        }
+        
+        public async Task<JsonResult> Save([ModelBinder(typeof(JsonModelBinder))]<#= table.ClassName #>SaveDto dto)
+        {
+            var info = await _<#= svr #>Service.SaveAsync(dto);
+            return Json(info);
+        }
+        
+        public async Task<JsonResult> Delete(<#= ptype #> id)
+        {
+            var success = await _<#= svr #>Service.DeleteAsync(id);
+            return Json(success);
+        }
+    }
+}

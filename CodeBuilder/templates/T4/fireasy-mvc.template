@@ -4,6 +4,12 @@
     "Version": 1,
     "Description": "基于 Fireasy 框架的 MVC 项目代码，包括实体模型及控制器、列表视图和编辑视图。",
     "Language": "CSharp",
+    "Extension": {
+        "UseBase": true,
+        "Common": null,
+        "Profile": [ "template.t4.fireasy-mvc.cs" ],
+        "Schema": [ "template.t4.fireasy-mvc.cs" ]
+    },
     "Groups": [
         {
             "Name": "Entity",

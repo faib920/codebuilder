@@ -5,6 +5,7 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core;
 using Fireasy.Common.Extensions;
 using Fireasy.Common.Serialization;
 using System;
@@ -40,6 +41,8 @@ namespace CodeBuilder
 
         public bool Source_View { get; set; }
 
+        public bool SkipWhenFileExists { get; set; }
+
         public static string PluginServerUrl { get; } = "http://fireasy.cn/api/codebuilder/plugins";
 
         public static string PluginStoragePath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "codebuilder_plugins");
@@ -49,7 +52,7 @@ namespace CodeBuilder
         public static Config Read()
         {
             var json = new JsonSerializer();
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "app.cfg");
+            var path = Path.Combine(Util.GetWorkPath(), "config", "app.cfg");
             var content = File.ReadAllText(path);
             return json.Deserialize<Config>(content);
         }
@@ -58,7 +61,7 @@ namespace CodeBuilder
         {
             var option = new JsonSerializeOption { Indent = true };
             var json = new JsonSerializer(option);
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "app.cfg");
+            var path = Path.Combine(Util.GetWorkPath(), "config", "app.cfg");
             var content = json.Serialize(Config.Instance);
             File.WriteAllText(path, content, System.Text.Encoding.UTF8);
         }
@@ -66,7 +69,7 @@ namespace CodeBuilder
         public static List<string> GetPartitionConfig(string template)
         {
             var json = new JsonSerializer();
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "prebuild.cfg");
+            var path = Path.Combine(Util.GetWorkPath(), "config", "prebuild.cfg");
             if (!File.Exists(path))
             {
                 return null;
@@ -87,7 +90,7 @@ namespace CodeBuilder
             var dict = new Dictionary<string, string>();
 
             var json = new JsonSerializer();
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "prebuild.cfg");
+            var path = Path.Combine(Util.GetWorkPath(), "config", "prebuild.cfg");
             if (File.Exists(path))
             {
                 var content1 = File.ReadAllText(path);

@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using CodeBuilder.Core;
 
 public class AbpProfileExt
@@ -9,7 +9,6 @@ public class AbpProfileExt
     public string Module { get; set; }
 
     [Description("子命名空间。用于指定默认命名空间之后的子目录，可以使用.来无限扩展，如 Customer.OrderHistory。")]
-    [RequiredCheck]
     [UnPersistently]
     public string SubNameSpace { get; set; }
 

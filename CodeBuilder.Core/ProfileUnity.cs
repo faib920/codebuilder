@@ -33,35 +33,54 @@ namespace CodeBuilder.Core
         public static Profile LoadProfile(IDevHosting hosting, TemplateDefinition template)
         {
             string fileName;
-            var profile = ProfileExtensionManager.Build(template?.TId);
+            var profile = ProfileExtensionManager.Build(template);
             if (!string.IsNullOrEmpty(template?.TId))
             {
-                fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "profiles", "template." + template.TId + ".profile");
+                fileName = Path.Combine(hosting.WorkPath, "profiles", "template." + template.TId + ".profile");
                 if (File.Exists(fileName))
                 {
                     return InitializerUnity.Initialize(hosting, FillByFile(profile, fileName), template);
                 }
             }
 
-            fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "profile.cfg");
+            fileName = Path.Combine(hosting.WorkPath, "config", "profile.cfg");
             return InitializerUnity.Initialize(hosting, FillByFile(profile, fileName), template);
+        }
+
+        /// <summary>
+        /// 载入变量对象。
+        /// </summary>
+        /// <param name="hosting">开发环境。</param>
+        /// <param name="template">模板定义。</param>
+        /// <param name="profileName">变量存储文件。</param>
+        /// <returns></returns>
+        public static Profile LoadProfile(IDevHosting hosting, TemplateDefinition template, string profileName)
+        {
+            if (File.Exists(profileName))
+            {
+                var profile = ProfileExtensionManager.Build(template);
+                return InitializerUnity.Initialize(hosting, FillByFile(profile, profileName), template);
+            }
+
+            return LoadProfile(hosting, template);
         }
 
         /// <summary>
         /// 将变量保存到本地。
         /// </summary>
+        /// <param name="hosting">开发环境。</param>
         /// <param name="templateUId">模板UID。</param>
         /// <param name="profile">变量。</param>
-        public static void SaveFile(string templateUId, Profile profile)
+        public static void SaveFile(IDevHosting hosting, string templateUId, Profile profile)
         {
             string fileName;
             if (string.IsNullOrEmpty(templateUId))
             {
-                fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config", "profile.cfg");
+                fileName = Path.Combine(hosting.WorkPath, "config", "profile.cfg");
             }
             else
             {
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "profiles");
+                var path = Path.Combine(hosting.WorkPath, "profiles");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
@@ -85,6 +104,11 @@ namespace CodeBuilder.Core
             var content = File.ReadAllText(filePath);
             var json = new JsonSerializer();
             var dyobj = (IDictionary<string, object>)json.Deserialize<dynamic>(content);
+
+            if (profile is IProfileInfo info)
+            {
+                info.FileName = filePath;
+            }
 
             foreach (var kvp in dyobj)
             {

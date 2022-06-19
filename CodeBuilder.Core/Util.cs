@@ -11,7 +11,6 @@ using Fireasy.Common.Security;
 using System;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 
 namespace CodeBuilder.Core
 {
@@ -30,12 +29,28 @@ namespace CodeBuilder.Core
         }
 
         /// <summary>
+        /// 获取工作目录。
+        /// </summary>
+        /// <returns></returns>
+        public static string GetWorkPath()
+        {
+            var workPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".codebuilder");
+
+            if (!Directory.Exists(workPath))
+            {
+                workPath = Directory.GetCurrentDirectory();
+            }
+
+            return workPath;
+        }
+
+        /// <summary>
         /// 生成一个临时文件的路径。
         /// </summary>
         /// <returns></returns>
         public static string GenerateTempFileName()
         {
-            var tempPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "temp\\codebuilder");
+            var tempPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "temp", "codebuilder");
             Directory.CreateDirectory(tempPath);
 
             return Path.Combine(tempPath, RandomGenerator.Create() + ".dll");
@@ -46,7 +61,7 @@ namespace CodeBuilder.Core
         /// </summary>
         public static void ClearTempFiles()
         {
-            var tempPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "temp\\codebuilder");
+            var tempPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "temp", "codebuilder");
             if (Directory.Exists(tempPath))
             {
                 Directory.Delete(tempPath, true);

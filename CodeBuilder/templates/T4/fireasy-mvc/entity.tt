@@ -43,7 +43,7 @@ if (!host.Profile.Fluent)
 if (!host.Profile.Fluent)
 {
 #>
-        [PropertyMapping(ColumnName = "<#= column.Name #> <#= column.Index #>", Description = "<#= column.Description #>", <#= column.AutoIncrement ? "GenerateType = IdentityGenerateType.AutoIncrement, " : string.Empty #><#= column.IsPrimaryKey ? "IsPrimaryKey = true, " : string.Empty #><#= CheckDelFlag(column) ? "IsDeletedKey = true, " : string.Empty #><#= column.PropertyType == "string" && column.Length != null ? "Length = " + column.Length + ", " : (column.PropertyType == "decimal" || column.PropertyType == "decimal?" ? "Precision = " + column.Precision + ", Scale = " + column.Scale + ", ": string.Empty) #>IsNullable = <#= column.IsNullable ? "true" : "false" #>)]
+        [PropertyMapping(ColumnName = "<#= column.Name #>", Description = "<#= column.Description #>", <#= column.AutoIncrement ? "GenerateType = IdentityGenerateType.AutoIncrement, " : string.Empty #><#= column.IsPrimaryKey ? "IsPrimaryKey = true, " : string.Empty #><#= CheckDelFlag(column) ? "IsDeletedKey = true, " : string.Empty #><#= column.PropertyType == "string" && column.Length != null ? "Length = " + column.Length + ", " : (column.PropertyType == "decimal" || column.PropertyType == "decimal?" ? "Precision = " + column.Precision + ", Scale = " + column.Scale + ", ": string.Empty) #>IsNullable = <#= column.IsNullable ? "true" : "false" #>)]
  <#
 }
 #>
