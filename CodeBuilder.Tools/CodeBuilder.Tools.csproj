@@ -93,6 +93,12 @@
     </Compile>
     <Compile Include="GeneralTools.cs" />
     <Compile Include="Remoter.cs" />
+    <Compile Include="Tools\CollComparer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\CollComparer.Designer.cs">
+      <DependentUpon>CollComparer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\GuidGenerator.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -140,6 +146,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\CollComparer.resx">
+      <DependentUpon>CollComparer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\GuidGenerator.resx">
       <DependentUpon>GuidGenerator.cs</DependentUpon>

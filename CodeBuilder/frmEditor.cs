@@ -72,12 +72,19 @@ namespace CodeBuilder
             {
                 FromTemplateItem();
                 contextMenuStrip1.Items.Add(new ToolStripSeparator());
-                var item = new FieldCacheMenuItem { Text = "插入" };
+                var item = new FieldCacheMenuItem { Text = "插入", Image = Properties.Resources.insert };
                 item.OnFieldInsert += (s) =>
                     {
                         txtEditor.ActiveTextAreaControl.TextArea.InsertString(s);
                     };
                 contextMenuStrip1.Items.Add(item);
+
+                if (!TemplateFile.IsPublic)
+                {
+                    contextMenuStrip1.Items.Add(new ToolStripSeparator());
+                    var item1 = new ToolStripMenuItem("校验...", Properties.Resources.check, ValidateTemplate) { Name = "Test" };
+                    contextMenuStrip1.Items.Add(item1);
+                }
             }
             else if (Template != null)
             {
@@ -124,7 +131,7 @@ namespace CodeBuilder
 
         private void FromTemplateItem()
         {
-            FileName = TemplateFile.FileName;
+            FileName = TemplateFile.FilePath;
             var info = new FileInfo(FileName);
             SetSyntax(TemplateFile.Language);
             txtEditor.Text = File.ReadAllText(FileName);
@@ -415,6 +422,9 @@ namespace CodeBuilder
                 case "Help":
                     GotoHelp();
                     break;
+                case "Test":
+                    ValidateTemplate(null, new EventArgs());
+                    break;
             }
         }
 
@@ -445,6 +455,15 @@ namespace CodeBuilder
                     Process.Start("http://fireasy.cn/docs/codebuilder-extension-edit");
                     break;
             }
+        }
+
+        private void ValidateTemplate(object o, EventArgs e)
+        {
+            Cursor = Cursors.WaitCursor;
+
+            _hosting.Validate(TemplateFile, txtEditor.Text);
+
+            Cursor = Cursors.Default;
         }
     }
 }

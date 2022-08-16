@@ -18,15 +18,17 @@ namespace CodeBuilder.Core.Template
             Name = name;
         }
 
-        public TemplateFile(string name, string fileName)
-            : this (name)
+        public TemplateFile(string name, string filePath, string language)
+            : this (name, string.Empty, filePath, language)
         {
-            FileName = fileName;
+            IsPublic = true;
         }
 
-        public TemplateFile(string name, string fileName, string language)
-            : this(name, fileName)
+        public TemplateFile(string name, string fileName, string filePath, string language)
         {
+            Name = name;
+            FileName = fileName;
+            FilePath = filePath;
             Language = language;
         }
 
@@ -41,6 +43,11 @@ namespace CodeBuilder.Core.Template
         public string FileName { get; set; }
 
         /// <summary>
+        /// 获取或设置文件路径。
+        /// </summary>
+        public string FilePath { get; set; }
+
+        /// <summary>
         /// 获取或设置文件使用的语言。
         /// </summary>
         public string Language { get; set; }
@@ -49,5 +56,15 @@ namespace CodeBuilder.Core.Template
         /// 获取或设置颜色。
         /// </summary>
         public string Color { get; set; }
+
+        /// <summary>
+        /// 获取或设置是否公共文件。
+        /// </summary>
+        public bool IsPublic { get; set; }
+
+        public override string ToString()
+        {
+            return string.IsNullOrEmpty(FileName) ? Name : FileName + " (" + Name + ")";
+        }
     }
 }

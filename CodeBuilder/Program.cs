@@ -20,6 +20,8 @@ namespace CodeBuilder
 {
     static class Program
     {
+        public static ApplicationContext Context { get; set; }
+
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
@@ -34,7 +36,10 @@ namespace CodeBuilder
             Util.ClearTempFiles();
             CheckVersion();
 
-            Application.Run(new frmMain());
+            Context = new ApplicationContext();
+            Context.MainForm = new frmStart(Context);
+
+            Application.Run(Context) ;
         }
 
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
@@ -46,6 +51,11 @@ namespace CodeBuilder
 
         static void CheckVersion()
         {
+            if (!File.Exists("AutoUpdate.exe"))
+            {
+                return;
+            }
+
             var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "version.xml");
             var xml = new XmlDocument();
             xml.Load(file);

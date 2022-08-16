@@ -126,6 +126,12 @@
     <Compile Include="frmExtension.Designer.cs">
       <DependentUpon>frmExtension.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmStart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmStart.Designer.cs">
+      <DependentUpon>frmStart.cs</DependentUpon>
+    </Compile>
     <Compile Include="IEditMenuManager.cs" />
     <Compile Include="IContextMenuManager.cs" />
     <Compile Include="OnlinePluginData.cs" />
@@ -302,6 +308,8 @@
     <None Include="Resources\browse.png" />
     <None Include="Resources\info.png" />
     <None Include="Resources\export.png" />
+    <None Include="Resources\check.png" />
+    <None Include="Resources\insert.png" />
     <Content Include="version.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -349,6 +357,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmProperty.resx">
       <DependentUpon>frmProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmStart.resx">
+      <DependentUpon>frmStart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTable.resx">
       <DependentUpon>frmTable.cs</DependentUpon>

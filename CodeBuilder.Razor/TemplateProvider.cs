@@ -63,11 +63,7 @@ namespace CodeBuilder.Razor
             }
 
             storage.Directories.Add(pub);
-
-            foreach (var p in definition.Partitions)
-            {
-                storage.Files.Add(new TemplateFile(string.Format("{1} ({0})", p.Name, p.FileName), p.FilePath, "C#"));
-            }
+            storage.FromDefinition(definition);
 
             return storage;
         }

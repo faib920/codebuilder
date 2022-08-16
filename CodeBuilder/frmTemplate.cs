@@ -75,7 +75,7 @@ namespace CodeBuilder
 
             foreach (var file in files)
             {
-                var item = new TreeListItem(file.Name);
+                var item = new TreeListItem(file.ToString());
                 items.Add(item);
                 item.Tag = file;
                 item.Image = Properties.Resources.fileT;

@@ -31,6 +31,7 @@ namespace CodeBuilder.Tools
             listView1.Items.Add("命名转换器").Tag = typeof(NamingConverter);
             listView1.Items.Add("属性生成器").Tag = typeof(PropertyGenerator);
             listView1.Items.Add("GUID生成器").Tag = typeof(GuidGenerator);
+            listView1.Items.Add("集合比较器").Tag = typeof(CollComparer);
         }
 
         private void listView1_ItemClick(object sender, Fireasy.Windows.Forms.TreeListItemEventArgs e)

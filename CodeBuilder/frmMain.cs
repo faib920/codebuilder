@@ -36,8 +36,14 @@ namespace CodeBuilder
         private DevHosting _hosting;
         private Dictionary<string, ToolStripMenuItem> _menuCache = new Dictionary<string, ToolStripMenuItem>();
 
-        public frmMain()
+        public Action OnLoaded { get; set; }
+
+        public Action<int> OnLoading { get; set; }
+
+        public frmMain(Action<int> onLading)
         {
+            OnLoading = onLading;
+
             InitializeComponent();
 
             var rect = Screen.GetWorkingArea(this);
@@ -56,6 +62,8 @@ namespace CodeBuilder
             _hosting = new DevHosting().Hold();
             _hosting.MainWindow = dockMgr;
             _hosting.DockContainer = dockMgr;
+
+            OnLoading(20);
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -64,23 +72,41 @@ namespace CodeBuilder
                 Encoding.Default : Encoding.GetEncoding(Config.Instance.Encoding);
 
             InitializeSourceMenus();
+            OnLoading(30);
+
             InitializeTemplateMenus();
+            OnLoading(40);
+
             InitializeToolMenus();
+            OnLoading(50);
 
             ReBuild();
 
+            OnLoading(60);
+
             OpenOutputForm();
+            OnLoading(70);
+
             GetTableForm();
+            OnLoading(80);
+
             OpenPeopertyForm();
             OpenProfileForm();
+            OnLoading(90);
+
             OpenExtensionForm();
+            OnLoading(100);
+
             OpenTemplateForm();
+
             _frmProperty.Activate();
 
             ThreadHelper.Start(CheckPluginUpdate);
             ThreadHelper.Start(CheckTemplateUpdate);
 
             _hosting.Hit("Main");
+
+            OnLoaded();
         }
 
         private frmTable GetTableForm()
@@ -514,7 +540,7 @@ namespace CodeBuilder
             {
                 if (content is frmEditor)
                 {
-                    if ((content as frmEditor).FileName == fileItem.FileName)
+                    if ((content as frmEditor).FileName == fileItem.FilePath)
                     {
                         content.Activate();
                         return;
@@ -725,7 +751,6 @@ namespace CodeBuilder
             var time = Processor.Run(this, () =>
                 {
                     _hosting.Hit("Build_" + template.TId);
-
                     _hosting.TemplateProvider.GenerateFiles(option, tables, (s, p) =>
                         {
                             Invoke(new Action(() =>
@@ -921,6 +946,12 @@ namespace CodeBuilder
 
         private void mnuUpdate_Click(object sender, EventArgs e)
         {
+            if (!File.Exists("AutoUpdate.exe"))
+            {
+                _hosting.ShowError("无法进行更新，找不到程序 AutoUpdate.exe。");
+                return;
+            }
+
             Process.Start("AutoUpdate.exe", "/T");
         }
 

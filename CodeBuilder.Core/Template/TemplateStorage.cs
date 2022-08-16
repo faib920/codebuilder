@@ -52,7 +52,7 @@ namespace CodeBuilder.Core.Template
 
             foreach (var p in partitions)
             {
-                fItems.Add(new TemplateFile(string.Format("{1} ({0})", p.Name, p.FileName), p.FilePath, "C#") {  Color = p.Color });
+                fItems.Add(new TemplateFile(p.Name, p.FileName, p.FilePath, "C#") {  Color = p.Color });
             }
         }
 

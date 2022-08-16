@@ -28,20 +28,22 @@ namespace CodeBuilder.PowerDesigner
 
         public static DbType? GetDbType(string databaseType, string dataType)
         {
-            Dictionary<string, string> sub = _cache.FirstOrDefault(s => databaseType.Contains(s.Key)).Value;
+            var sub = _cache.FirstOrDefault(s => databaseType.Contains(s.Key));
 
-            if (sub != null)
+            if (sub.Value != null)
             {
-                if (sub.TryGetValue(dataType.ToLower(), out string dbType))
+                if (sub.Value.TryGetValue(dataType.ToLower(), out string dbType))
                 {
                     if (Enum.TryParse(dbType, out DbType result))
                     {
                         return result;
                     }
                 }
+
+                throw new ArgumentException("在配置文件 config\\pd.cfg 的 " + sub.Key + " 配置中找不到类型 " + dataType + " 的映射，你可以自行添加相应的配置。");
             }
 
-            return null;
+            throw new ArgumentException("在配置文件 config\\pd.cfg 中找不到与 " + databaseType + " 数据库类型相匹配的类型映射，你可以自行添加相应的配置。");
         }
     }
 }

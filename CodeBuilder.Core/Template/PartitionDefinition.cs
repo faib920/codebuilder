@@ -56,7 +56,7 @@ namespace CodeBuilder.Core.Template
         /// 获取模板文件的内容。
         /// </summary>
         [NoTextSerializable]
-        public string Content
+        public virtual string Content
         {
             get
             {

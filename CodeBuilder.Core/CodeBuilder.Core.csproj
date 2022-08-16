@@ -122,6 +122,7 @@
     <Compile Include="RequiredCheckAttribute.cs" />
     <Compile Include="SchemaUnity.cs" />
     <Compile Include="Template\TemplateExtension.cs" />
+    <Compile Include="Template\TemplateValidation.cs" />
     <Compile Include="ThreadHelper.cs" />
     <Compile Include="Tool\MultipleToolProviderBase.cs" />
     <Compile Include="ValidationUnity.cs" />

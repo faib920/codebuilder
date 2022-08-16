@@ -102,6 +102,7 @@ namespace CodeBuilder.PowerDesigner
                 {
                     ParseDbTypeAndPrecision(dtNode.InnerText, column);
                     column.DbType = DbTypeManager.GetDbType(_databaseType, column.DataType);
+                    column.ColumnType = dtNode.InnerText;
                 }
 
                 if (lngNode != null)
