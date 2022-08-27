@@ -335,6 +335,7 @@ namespace CodeBuilder
             {
                 using (var form = new frmTemplateShop(_hosting))
                 {
+                    form.OnUpdated = () => ThreadHelper.Start(CheckTemplateUpdate);
                     form.ShowDialog();
                     if (form.ChangedTemplates.Count > 0)
                     {
@@ -872,9 +873,9 @@ namespace CodeBuilder
         {
             using (var frm = new frmOption(_hosting))
             {
-                if (frm.ShowDialog() == DialogResult.OK)
-                {
-                }
+                frm.OnPluginUpdated = () => ThreadHelper.Start(CheckPluginUpdate);
+
+                frm.ShowDialog();
             }
         }
 
@@ -1163,10 +1164,13 @@ namespace CodeBuilder
                 }
             }
 
+            statusStrip1.Items.RemoveByKey("ssPlugin");
+
             if (updateCount > 0)
             {
                 var ss = new ToolStripStatusLabel();
                 ss.IsLink = true;
+                ss.Name = "ssPlugin";
                 ss.Visible = true;
                 ss.LinkBehavior = LinkBehavior.HoverUnderline;
                 ss.Text = "插件更新(" + updateCount + ")";
@@ -1174,6 +1178,7 @@ namespace CodeBuilder
                 ss.Click += (o, e) =>
                 {
                     var frm = new frmPluginShop(_hosting);
+                    frm.OnUpdated = () => ThreadHelper.Start(CheckPluginUpdate);
                     frm.ShowDialog();
                 };
 
@@ -1220,10 +1225,13 @@ namespace CodeBuilder
                 }
             }
 
+            statusStrip1.Items.RemoveByKey("ssTemp");
+
             if (updateCount > 0)
             {
                 var ss = new ToolStripStatusLabel();
                 ss.IsLink = true;
+                ss.Name = "ssTemp";
                 ss.Visible = true;
                 ss.LinkBehavior = LinkBehavior.HoverUnderline;
                 ss.Text = "模板更新(" + updateCount + ")";
@@ -1231,6 +1239,8 @@ namespace CodeBuilder
                 ss.Click += (o, e) =>
                 {
                     var frm = new frmTemplateShop(_hosting);
+                    frm.OnUpdated = () => ThreadHelper.Start(CheckTemplateUpdate);
+
                     frm.ShowDialog();
                 };
 

@@ -35,6 +35,8 @@ namespace CodeBuilder
             _hosting = hosting;
         }
 
+        public Action OnUpdated { get; set; }
+
         private async void frmPluginShop_Load(object sender, EventArgs e)
         {
             lvwPlugin.Renderer = new PlugTreeListRenderer1();
@@ -190,6 +192,8 @@ namespace CodeBuilder
                 plugin.IsInstalled = true;
                 plugin.NeedUpdate = false;
                 lvwPlugin.Invalidate();
+
+                OnUpdated?.Invoke();
 
                 var response = await client.PostAsync(Config.PluginServerUrl + "/download/" + plugin.Code, null);
 

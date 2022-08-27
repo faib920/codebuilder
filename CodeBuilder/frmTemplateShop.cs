@@ -38,6 +38,8 @@ namespace CodeBuilder
 
         public List<string> ChangedTemplates { get; set; } = new List<string>();
 
+        public Action OnUpdated { get; set; }
+
         private async void frmTemplateShop_Load(object sender, EventArgs e)
         {
             lvwTemplate.Renderer = new TemplateTreeListRenderer();
@@ -186,9 +188,17 @@ namespace CodeBuilder
 
                 ChangedTemplates.Add(tmp.Code);
 
+                if (TemplateUnity.TryGet(tmp.Category, tmp.Code, out TemplateDefinition definition))
+                {
+                    definition.Version = tmp.Version;
+                }
+
+                OnUpdated?.Invoke();
+
                 var response = await client.PostAsync(Config.Instance.TemplateServerUrl + "/download/" + tmp.Code, null);
 
                 btnUpdate.Visible = false;
+                btnLocation.Visible = false;
             }
             catch (Exception exp)
             {

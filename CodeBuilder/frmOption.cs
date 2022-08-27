@@ -29,6 +29,8 @@ namespace CodeBuilder
             _hosting = hosting;
         }
 
+        public Action OnPluginUpdated { get; set; }
+
         private void frmOption_Load(object sender, EventArgs e)
         {
             LoadEncodings();
@@ -143,6 +145,7 @@ namespace CodeBuilder
         private void mnuShop_Click(object sender, EventArgs e)
         {
             var frm = new frmPluginShop(_hosting);
+            frm.OnUpdated = OnPluginUpdated;
             frm.ShowDialog();
         }
 
