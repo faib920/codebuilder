@@ -1,0 +1,271 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{595C1180-C831-4F78-8A3A-5C975A8A46A4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeBuilder.Tools</RootNamespace>
+    <AssemblyName>CodeBuilder.Tools</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\CodeBuilder\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\CodeBuilder\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Fireasy.Common, Version=2.0.0.46108, Culture=neutral, PublicKeyToken=31261c3914251779, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Fireasy.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Fireasy.Data, Version=2.0.0.46108, Culture=neutral, PublicKeyToken=31261c3914251779, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Fireasy.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Fireasy.Windows.Forms, Version=2.0.0.46102, Culture=neutral, PublicKeyToken=31261c3914251779, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Fireasy.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Fireasy.Windows.Forms.TreeList, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31261c3914251779, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Fireasy.Windows.Forms.TreeList.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.TextEditor, Version=4.0.0.5700, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython, Version=3.4.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.3.4.1\lib\net462\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules, Version=3.4.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.3.4.1\lib\net462\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.SQLite, Version=3.4.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.3.4.1\lib\net462\IronPython.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Wpf, Version=3.4.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.3.4.1\lib\net462\IronPython.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.3.4.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.4\lib\net452\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.3.4.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.4\lib\net452\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata, Version=1.3.4.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.4\lib\net452\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\lib\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataTypeManageTool.cs" />
+    <Compile Include="frmDataTypeManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDataTypeManager.Designer.cs">
+      <DependentUpon>frmDataTypeManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmNewDatabase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmNewDatabase.Designer.cs">
+      <DependentUpon>frmNewDatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmTools.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTools.Designer.cs">
+      <DependentUpon>frmTools.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="GeneralTools.cs" />
+    <Compile Include="Tools\CodeDebugConfig.cs" />
+    <Compile Include="Tools\PythonCodeDebuger.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\PythonCodeDebuger.Designer.cs">
+      <DependentUpon>PythonCodeDebuger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\CodeDebuger.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\CodeDebuger.Designer.cs">
+      <DependentUpon>CodeDebuger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\FileComparer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\FileComparer.Designer.cs">
+      <DependentUpon>FileComparer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\frmConfigCodeDebugger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\frmConfigCodeDebugger.Designer.cs">
+      <DependentUpon>frmConfigCodeDebugger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\frmConfigTextConverter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\frmConfigTextConverter.Designer.cs">
+      <DependentUpon>frmConfigTextConverter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\TextConvertConfig.cs" />
+    <Compile Include="Tools\UnicodeConverter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\UnicodeConverter.Designer.cs">
+      <DependentUpon>UnicodeConverter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\UrlEncodeConverter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\UrlEncodeConverter.Designer.cs">
+      <DependentUpon>UrlEncodeConverter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\CollComparer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\CollComparer.Designer.cs">
+      <DependentUpon>CollComparer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\GuidGenerator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\GuidGenerator.Designer.cs">
+      <DependentUpon>GuidGenerator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\Base64Converter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Base64Converter.Designer.cs">
+      <DependentUpon>Base64Converter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\NamingConverter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\NamingConverter.Designer.cs">
+      <DependentUpon>NamingConverter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\TextConverter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\TextConverter.Designer.cs">
+      <DependentUpon>TextConverter.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CodeBuilder.Core\CodeBuilder.Core.csproj">
+      <Project>{26662e91-a4f1-48fd-9f58-bd229253a3f5}</Project>
+      <Name>CodeBuilder.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmDataTypeManager.resx">
+      <DependentUpon>frmDataTypeManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmNewDatabase.resx">
+      <DependentUpon>frmNewDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTools.resx">
+      <DependentUpon>frmTools.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\PythonCodeDebuger.resx">
+      <DependentUpon>PythonCodeDebuger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\CodeDebuger.resx">
+      <DependentUpon>CodeDebuger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FileComparer.resx">
+      <DependentUpon>FileComparer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\frmConfigCodeDebugger.resx">
+      <DependentUpon>frmConfigCodeDebugger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\frmConfigTextConverter.resx">
+      <DependentUpon>frmConfigTextConverter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\UnicodeConverter.resx">
+      <DependentUpon>UnicodeConverter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\UrlEncodeConverter.resx">
+      <DependentUpon>UrlEncodeConverter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\CollComparer.resx">
+      <DependentUpon>CollComparer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\GuidGenerator.resx">
+      <DependentUpon>GuidGenerator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\Base64Converter.resx">
+      <DependentUpon>Base64Converter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\NamingConverter.resx">
+      <DependentUpon>NamingConverter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\TextConverter.resx">
+      <DependentUpon>TextConverter.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

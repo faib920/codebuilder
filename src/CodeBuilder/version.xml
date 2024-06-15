@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<local>
+  <version>43</version>
+  <updatUri>http://www.fireasy.cn/auto_update/codebuilder.xml</updatUri>
+  <icon>
+  </icon>
+  <startup>CodeBuilder.exe</startup>
+  <check-date>2022/4/23</check-date>
+</local>

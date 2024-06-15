@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{26662E91-A4F1-48FD-9F58-BD229253A3F5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeBuilder.Core</RootNamespace>
+    <AssemblyName>CodeBuilder.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Fireasy.Common">
+      <HintPath>..\lib\Fireasy.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Fireasy.Windows.Forms">
+      <HintPath>..\lib\Fireasy.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Fireasy.Windows.Forms.Editors, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31261c3914251779, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Fireasy.Windows.Forms.Editors.dll</HintPath>
+    </Reference>
+    <Reference Include="Fireasy.Windows.Forms.TreeList">
+      <HintPath>..\lib\Fireasy.Windows.Forms.TreeList.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.4.5.0\lib\netstandard2.0\Microsoft.CodeAnalysis.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Metadata, Version=6.0.0.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.Metadata.6.0.1\lib\net461\System.Reflection.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding.CodePages, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.6.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\lib\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Designer\CategoryConsts.cs" />
+    <Compile Include="Designer\CollectionConverter.cs" />
+    <Compile Include="Designer\CollectionViewEditor.cs" />
+    <Compile Include="Designer\HostConvert.cs" />
+    <Compile Include="Designer\ColumnOwnerConvert.cs" />
+    <Compile Include="Designer\DisableViewEditor.cs" />
+    <Compile Include="Designer\IModeView.cs" />
+    <Compile Include="Forms\ChangedFormBase.cs" />
+    <Compile Include="Forms\FormCloseHandler.cs" />
+    <Compile Include="Forms\IWindowSetManager.cs" />
+    <Compile Include="Forms\IChangeManager.cs" />
+    <Compile Include="HostingExtensions.cs" />
+    <Compile Include="MainMenuKeys.cs" />
+    <Compile Include="IConfigureSupported.cs" />
+    <Compile Include="Forms\IContextMenuManager.cs" />
+    <Compile Include="Forms\IMainMenuManager.cs" />
+    <Compile Include="RegistryHelper.cs" />
+    <Compile Include="Source\IIdentity.cs" />
+    <Compile Include="Source\OpenSchemaFileException.cs" />
+    <Compile Include="Source\SchemaValidatorAttribute.cs" />
+    <Compile Include="Tool\IBootstrapTool.cs" />
+    <Compile Include="Tool\ToolShortcutHelper.cs" />
+    <Compile Include="UICustomizedAttribute.cs" />
+    <Compile Include="Designer\ForeignKeyEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Designer\ForeignKeyEditorForm.Designer.cs">
+      <DependentUpon>ForeignKeyEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="INotifyWindow.cs" />
+    <Compile Include="LocalDynamicCache.cs" />
+    <Compile Include="ExtendPropertyAttribute.cs" />
+    <Compile Include="FileTypeHelper.cs" />
+    <Compile Include="Forms\DockFormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IClosableDockManaged.cs" />
+    <Compile Include="IDevHosting.cs" />
+    <Compile Include="Source\DataTypeManager.cs" />
+    <Compile Include="Source\HistoryStorage.cs" />
+    <Compile Include="Source\ISchemaRepository.cs" />
+    <Compile Include="Source\ISourceAssistant.cs" />
+    <Compile Include="Source\SchemaRepository.cs" />
+    <Compile Include="Source\SourceAssistant.cs" />
+    <Compile Include="Template\IPartitionOutputParser.cs" />
+    <Compile Include="IPlugin.cs" />
+    <Compile Include="Initializers\IProfileInitializer.cs" />
+    <Compile Include="RequiredCheckAttribute.cs" />
+    <Compile Include="SchemaUnity.cs" />
+    <Compile Include="Template\TemplateExtension.cs" />
+    <Compile Include="Template\TemplateValidation.cs" />
+    <Compile Include="ThreadHelper.cs" />
+    <Compile Include="Tool\MultipleToolProviderBase.cs" />
+    <Compile Include="Validations\ISchemaValidator.cs" />
+    <Compile Include="Validations\ValidateResult.cs" />
+    <Compile Include="Validations\ValidationUnity.cs" />
+    <Compile Include="TemplateUnity.cs" />
+    <Compile Include="UnPersistentlyAttribute.cs" />
+    <Compile Include="SourceOption.cs" />
+    <Compile Include="Source\IField.cs" />
+    <Compile Include="Source\IObject.cs" />
+    <Compile Include="Profile.cs" />
+    <Compile Include="frmProcessor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmProcessor.Designer.cs">
+      <DependentUpon>frmProcessor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ISourceProvider.cs" />
+    <Compile Include="ITemplateProvider.cs" />
+    <Compile Include="ProfileUnity.cs" />
+    <Compile Include="Designer\ForeignKeyEditor.cs" />
+    <Compile Include="Source\DisGenerateAttribute.cs" />
+    <Compile Include="Source\Host.cs" />
+    <Compile Include="Initializers\ISchemaInitializer.cs" />
+    <Compile Include="Initializers\InitializerUnity.cs" />
+    <Compile Include="Source\SchemaBase.cs" />
+    <Compile Include="Source\SchemaExtensionAttribute.cs" />
+    <Compile Include="Source\SchemaInitializerAttribute.cs" />
+    <Compile Include="StaticUnity.cs" />
+    <Compile Include="Processor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Template\GenerateResult.cs" />
+    <Compile Include="Template\GroupDefinition.cs" />
+    <Compile Include="Template\Parser.cs" />
+    <Compile Include="Template\ResourceWriter.cs" />
+    <Compile Include="Template\TemplateDirectory.cs" />
+    <Compile Include="Template\TemplateStorage.cs" />
+    <Compile Include="IToolProvider.cs" />
+    <Compile Include="Variable\AssemblyReferenceManager.cs" />
+    <Compile Include="Variable\BaseExtensionManager.cs" />
+    <Compile Include="Variable\CompileException.cs" />
+    <Compile Include="Variable\CompileHelper.cs" />
+    <Compile Include="Variable\IProfileExtensionManager.cs" />
+    <Compile Include="Variable\ISchemaExtensionManager.cs" />
+    <Compile Include="Variable\PropertyMap.cs" />
+    <Compile Include="Variable\SchemaExtensionManager.cs" />
+    <Compile Include="Source\Column.cs" />
+    <Compile Include="Source\Reference.cs" />
+    <Compile Include="Source\Table.cs" />
+    <Compile Include="Source\TableSchemaProcessHandler.cs" />
+    <Compile Include="TemplateOption.cs" />
+    <Compile Include="Template\CodeGenerateHandler.cs" />
+    <Compile Include="Template\TemplateFile.cs" />
+    <Compile Include="Template\PartitionDefinition.cs" />
+    <Compile Include="Template\PartitionLoop.cs" />
+    <Compile Include="Template\PartitionWriter.cs" />
+    <Compile Include="Template\TemplateDefinition.cs" />
+    <Compile Include="Template\TemplateParser.cs" />
+    <Compile Include="Util.cs" />
+    <Compile Include="Variable\ProfileExtensionManager.cs" />
+    <Compile Include="WebHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Designer\ForeignKeyEditorForm.resx">
+      <DependentUpon>ForeignKeyEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmProcessor.resx">
+      <DependentUpon>frmProcessor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DockFormBase.resx">
+      <DependentUpon>DockFormBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormBase.resx">
+      <DependentUpon>FormBase.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Resources\App.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Internal\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\4.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\column.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\item.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.targets'))" />
+  </Target>
+  <Import Project="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.targets" Condition="Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\build\Microsoft.CodeAnalysis.Analyzers.targets')" />
+</Project>

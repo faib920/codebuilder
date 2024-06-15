@@ -1,0 +1,133 @@
+﻿namespace CodeBuilder.Database
+{
+    partial class frmOracleConfig
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtSvr = new System.Windows.Forms.TextBox();
+            this.txtUser = new System.Windows.Forms.TextBox();
+            this.txtPwd = new System.Windows.Forms.TextBox();
+            this.chkProtect = new System.Windows.Forms.CheckBox();
+            this.SuspendLayout();
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(25, 25);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(51, 19);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "服务器:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(25, 61);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 19);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "用户名:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(38, 97);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(38, 19);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "密码:";
+            // 
+            // txtSvr
+            // 
+            this.txtSvr.Location = new System.Drawing.Point(88, 22);
+            this.txtSvr.Name = "txtSvr";
+            this.txtSvr.Size = new System.Drawing.Size(202, 24);
+            this.txtSvr.TabIndex = 5;
+            this.txtSvr.Text = "ORCL";
+            // 
+            // txtUser
+            // 
+            this.txtUser.Location = new System.Drawing.Point(88, 58);
+            this.txtUser.Name = "txtUser";
+            this.txtUser.Size = new System.Drawing.Size(202, 24);
+            this.txtUser.TabIndex = 7;
+            // 
+            // txtPwd
+            // 
+            this.txtPwd.Location = new System.Drawing.Point(88, 94);
+            this.txtPwd.Name = "txtPwd";
+            this.txtPwd.Size = new System.Drawing.Size(202, 24);
+            this.txtPwd.TabIndex = 8;
+            // 
+            // chkProtect
+            // 
+            this.chkProtect.AutoSize = true;
+            this.chkProtect.Location = new System.Drawing.Point(296, 96);
+            this.chkProtect.Name = "chkProtect";
+            this.chkProtect.Size = new System.Drawing.Size(80, 23);
+            this.chkProtect.TabIndex = 23;
+            this.chkProtect.Text = "密文保护";
+            this.chkProtect.UseVisualStyleBackColor = true;
+            // 
+            // frmOracleConfig
+            // 
+            this.ClientSize = new System.Drawing.Size(464, 291);
+            this.Controls.Add(this.chkProtect);
+            this.Controls.Add(this.txtPwd);
+            this.Controls.Add(this.txtUser);
+            this.Controls.Add(this.txtSvr);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label1);
+            this.Name = "frmOracleConfig";
+            this.Text = "配置 Oracle";
+            this.Controls.SetChildIndex(this.label1, 0);
+            this.Controls.SetChildIndex(this.label3, 0);
+            this.Controls.SetChildIndex(this.label4, 0);
+            this.Controls.SetChildIndex(this.txtSvr, 0);
+            this.Controls.SetChildIndex(this.txtUser, 0);
+            this.Controls.SetChildIndex(this.txtPwd, 0);
+            this.Controls.SetChildIndex(this.chkProtect, 0);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txtSvr;
+        private System.Windows.Forms.TextBox txtUser;
+        private System.Windows.Forms.TextBox txtPwd;
+        private System.Windows.Forms.CheckBox chkProtect;
+    }
+}

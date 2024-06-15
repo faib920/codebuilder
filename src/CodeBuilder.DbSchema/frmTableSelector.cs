@@ -1,0 +1,142 @@
+﻿// -----------------------------------------------------------------------
+// <copyright license="GPL"
+//      company="fireasy.cn"
+//      email="faib920@126.com"
+//      qq="55570729">
+//   (c) Copyright Fireasy. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+using CodeBuilder.Core;
+using CodeBuilder.Core.Forms;
+using CodeBuilder.Core.Source;
+using Fireasy.Windows.Forms;
+using System;
+using System.Collections.Generic;
+
+namespace CodeBuilder.DbSchema
+{
+    public partial class frmTableSelector : FormBase
+    {
+        private PdmDefinition _definition;
+        private readonly IDevHosting _hosting;
+        private readonly List<string> _selectedNames;
+
+        public frmTableSelector(IDevHosting hosting, List<string> selectedNames)
+            : base()
+        {
+            InitializeComponent();
+            Icon = Util.GetIcon();
+            _hosting = hosting;
+            _selectedNames = selectedNames;
+        }
+
+        public frmTableSelector(IDevHosting hosting, PdmDefinition definition, List<string> selectedNames)
+            : this(hosting, selectedNames)
+        {
+            _definition = definition;
+        }
+
+        public List<Table> Selected { get; private set; }
+
+        public bool Append { get; set; }
+
+        private void frmTableSelector_Load(object sender, EventArgs e)
+        {
+            lstTable.BeginUpdate();
+            LoadSchemas(lstTable.Items, _definition.Schemas);
+            lstTable.EndUpdate();
+        }
+
+        private void LoadSchemas(TreeListItemCollection items, List<PdmSchema> schemas)
+        {
+            foreach (var p in schemas)
+            {
+                var item = new TreeListItem(p.Name);
+                items.Add(item);
+                LoadTables(item.Items, p.Tables);
+                item.Expended = true;
+                item.ImageIndex = 0;
+            }
+        }
+
+        private void LoadTables(TreeListItemCollection items, List<PdmTable> tables)
+        {
+            foreach (var t in tables)
+            {
+                var item = new TreeListItem(t.Name);
+                item.Tag = t;
+                item.ImageIndex = 1;
+                items.Add(item);
+                item.Cells[1].Value = t.Description;
+
+                if (_selectedNames.Contains(t.Name))
+                {
+                    item.Checked = true;
+                }
+            }
+        }
+
+        private void CheckedItems(TreeListItemCollection items)
+        {
+            foreach (var item in items)
+            {
+                item.Checked = true;
+                CheckedItems(item.Items);
+            }
+        }
+
+        private void GetSelectedTables(TreeListItemCollection items)
+        {
+            foreach (var item in items)
+            {
+                var t = item.Tag as PdmTable;
+                if (t == null)
+                {
+                    GetSelectedTables(item.Items);
+                }
+                else if (item.Checked)
+                {
+                    Selected.Add(t);
+                }
+            }
+        }
+
+        private void lstTable_AfterItemCheckChange(object sender, TreeListItemEventArgs e)
+        {
+            if (e.Item.Checked)
+            {
+                CheckedItems(e.Item.Items);
+            }
+        }
+
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            Selected = new List<Table>();
+
+            if (_selectedNames.Count > 0)
+            {
+                Append = _hosting.ShowConfirm("是否已追加的方式添加表到对象列表中?") == ShowMsgButton.Yes;
+            }
+
+            GetSelectedTables(lstTable.Items);
+
+            if (Selected.Count == 0)
+            {
+                _hosting.ShowWarn("至少选择一个以上的表。");
+                return;
+            }
+
+            DialogResult = System.Windows.Forms.DialogResult.OK;
+            Close();
+        }
+
+        private void btnAll_Click(object sender, EventArgs e)
+        {
+            foreach (var item in lstTable.Items)
+            {
+                item.Checked = true;
+                CheckedItems(item.Items);
+            }
+        }
+    }
+}
