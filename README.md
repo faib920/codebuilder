@@ -110,6 +110,40 @@ public interface ITemplateProvider : IPlugin
 }
 ```
 
+### 工具 IToolProvider
+
+```csharp
+/// <summary>
+/// 工具提供者插件。
+/// </summary>
+public interface IToolProvider : IPlugin
+{
+    /// <summary>
+    /// 执行调用工具，返回工具的窗体。
+    /// </summary>
+    Form Execute();
+}
+
+/// <summary>
+/// 提供子项的工具插件。
+/// </summary>
+public interface IMultipleToolProvider : IToolProvider
+{
+    /// <summary>
+    /// 执行调用工具，返回工具的窗体。
+    /// </summary>
+    /// <param name="name">子工具名称。</param>
+    /// <param name="parameter">参数。</param>
+    /// <returns></returns>
+    Form Execute(string name, object parameter);
+
+    /// <summary>
+    /// 获取子工具的菜单。
+    /// </summary>
+    IEnumerable<IToolMenu> SubItems { get; }
+}
+```
+
 ## 发行版本
 
   [http://www.fireasy.cn/codebuilder](http://www.fireasy.cn/codebuilder)
