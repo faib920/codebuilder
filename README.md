@@ -15,7 +15,7 @@
 
 ### 数据源 ISourceProvider
 
-```cshar
+```csharp
 /// <summary>
 /// 数据源提供者插件。
 /// </summary>
