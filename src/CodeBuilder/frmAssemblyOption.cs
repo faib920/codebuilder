@@ -64,7 +64,7 @@ namespace CodeBuilder
 
         private void tbtnDelete_Click(object sender, System.EventArgs e)
         {
-            if (lvwAssembly.SelectedItems.Count > 0)
+            if (lvwAssembly.HasSelectedItems)
             {
                 lvwAssembly.Items.Remove(lvwAssembly.SelectedItems[0]);
             }

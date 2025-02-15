@@ -28,6 +28,16 @@ namespace CodeBuilder.DbSchema
 
     public class PdmTable : Table
     {
+        public PdmTable()
+            : base()
+        {
+        }
+
+        public PdmTable(bool isView)
+            : base(isView)
+        {
+        }
+
         public string Uri { get; set; }
     }
 }

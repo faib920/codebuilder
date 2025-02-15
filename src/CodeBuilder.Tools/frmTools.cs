@@ -20,7 +20,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder.Tools
 {
-    public partial class frmTools : DockFormBase, IContextMenuManager
+    public partial class frmTools : DockFormBase, IContextMenuManager, ICloseManager
     {
         private readonly IDevHosting _hosting;
 
@@ -44,6 +44,7 @@ namespace CodeBuilder.Tools
             SetToolItem<GuidGenerator>(listView1.Items.Add("GUID生成器"));
             SetToolItem<CollComparer>(listView1.Items.Add("集合比较器"));
             SetToolItem<FileComparer>(listView1.Items.Add("文件比较器"));
+            SetToolItem<FileEncodeDetector>(listView1.Items.Add("文件编码检测器"));
             SetToolItem<CodeDebuger>(listView1.Items.Add("代码调试器"));
             SetToolItem<PythonCodeDebuger>(listView1.Items.Add("Python代码调试器"));
 
@@ -67,7 +68,7 @@ namespace CodeBuilder.Tools
 
         private void mnuDefault_Click(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count == 0)
+            if (!listView1.HasSelectedItems)
             {
                 return;
             }
@@ -77,7 +78,7 @@ namespace CodeBuilder.Tools
 
         private void listView1_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            if (listView1.SelectedItems.Count == 0)
+            if (!listView1.HasSelectedItems)
             {
                 return;
             }

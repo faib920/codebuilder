@@ -98,25 +98,43 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Designer\CategoryConsts.cs" />
+    <Compile Include="Designer\ChangedPropertyConverter.cs" />
+    <Compile Include="Designer\ChangedPropertyEditor.cs" />
     <Compile Include="Designer\CollectionConverter.cs" />
     <Compile Include="Designer\CollectionViewEditor.cs" />
+    <Compile Include="Designer\SubKeyViewEditor.cs" />
+    <Compile Include="Designer\ForeignKeyViewEditor.cs" />
     <Compile Include="Designer\HostConvert.cs" />
     <Compile Include="Designer\ColumnOwnerConvert.cs" />
     <Compile Include="Designer\DisableViewEditor.cs" />
     <Compile Include="Designer\IModeView.cs" />
+    <Compile Include="Designer\IndexViewEditor.cs" />
+    <Compile Include="DynamicFunc\DefaultFuncProvider.cs" />
+    <Compile Include="DynamicFunc\DynamicFuncAttribute.cs" />
+    <Compile Include="DynamicFunc\DynamicFuncBuilder.cs" />
+    <Compile Include="DynamicFunc\DynamicFuncHelper.cs" />
+    <Compile Include="DynamicFunc\DynamicFuncInvokeException.cs" />
+    <Compile Include="DynamicFunc\IDynamicFuncProvider.cs" />
+    <Compile Include="EventBus\DefaultEventBusHandler.cs" />
+    <Compile Include="EventBus\IEventBusHandler.cs" />
     <Compile Include="Forms\ChangedFormBase.cs" />
     <Compile Include="Forms\FormCloseHandler.cs" />
+    <Compile Include="Forms\ISaveAsManager.cs" />
     <Compile Include="Forms\IWindowSetManager.cs" />
     <Compile Include="Forms\IChangeManager.cs" />
     <Compile Include="HostingExtensions.cs" />
+    <Compile Include="ILogQueue.cs" />
     <Compile Include="MainMenuKeys.cs" />
     <Compile Include="IConfigureSupported.cs" />
     <Compile Include="Forms\IContextMenuManager.cs" />
     <Compile Include="Forms\IMainMenuManager.cs" />
     <Compile Include="RegistryHelper.cs" />
+    <Compile Include="Source\ChangedProperty.cs" />
     <Compile Include="Source\IIdentity.cs" />
+    <Compile Include="Source\IndexColumn.cs" />
     <Compile Include="Source\OpenSchemaFileException.cs" />
     <Compile Include="Source\SchemaValidatorAttribute.cs" />
+    <Compile Include="Source\Index.cs" />
     <Compile Include="Tool\IBootstrapTool.cs" />
     <Compile Include="Tool\ToolShortcutHelper.cs" />
     <Compile Include="UICustomizedAttribute.cs" />
@@ -136,14 +154,14 @@
     <Compile Include="Forms\FormBase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\IClosableDockManaged.cs" />
+    <Compile Include="Forms\ICloseManager.cs" />
     <Compile Include="IDevHosting.cs" />
     <Compile Include="Source\DataTypeManager.cs" />
     <Compile Include="Source\HistoryStorage.cs" />
     <Compile Include="Source\ISchemaRepository.cs" />
     <Compile Include="Source\ISourceAssistant.cs" />
     <Compile Include="Source\SchemaRepository.cs" />
-    <Compile Include="Source\SourceAssistant.cs" />
+    <Compile Include="Source\SourceAssistantBase.cs" />
     <Compile Include="Template\IPartitionOutputParser.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="Initializers\IProfileInitializer.cs" />
@@ -197,7 +215,9 @@
     <Compile Include="Variable\AssemblyReferenceManager.cs" />
     <Compile Include="Variable\BaseExtensionManager.cs" />
     <Compile Include="Variable\CompileException.cs" />
-    <Compile Include="Variable\CompileHelper.cs" />
+    <Compile Include="Variable\CompileManager.cs" />
+    <Compile Include="Variable\CompileResult.cs" />
+    <Compile Include="Variable\ICompileManager.cs" />
     <Compile Include="Variable\IProfileExtensionManager.cs" />
     <Compile Include="Variable\ISchemaExtensionManager.cs" />
     <Compile Include="Variable\PropertyMap.cs" />
@@ -276,6 +296,24 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\unique.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\index.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\column1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\column2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\relation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\关系.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

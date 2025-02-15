@@ -121,7 +121,7 @@ namespace CodeBuilder
 
         private void lvwPlugin_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            if (lvwPlugin.SelectedItems.Count == 0)
+            if (!lvwPlugin.HasSelectedItems)
             {
                 btnUpdate.Visible = false;
                 return;
@@ -152,7 +152,7 @@ namespace CodeBuilder
 
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (lvwPlugin.SelectedItems.Count == 0)
+            if (!lvwPlugin.HasSelectedItems)
             {
                 return;
             }

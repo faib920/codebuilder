@@ -31,6 +31,8 @@ namespace CodeBuilder
 
         public string OutputDirectory { get; set; }
 
+        public List<string> OutputDirectoryHistory { get; set; } = new List<string>();
+
         public string Encoding { get; set; }
 
         public string Profile { get; set; }
@@ -62,6 +64,10 @@ namespace CodeBuilder
         public int LogLevel { get; set; }
 
         public TemplateAnalysisConfig TemplateAnalysis { get; set; } = new TemplateAnalysisConfig();
+
+        public List<string> SyncIgnore { get; set; } = new List<string> { "Description", "ForeignKey" };
+
+        public bool Source_FilterMode { get; set; }
 
         public class TemplateAnalysisConfig
         {

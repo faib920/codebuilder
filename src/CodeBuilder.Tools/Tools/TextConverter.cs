@@ -35,7 +35,7 @@ namespace CodeBuilder.Tools.Tools
                 split = "\t";
             }
 
-            var regex = new Regex(@"\{(\d)\}", RegexOptions.Compiled);
+            var regex = new Regex(@"\{(\d+)\}", RegexOptions.Compiled);
 
             foreach (var r in txtSource.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
             {

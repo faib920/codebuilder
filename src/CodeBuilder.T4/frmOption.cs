@@ -67,7 +67,7 @@ namespace CodeBuilder.T4
 
         private void tbtnDelete_Click(object sender, System.EventArgs e)
         {
-            if (lvwAssembly.SelectedItems.Count > 0)
+            if (lvwAssembly.HasSelectedItems)
             {
                 if (lvwAssembly.SelectedItems[0].ForeColor != Color.Empty)
                 {

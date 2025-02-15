@@ -12,6 +12,7 @@ using CodeBuilder.Core.Source;
 using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace CodeBuilder.DbSchema
 {
@@ -38,8 +39,6 @@ namespace CodeBuilder.DbSchema
 
         public List<Table> Selected { get; private set; }
 
-        public bool Append { get; set; }
-
         private void frmTableSelector_Load(object sender, EventArgs e)
         {
             lstTable.BeginUpdate();
@@ -65,7 +64,7 @@ namespace CodeBuilder.DbSchema
             {
                 var item = new TreeListItem(t.Name);
                 item.Tag = t;
-                item.ImageIndex = 1;
+                item.ImageIndex = t.IsView ? 2 : 1;
                 items.Add(item);
                 item.Cells[1].Value = t.Description;
 
@@ -76,12 +75,12 @@ namespace CodeBuilder.DbSchema
             }
         }
 
-        private void CheckedItems(TreeListItemCollection items)
+        private void CheckedItems(TreeListItemCollection items, bool @checked)
         {
             foreach (var item in items)
             {
-                item.Checked = true;
-                CheckedItems(item.Items);
+                item.Checked = @checked;
+                CheckedItems(item.Items, @checked);
             }
         }
 
@@ -103,20 +102,12 @@ namespace CodeBuilder.DbSchema
 
         private void lstTable_AfterItemCheckChange(object sender, TreeListItemEventArgs e)
         {
-            if (e.Item.Checked)
-            {
-                CheckedItems(e.Item.Items);
-            }
+            CheckedItems(e.Item.Items, e.Item.Checked);
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
             Selected = new List<Table>();
-
-            if (_selectedNames.Count > 0)
-            {
-                Append = _hosting.ShowConfirm("是否已追加的方式添加表到对象列表中?") == ShowMsgButton.Yes;
-            }
 
             GetSelectedTables(lstTable.Items);
 
@@ -130,13 +121,46 @@ namespace CodeBuilder.DbSchema
             Close();
         }
 
-        private void btnAll_Click(object sender, EventArgs e)
+        private void lstTable_CheckAllChanged(object sender, TreeListCheckAllEventArgs e)
         {
-            foreach (var item in lstTable.Items)
+            CheckedItems(lstTable.Items, e.Checked);
+        }
+
+        private void txtKeyword_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == System.Windows.Forms.Keys.Enter)
             {
-                item.Checked = true;
-                CheckedItems(item.Items);
+                FindAndFiltering();
             }
         }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+            txtKeyword.Text = string.Empty;
+            FindAndFiltering();
+        }
+
+        private void txtKeyword_TextChanged(object sender, EventArgs e)
+        {
+            label3.Visible = txtKeyword.Text.Length > 0;
+        }
+
+        private void FindAndFiltering()
+        {
+            if (txtKeyword.Text.Length == 0)
+            {
+                lstTable.Filtering(null);
+            }
+            else
+            {
+                lstTable.Filtering(s =>
+                {
+                    return s.Items.HasVisiableItems ||
+                        Regex.IsMatch(s.Text, txtKeyword.Text, RegexOptions.IgnoreCase) ||
+                        (s.Cells.Count > 1 && Regex.IsMatch(s.Cells[1].Text, txtKeyword.Text, RegexOptions.IgnoreCase));
+                });
+            }
+        }
+
     }
 }

@@ -120,4 +120,12 @@
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="label3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        DAAACwwBP0AiyAAAAFJJREFUKFNjGBDAAsXYAEicGcJEBSCJUCiNDGDiWDWBAEgiCIhZwTxMPk4AU8gB
+        pQlqgAGQhplQmihAsk0k+wmkgOTQAwmia4ABkDhWTbQEDAwAwL8FCNeK/g8AAAAASUVORK5CYII=
+</value>
+  </data>
 </root>

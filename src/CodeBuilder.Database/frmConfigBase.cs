@@ -10,6 +10,7 @@ using CodeBuilder.Core;
 using CodeBuilder.Core.Forms;
 using Fireasy.Common.Extensions;
 using Fireasy.Data;
+using Fireasy.Data.Extensions;
 using Fireasy.Data.Provider;
 using System;
 using System.Windows.Forms;
@@ -71,6 +72,10 @@ namespace CodeBuilder.Database
 
             using (var db = databaseFactory.CreateDatabase(Provider.ProviderName, connstr))
             {
+                db.Provider.UpdateConnectionParameter(db.ConnectionString, p => p.ConnectTimeout = "3");
+
+                Cursor = Cursors.WaitCursor;
+
                 try
                 {
                     var exp = await db.TryConnectAsync();
@@ -86,6 +91,10 @@ namespace CodeBuilder.Database
                 catch (Exception exp)
                 {
                     _hosting.ShowError(string.Format("连接失败。详细信息如下：\n\n{0}", exp.Message));
+                }
+                finally
+                {
+                    Cursor = Cursors.Default;
                 }
             }
         }

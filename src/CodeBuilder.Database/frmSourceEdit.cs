@@ -10,6 +10,7 @@ using CodeBuilder.Core;
 using CodeBuilder.Core.Forms;
 using Fireasy.Common.Extensions;
 using Fireasy.Data;
+using Fireasy.Data.Extensions;
 using Fireasy.Data.Provider;
 using System;
 using System.Windows.Forms;
@@ -27,12 +28,12 @@ namespace CodeBuilder.Database
             _hosting = hosting;
         }
 
-        public frmSourceEdit(IDevHosting hosting, DbSourceStruct db)
+        public frmSourceEdit(IDevHosting hosting, DbSourceStruct db, bool isNew = false)
             : this(hosting)
         {
             Current = db;
             _providerName = db.Type;
-            Text = "添加 " + db.Type + " 数据源";
+            Text = (isNew ? "添加 " : "修改 ") + db.Type + " 数据源";
             txtName.Text = db.Name;
             txtConnStr.Text = db.ConnectionString;
         }
@@ -85,6 +86,10 @@ namespace CodeBuilder.Database
 
             using (var db = databaseFactory.CreateDatabase(Current.Type, txtConnStr.Text))
             {
+                db.Provider.UpdateConnectionParameter(db.ConnectionString, p => p.ConnectTimeout = "3");
+
+                Cursor = Cursors.WaitCursor;
+
                 try
                 {
                     var exp = await db.TryConnectAsync();
@@ -101,6 +106,10 @@ namespace CodeBuilder.Database
                 {
                     _hosting.ShowError(string.Format("{0} 连接失败。详细信息如下：\n\n{1}", sourceName, exp.Message));
                 }
+                finally
+                {
+                    Cursor = Cursors.Default;
+                }
             }
         }
 
@@ -109,6 +118,7 @@ namespace CodeBuilder.Database
             var frm = ConfigForms.GetConfigForm(_hosting.ServiceProvider, _providerName);
             if (frm == null)
             {
+                _hosting.ShowInfo("未提供 " + _providerName + " 的向导窗口。");
                 return;
             }
 

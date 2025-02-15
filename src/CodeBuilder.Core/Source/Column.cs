@@ -8,6 +8,8 @@
 // -----------------------------------------------------------------------
 //using CodeBuilder.Core.Designer;
 using CodeBuilder.Core.Designer;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing.Design;
@@ -35,10 +37,6 @@ namespace CodeBuilder.Core.Source
         private bool _isUniqueKey;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public Column()
-        {
-        }
 
         public Column(Table owner)
         {
@@ -271,6 +269,22 @@ namespace CodeBuilder.Core.Source
         public int Index { get; set; }
 
         /// <summary>
+        /// 获取或设置字符集。
+        /// </summary>
+        [Description("字符集。")]
+        [Category(CategoryConsts.Attribute)]
+        [UICustomized("字符集", 80)]
+        public string Charset { get; set; }
+
+        /// <summary>
+        /// 获取或设置字符排列规则。
+        /// </summary>
+        [Description("字符排列规则。")]
+        [Category(CategoryConsts.Attribute)]
+        [UICustomized("字符排列规则", 120)]
+        public string Collation { get; set; }
+
+        /// <summary>
         /// 获取或设置字段是否为主键。
         /// </summary>
         [Description("字段是否为主键。")]
@@ -344,6 +358,17 @@ namespace CodeBuilder.Core.Source
         [Category(CategoryConsts.Auxiliary)]
         [UnPersistently]
         public Table Owner { get; private set; }
+
+        /// <summary>
+        /// 获取变更明细。
+        /// </summary>
+        [Description("变更明细。")]
+        [TypeConverter(typeof(Designer.ChangedPropertyConverter))]
+        [Editor(typeof(Designer.ChangedPropertyEditor), typeof(UITypeEditor))]
+        [Category(CategoryConsts.Auxiliary)]
+        [DisGenerate]
+        [UnPersistently]
+        public List<ChangedProperty> ChangeDetails { get; private set; }
 
         /// <summary>
         /// 绑定外键。
@@ -423,6 +448,11 @@ namespace CodeBuilder.Core.Source
         public override string ToString()
         {
             return Name;
+        }
+
+        public void SetChangeDetails(List<ChangedProperty> details)
+        {
+            ChangeDetails = details == null || details.Count == 0 ? null : new List<ChangedProperty>(details);
         }
 
         string IModeView.GetDisplayName(string view)

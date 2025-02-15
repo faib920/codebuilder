@@ -57,8 +57,6 @@ namespace CodeBuilder.PowerDesigner
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    option.Append = frm.Append;
-
                     _historyStorage.Add(_pdmFileName);
                     _hosting.OnSourceHistoryChanged();
 
@@ -82,8 +80,6 @@ namespace CodeBuilder.PowerDesigner
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    option.Append = frm.Append;
-
                     _historyStorage.Add(_pdmFileName);
                     _hosting.OnSourceHistoryChanged();
 

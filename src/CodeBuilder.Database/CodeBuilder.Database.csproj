@@ -184,6 +184,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DbSourceStruct.cs" />
+    <Compile Include="DbFuncProvider.cs" />
     <Compile Include="frmConfigBase.cs">
       <SubType>Form</SubType>
     </Compile>

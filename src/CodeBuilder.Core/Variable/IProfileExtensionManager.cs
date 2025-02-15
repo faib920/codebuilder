@@ -23,12 +23,14 @@ namespace CodeBuilder.Core.Variable
         /// <summary>
         /// 获取变量的包装类。
         /// </summary>
+        /// <param name="definition">模板定义。</param>
         /// <returns></returns>
         Type GetWrapType();
 
         /// <summary>
         /// 获取变量的所有属性映射。
         /// </summary>
+        /// <param name="definition">模板定义。</param>
         /// <returns></returns>
         List<PropertyMap> GetPropertyMaps();
     }

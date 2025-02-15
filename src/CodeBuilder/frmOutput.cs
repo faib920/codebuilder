@@ -40,11 +40,15 @@ namespace CodeBuilder
             {
                 if (type == 0)
                 {
-                    WriteMessage(SystemColors.WindowText, msg, time);
+                    WriteMessage(Color.Green, msg, time);
                 }
                 else if (type == 1)
                 {
                     WriteMessage(Color.Red, msg, time);
+                }
+                else if (type == 2)
+                {
+                    WriteMessage(Color.DarkOrange, msg, time);
                 }
             };
         }
@@ -63,20 +67,24 @@ namespace CodeBuilder
 
         private void WriteMessage(Color color, string msg, DateTime time)
         {
-            Invoke(new Action(() =>
+            try
             {
-                if (!_styles.TryGetValue(color, out var style))
+                Invoke(new Action(() =>
                 {
-                    style = new TextStyle(new SolidBrush(color), null, FontStyle.Regular);
-                    _styles.Add(color, style);
-                }
+                    if (!_styles.TryGetValue(color, out var style))
+                    {
+                        style = new TextStyle(new SolidBrush(color), null, FontStyle.Regular);
+                        _styles.Add(color, style);
+                    }
 
-                richTextBox1.AppendText(time.ToString("HH:mm:ss.fff "), _styles[Color.Gray]);
-                richTextBox1.AppendText(msg, style);
-                richTextBox1.AppendText(Environment.NewLine);
+                    richTextBox1.AppendText(time.ToString("HH:mm:ss.fff "), _styles[Color.Gray]);
+                    richTextBox1.AppendText(msg, style);
+                    richTextBox1.AppendText(Environment.NewLine);
 
-                richTextBox1.Navigate(richTextBox1.Lines.Count - 1);
-            }));
+                    richTextBox1.Navigate(richTextBox1.Lines.Count - 1);
+                }));
+            }
+            catch { }
         }
 
         private void tlbClear_Click(object sender, EventArgs e)

@@ -25,6 +25,8 @@ namespace CodeBuilder.Core.Source
     {
         private readonly IBinarySerializer _binarySerializer;
         private readonly ISchemaExtensionManager _schemaExtensionManager;
+        private Dictionary<string, PropertyInfo> _tableProperties;
+        private Dictionary<string, PropertyInfo> _columnProperties;
 
         public SchemaRepository(IBinarySerializer binarySerializer, ISchemaExtensionManager schemaExtensionManager)
         {
@@ -39,7 +41,9 @@ namespace CodeBuilder.Core.Source
                 writer.WriteStartObject();
 
                 writer.WritePropertyName("Version");
-                writer.WriteValue("3.3");
+                writer.WriteValue("3.4");
+                writer.WritePropertyName("DbType");
+                writer.WriteValue(tables.FirstOrDefault()?.Host?.DbType);
 
                 WriteTables(writer, tables);
 
@@ -117,12 +121,18 @@ namespace CodeBuilder.Core.Source
             }
 
             var obj = JsonConvert.DeserializeObject<JObject>(json);
+            var host = new Host();
 
             var version = obj.GetValue("Version").Value<string>();
+            if (Convert.ToDecimal(version) >= 3.4m)
+            {
+                host.DbType = obj.GetValue("DbType").Value<string>();
+            }
 
             try
             {
-                var host = new Host();
+                _tableProperties = new Dictionary<string, PropertyInfo>();
+                _columnProperties = new Dictionary<string, PropertyInfo>();
 
                 var tables = ReadTables(obj.GetValue("Tables"));
                 var references = ReadReferences(obj.GetValue("References"));
@@ -158,7 +168,7 @@ namespace CodeBuilder.Core.Source
             }
         }
 
-        private Reference FindReference((string PkTable, string PkColumn, string FkTable, string FkColumn) reference, Dictionary<string, Table> tables)
+        private Reference FindReference(RepReference reference, Dictionary<string, Table> tables)
         {
             tables.TryGetValue(reference.FkTable, out var fktable);
             tables.TryGetValue(reference.PkTable, out var pktable);
@@ -173,7 +183,7 @@ namespace CodeBuilder.Core.Source
             return new Reference(pktable, pkcolumn, fktable, fkcolumn);
         }
 
-        private Reference FindReferenceV3_3((string PkTable, string PkColumn, string FkTable, string FkColumn) reference, Dictionary<string, Table> tables)
+        private Reference FindReferenceV3_3(RepReference reference, Dictionary<string, Table> tables)
         {
             tables.TryGetValue(reference.FkTable, out var fktable);
             tables.TryGetValue(reference.PkTable, out var pktable);
@@ -185,7 +195,20 @@ namespace CodeBuilder.Core.Source
                 return null;
             }
 
-            return new Reference(pktable, pkcolumn, fktable, fkcolumn);
+            var refer = new Reference(pktable, pkcolumn, fktable, fkcolumn);
+            if (reference.OnUpdate != null)
+            {
+                refer.OnUpdate = (Constraint)reference.OnUpdate;
+            }
+            if (reference.OnDelete != null)
+            {
+                refer.OnDelete = (Constraint)reference.OnDelete;
+            }
+            if (reference.Relationship != null)
+            {
+                refer.Relationship = (Relationship)reference.Relationship;
+            }
+            return refer;
         }
 
         public void ReadRelationFile(string fileName, IEnumerable<Table> tables)
@@ -279,6 +302,15 @@ namespace CodeBuilder.Core.Source
 
             writer.WriteEndArray();
 
+            writer.WritePropertyName(nameof(Table.Indexes));
+            writer.WriteStartArray();
+
+            foreach (var u in table.Indexes)
+            {
+                WriteIndex(writer, u);
+            }
+
+            writer.WriteEndArray();
             writer.WriteEndObject();
         }
 
@@ -301,6 +333,36 @@ namespace CodeBuilder.Core.Source
             writer.WriteEndObject();
         }
 
+        private void WriteIndex(JsonTextWriter writer, Index index)
+        {
+            writer.WriteStartObject();
+
+            writer.WritePropertyName(nameof(index.Name));
+            writer.WriteValue(index.Name);
+
+            writer.WritePropertyName(nameof(index.IsUniqueKey));
+            writer.WriteValue(index.IsUniqueKey);
+
+            writer.WritePropertyName(nameof(index.Columns));
+            writer.WriteStartArray();
+
+            foreach (var column in index.Columns)
+            {
+                writer.WriteStartObject();
+
+                writer.WritePropertyName(nameof(column.Name));
+                writer.WriteValue(column.Name);
+
+                writer.WritePropertyName(nameof(column.SortOrder));
+                writer.WriteValue(column.SortOrder);
+
+                writer.WriteEndObject();
+            }
+
+            writer.WriteEndArray();
+            writer.WriteEndObject();
+        }
+
         private void WriteReference(JsonTextWriter writer, Reference reference)
         {
             writer.WriteStartObject();
@@ -316,6 +378,15 @@ namespace CodeBuilder.Core.Source
 
             writer.WritePropertyName(nameof(Reference.FkColumn));
             writer.WriteValue(reference.FkColumn._Name);
+
+            writer.WritePropertyName(nameof(Reference.OnUpdate));
+            writer.WriteValue((int)reference.OnUpdate);
+
+            writer.WritePropertyName(nameof(Reference.OnDelete));
+            writer.WriteValue((int)reference.OnDelete);
+
+            writer.WritePropertyName(nameof(Reference.Relationship));
+            writer.WriteValue((int)reference.Relationship);
 
             writer.WriteEndObject();
         }
@@ -340,6 +411,11 @@ namespace CodeBuilder.Core.Source
                     {
                         table.Columns.AddRange(ReadColumns(table, (JArray)value));
                     }
+                    else if (p.Name == nameof(Table.Indexes))
+                    {
+                        var dic = table.Columns.ToDictionary(s => s.Name);
+                        table.Indexes.AddRange(ReadIndexes(dic, (JArray)value));
+                    }
                     else if (value is JValue jvalue)
                     {
                         if (p.Name == nameof(Table.IsView) && (bool)jvalue.Value == true)
@@ -348,7 +424,7 @@ namespace CodeBuilder.Core.Source
                         }
                         else
                         {
-                            var property = table.GetType().GetProperty(p.Name);
+                            var property = _tableProperties.TryGetValue(p.Name, () => table.GetType().GetProperty(p.Name));
                             if (property != null && property.CanWrite)
                             {
                                 property.SetValue(table, jvalue.Value.To(property.PropertyType));
@@ -363,15 +439,11 @@ namespace CodeBuilder.Core.Source
             return tables;
         }
 
-        private List<Column> ReadColumns(Table table, object array)
+        private List<Column> ReadColumns(Table table, JArray array)
         {
             var columns = new List<Column>();
-            if (!(array is JArray jarray))
-            {
-                return columns;
-            }
 
-            foreach (JObject obj in jarray)
+            foreach (JObject obj in array)
             {
                 var column = _schemaExtensionManager.Build<Column>(table);
                 column._Name = obj.GetValue(nameof(Table._Name))?.Value<string>();
@@ -381,7 +453,7 @@ namespace CodeBuilder.Core.Source
                     var value = obj.GetValue(prop.Name);
                     if (value is JValue jvalue)
                     {
-                        var property = column.GetType().GetProperty(prop.Name);
+                        var property = _columnProperties.TryGetValue(prop.Name, () => column.GetType().GetProperty(prop.Name));
                         if (property != null && property.CanWrite)
                         {
                             property.SetValue(column, jvalue.Value.To(property.PropertyType));
@@ -395,9 +467,41 @@ namespace CodeBuilder.Core.Source
             return columns;
         }
 
-        private List<(string PkTable, string PkColumn, string FkTable, string FkColumn)> ReadReferences(object array)
+        private List<Index> ReadIndexes(Dictionary<string, Column> columnDict, JArray array)
         {
-            var references = new List<(string PkTable, string PkColumn, string FkTable, string FkColumn)>();
+            var indexes = new List<Index>();
+
+            foreach (JObject obj in array)
+            {
+                var iname = obj.GetValue(nameof(Index.Name)).Value<string>();
+                var isUniqueKey = obj.GetValue(nameof(Index.IsUniqueKey))?.Value<bool>();
+                var columns = obj.GetValue(nameof(Index.Columns));
+
+                var index = new Index(iname);
+                index.IsUniqueKey = isUniqueKey ?? false;
+
+                if (columns is JArray carray)
+                {
+                    foreach (JObject o in carray)
+                    {
+                        var cname = o.GetValue(nameof(IndexColumn.Name)).Value<string>();
+                        if (columnDict.TryGetValue(cname, out var column))
+                        {
+                            var idxc = index.AddColumn(column);
+                            idxc.SortOrder = o.GetValue(nameof(IndexColumn.SortOrder))?.Value<string>();
+                        }
+                    }
+                }
+
+                indexes.Add(index);
+            }
+
+            return indexes;
+        }
+
+        private List<RepReference> ReadReferences(object array)
+        {
+            var references = new List<RepReference>();
             if (!(array is JArray jarray))
             {
                 return references;
@@ -405,10 +509,39 @@ namespace CodeBuilder.Core.Source
 
             foreach (JObject obj in jarray)
             {
-                references.Add((obj.Value<string>(nameof(Reference.PkTable)), obj.Value<string>(nameof(Reference.PkColumn)), obj.Value<string>(nameof(Reference.FkTable)), obj.Value<string>(nameof(Reference.FkColumn))));
+                references.Add(new RepReference(
+                    obj.Value<string>(nameof(Reference.PkTable)), 
+                    obj.Value<string>(nameof(Reference.PkColumn)), 
+                    obj.Value<string>(nameof(Reference.FkTable)), 
+                    obj.Value<string>(nameof(Reference.FkColumn)),
+                    obj.Value<int?>(nameof(Reference.OnUpdate)),
+                    obj.Value<int?>(nameof(Reference.OnDelete)),
+                    obj.Value<int?>(nameof(Reference.Relationship))));
             }
 
             return references;
+        }
+
+        private struct RepReference
+        {
+            public RepReference(string pkTable, string pkColumn, string fkTable, string fkColumn, int? onUpdate, int? onDelete, int? relationship)
+            {
+                PkTable = pkTable;
+                PkColumn = pkColumn;
+                FkTable = fkTable;
+                FkColumn = fkColumn;
+                OnUpdate = onUpdate;
+                OnDelete = onDelete;
+                Relationship = relationship;
+            }
+
+            public string PkTable { get; }
+            public string PkColumn { get; }
+            public string FkTable { get; }
+            public string FkColumn { get; }
+            public int? OnUpdate { get; }
+            public int? OnDelete { get; }
+            public int? Relationship { get; }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace CodeBuilder.Core.Source
     {
         public Host()
         {
-            Tables = new List<Table>();
+            Tables = new HashSet<Table>();
         }
 
         /// <summary>
@@ -27,7 +27,10 @@ namespace CodeBuilder.Core.Source
         /// </summary>
         [TypeConverter(typeof(Designer.CollectionConverter))]
         [Editor(typeof(Designer.DisableViewEditor), typeof(UITypeEditor))]
-        public List<Table> Tables { get; private set; }
+        public HashSet<Table> Tables { get; private set; }
+
+        [Description("数据库类型名称。")]
+        public string DbType { get; set; }
 
         /// <summary>
         /// 将数据表附加到集合中。
@@ -35,8 +38,10 @@ namespace CodeBuilder.Core.Source
         /// <param name="table"></param>
         public void Attach(Table table)
         {
-            Tables.Add(table);
-            table.Host = this;
+            if (Tables.Add(table))
+            {
+                table.Host = this;
+            }
         }
     }
 }

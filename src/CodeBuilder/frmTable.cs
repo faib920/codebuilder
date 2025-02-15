@@ -23,7 +23,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CodeBuilder
@@ -35,7 +34,23 @@ namespace CodeBuilder
         private int _filterIndex;
         private List<TreeListItem> _filterItems = null;
         private bool _isLoading = false;
-        private Popup _popup;
+        private Popup _popup1;
+        private Dictionary<TreeListItem, Dictionary<string, UpdateFlag>> _updatedBag;
+        private Dictionary<TreeListItem, UpdateFlag> _updatedItems;
+        private Dictionary<UpdateFlag, bool> _filterOpts = new Dictionary<UpdateFlag, bool>
+        {
+            { UpdateFlag.Added, false },
+            { UpdateFlag.Modified, false },
+            { UpdateFlag.Removed, false },
+        };
+        private Func<TreeListItem, bool> _predicate;
+
+        public enum UpdateFlag
+        {
+            Added,
+            Modified,
+            Removed
+        }
 
         public frmTable(IDevHosting hosting)
         {
@@ -43,15 +58,21 @@ namespace CodeBuilder
             _hosting = hosting;
             InitializeColumns();
 
-            _popup = new Popup(panel3) { DropShadowEnabled = false, Font = Font, Resizable = false };
-            _popup.Closed += (o, e) =>
+            _popup1 = new Popup(panel3) { DropShadowEnabled = false, Font = Font, Resizable = false };
+            _popup1.Closed += (o, e) =>
             {
                 label2.Text = "6";
             };
-            _popup.Opened += (o, e) =>
+            _popup1.Opened += (o, e) =>
             {
                 label2.Text = "5";
             };
+
+            _predicate = s => s.Level == 0 ? (_filterOpts.All(t => !t.Value) ? true : _updatedItems.TryGetValue(s, out var sflag) && _filterOpts[sflag]) : true;
+
+            chkFilterMode.Checked = Config.Instance.Source_FilterMode;
+            btnNext.Visible = !chkFilterMode.Checked;
+            LoadAssistants();
         }
 
         /// <summary>
@@ -65,6 +86,41 @@ namespace CodeBuilder
         public Action<int> CheckItemsAct { get; set; }
 
         public Action<ValidateEntry> ShowValidationAct { get; set; }
+
+        public Action<int, int, int> ShowSynchronizedAct { get; set; }
+
+        private void LoadAssistants()
+        {
+            var assistants = _hosting.ServiceProvider.GetServices<ISourceAssistant>();
+
+            foreach (var assist in assistants)
+            {
+                var menuItem = new ToolStripMenuItem(assist.Name);
+                menuItem.Tag = assist;
+                menuItem.Click += (o, e) =>
+                {
+                    var ass = (o as ToolStripMenuItem).Tag as ISourceAssistant;
+                    if (ass == null)
+                    {
+                        return;
+                    }
+
+                    var tables = lstObject.Items.Select(s => s.DataItem as Table);
+                    if (!ass.PreHandle(tables))
+                    {
+                        return;
+                    }
+
+                    var time = Processor.Run(this, calcelToken => ass.HandleAsync(tables, calcelToken));
+
+                    _hosting.HideProgress();
+
+                    ass.PostHandle(new SourceAssistantPostHandleContext(lstObject));
+                };
+
+                toolStripMenuItem3.DropDownItems.Add(menuItem);
+            }
+        }
 
         private void InitializeColumns()
         {
@@ -92,7 +148,7 @@ namespace CodeBuilder
                     Text = map.DisplayName,
                     Width = map.Width,
                     Editable = name != nameof(Column.Name),
-                    Sortable = name == nameof(Column.Name) || name == nameof(Column.Description),
+                    Sortable = true,
                     Validatable = false
                 };
 
@@ -129,66 +185,218 @@ namespace CodeBuilder
             }
         }
 
+        public void SetFilterFlag(UpdateFlag flag, bool opt)
+        {
+            _filterOpts[flag] = opt;
+
+            FindAndFiltering(txtKeyword.Text);
+        }
+
         /// <summary>
         /// 将表结构填充表列表控件中。
         /// </summary>
         /// <param name="tables">数据表列表。</param>
-        /// <param name="append">是否追加模式</param>
-        /// <param name="isNew">初始化。</param>
-        public void FillTables(IEnumerable<IObject> tables, bool append = false, bool isNew = true)
+        /// <param name="loadMode">加载模式</param>
+        public void FillTables(IEnumerable<Table> tables, LoadMode loadMode = LoadMode.Default)
         {
             if (tables == null)
             {
                 return;
             }
 
-            if (isNew)
-            {
-                _fileName = null;
-            }
-
             _filterItems = null;
             lblLocCount.Text = string.Empty;
+            _updatedBag = new Dictionary<TreeListItem, Dictionary<string, UpdateFlag>>();
+            _updatedItems = new Dictionary<TreeListItem, UpdateFlag>();
+
+            _filterOpts[UpdateFlag.Added] = false;
+            _filterOpts[UpdateFlag.Modified] = false;
+            _filterOpts[UpdateFlag.Removed] = false;
+
 
             _isLoading = true;
             lstObject.BeginUpdate();
 
-            var host = append && lstObject.Items.Count > 0 ? (lstObject.Items[0].DataItem as Table).Host : null;
+            try
+            {
+                InternalFillTables(tables, loadMode);
+                CheckItemsAct(lstObject.CheckedItems.Where(s => s.Level == 0).Count());
+                ShowSynchronizedAct(_updatedItems.Count(s => s.Value == UpdateFlag.Added), _updatedItems.Count(s => s.Value == UpdateFlag.Modified), _updatedItems.Count(s => s.Value == UpdateFlag.Removed));
+            }
+            finally
+            {
+                lstObject.EndUpdate();
+                _isLoading = false;
+            }
+        }
 
-            if (!append)
+        public void CloseFile()
+        {
+            if (!string.IsNullOrEmpty(_fileName))
+            {
+                ClearAll();
+                _fileName = null;
+            }
+        }
+
+        private void InternalFillTables(IEnumerable<Table> tables, LoadMode loadMode = LoadMode.Default)
+        {
+            var currTableDict = lstObject.Items.ToDictionary(s => (s.DataItem as Table)._Name, s => new { Item = s, Table = s.DataItem as Table });
+
+            var host = tables.FirstOrDefault()?.Host ?? new Host();
+
+            if (loadMode == LoadMode.Default)
             {
                 lstObject.Items.Clear();
             }
 
+            TreeListItem lastTableItem = null;
+
             //循环所有数据表
             foreach (var table in tables)
             {
-                if (append)
+                if (loadMode == LoadMode.Append)
                 {
-                    if (lstObject.Items.Any(s => s.Text == table.Name))
+                    if (currTableDict.ContainsKey(table._Name))
                     {
                         continue;
                     }
+                }
+                else if (loadMode == LoadMode.Synchronize)
+                {
+                    if (currTableDict.TryGetValue(table._Name, out var existsItem))
+                    {
+                        UpdateTable(existsItem.Table, table);
 
-                    host.Attach((Table)table);
+                        lastTableItem = existsItem.Item;
+
+                        var up = new Dictionary<string, UpdateFlag>();
+                        var isChanged = false;
+                        var existsColumnDict = existsItem.Table.Columns.ToDictionary(s => s._Name);
+                        var existsColumnItemDict = (existsItem.Item.Items.Count > 0 || existsItem.Item.IsDemandLoad) ?
+                            existsItem.Item.Items.Select(s => new { Item = s, Column = (s.DataItem as Column) }).ToDictionary(s => s.Column._Name) : null;
+
+                        foreach (var column in table.Columns)
+                        {
+                            if (!existsColumnDict.TryGetValue(column._Name, out var currColumn))
+                            {
+                                isChanged = true;
+
+                                existsItem.Table.Columns.Add(column);
+                                if (existsItem.Item.Items.Count > 0 || existsItem.Item.IsDemandLoad)
+                                {
+                                    var citem = LoadColumnNode(existsItem.Item, column);
+                                    citem.BackgroundColor = Consts.AddedColor;
+                                }
+                                else
+                                {
+                                    up.Add(column._Name, UpdateFlag.Added);
+                                }
+                            }
+                            else if (UpdateColumn(currColumn, column))
+                            {
+                                isChanged = true;
+
+                                if (existsColumnItemDict?.TryGetValue(currColumn._Name, out var existsColumnItem) == true)
+                                {
+                                    existsColumnItem.Item.BackgroundColor = Consts.ModifiedColor;
+                                }
+                                else
+                                {
+                                    up.Add(column._Name, UpdateFlag.Modified);
+                                }
+
+                                InitializerUnity.Initialize(_hosting, currColumn);
+                            }
+                            else if (existsColumnItemDict?.TryGetValue(currColumn._Name, out var existsColumnItem) == true)
+                            {
+                                if (existsColumnItem.Item.BackgroundColor != Color.Empty)
+                                {
+                                    existsColumnItem.Item.BackgroundColor = Color.Empty;
+                                }
+                            }
+                        }
+
+                        var currColumnDict = table.Columns.ToDictionary(s => s._Name);
+
+                        foreach (var column in existsItem.Table.Columns)
+                        {
+                            if (!currColumnDict.TryGetValue(column._Name, out var _))
+                            {
+                                isChanged = true;
+
+                                if (existsColumnItemDict?.TryGetValue(column._Name, out var existsColumnItem) == true)
+                                {
+                                    existsColumnItem.Item.BackgroundColor = Consts.RemovedColor;
+                                    existsColumnItem.Item.Checked = false;
+                                }
+                                else
+                                {
+                                    up.Add(column._Name, UpdateFlag.Removed);
+                                }
+                            }
+                        }
+
+                        if (isChanged)
+                        {
+                            existsItem.Item.BackgroundColor = Consts.ModifiedColor;
+                            _updatedItems.Add(existsItem.Item, UpdateFlag.Modified);
+
+                            if (up.Count > 0)
+                            {
+                                _updatedBag.Add(existsItem.Item, up);
+                            }
+                        }
+                        else if (existsItem.Item.BackgroundColor != Color.Empty)
+                        {
+                            existsItem.Item.BackgroundColor = Color.Empty;
+                        }
+
+                        continue;
+                    }
                 }
 
+                host.Attach(table);
+
                 //初始化架构对象，比如格式化类名
-                InitializerUnity.Initialize(_hosting, table as SchemaBase);
+                InitializerUnity.Initialize(_hosting, table);
 
                 var titem = new TreeListItem();
-                lstObject.Items.Add(titem);
-                titem.Image = (table as Table).IsView ? Properties.Resources.view : Properties.Resources.table;
+                lstObject.Items.Insert(lastTableItem == null ? 0 : lastTableItem.Index + 1, titem);
+                titem.Image = table.IsView ? Properties.Resources.view : Properties.Resources.table;
                 titem.Checked = true;
+                lastTableItem = titem;
+
+                if (table is INotifyPropertyChanged npc)
+                {
+                    npc.PropertyChanged += (o1, e1) => UpdateObject(titem, e1.PropertyName);
+                }
+
+                if (loadMode == LoadMode.Synchronize)
+                {
+                    _updatedItems.Add(titem, UpdateFlag.Added);
+                    titem.BackgroundColor = Consts.AddedColor;
+                }
 
                 titem.Bind(table);
 
-                titem.ShowExpanded = table.Fields.Count > 0;
+                titem.ShowExpanded = table.Columns.Count > 0;
             }
 
-            lstObject.EndUpdate();
-            _isLoading = false;
-            CheckItemsAct(lstObject.CheckedItems.Where(s => s.DataItem is Table).Count());
+            var newTableDict = tables.ToDictionary(s => s._Name);
+
+            foreach (var kvp in currTableDict)
+            {
+                if (!newTableDict.ContainsKey(kvp.Value.Table._Name))
+                {
+                    kvp.Value.Item.BackgroundColor = Consts.RemovedColor;
+                    kvp.Value.Item.Checked = false;
+
+                    kvp.Value.Item.Items.ForEach(s => s.Checked = false);
+
+                    _updatedItems.Add(kvp.Value.Item, UpdateFlag.Removed);
+                }
+            }
         }
 
         /// <summary>
@@ -207,12 +415,19 @@ namespace CodeBuilder
                     continue;
                 }
                 var clTable = (titem.DataItem as Table).Clone();
-                clTable.Index = ++rowIndex;
+                if (clTable.Index == 0)
+                {
+                    clTable.Index = ++rowIndex;
+                }
+                else
+                {
+                    rowIndex = clTable.Index;
+                }
 
                 var colIndex = 0;
 
                 //没有展开过节点
-                if (titem.Items.Count == 0 && clTable.Columns.Count > 0)
+                if (!titem.IsDemandLoad && clTable.Columns.Count > 0)
                 {
                     var savedColumns = new List<Column>(clTable.Columns);
                     clTable.Columns.Clear();
@@ -222,7 +437,15 @@ namespace CodeBuilder
                         //初始化架构对象，比如格式化属性名
                         InitializerUnity.Initialize(_hosting, column);
 
-                        column.Index = ++colIndex;
+                        if (column.Index == 0)
+                        {
+                            column.Index = ++colIndex;
+                        }
+                        else
+                        {
+                            colIndex = column.Index;
+                        }
+
                         clTable.Columns.Add(column);
                     }
 
@@ -240,7 +463,15 @@ namespace CodeBuilder
                         }
 
                         var column = citem.DataItem as Column;
-                        column.Index = ++colIndex;
+                        if (column.Index == 0)
+                        {
+                            column.Index = ++colIndex;
+                        }
+                        else
+                        {
+                            colIndex = column.Index;
+                        }
+
                         clTable.Columns.Add(column);
                     }
                 }
@@ -284,37 +515,30 @@ namespace CodeBuilder
         /// <summary>
         /// 更新列表中的内容。
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="item"></param>
         /// <param name="propertyName"></param>
-        public void UpdateObject(string propertyName)
+        public void UpdateObject(TreeListItem item, string propertyName)
         {
-            if (lstObject.SelectedItems.Count == 0)
+            if (item.DataItem is Table table && item.Level == 0)
             {
-                return;
+                if (lstObject.HasSelectedItems && lstObject.SelectedItems[0] == item)
+                {
+                    SelectItemAct?.Invoke(table);
+                }
             }
-
-            var item = lstObject.SelectedItems[0];
-
             if (item.DataItem is Column column && item.Level == 1)
             {
                 switch (propertyName)
                 {
                     case nameof(Column.IsPrimaryKey):
                     case nameof(Column.ForeignKey):
-                        if (column.ForeignKey != null)
-                        {
-                            item.Image = Properties.Resources.fk;
-                        }
-                        else if (column.IsPrimaryKey)
-                        {
-                            item.Image = Properties.Resources.pk;
-                        }
-                        else
-                        {
-                            item.Image = Properties.Resources.column;
-                        }
-
+                        SetColumnItemImage(item, column);
                         break;
+                }
+
+                if (lstObject.HasSelectedItems && lstObject.SelectedItems[0] == item)
+                {
+                    SelectItemAct?.Invoke(column);
                 }
             }
         }
@@ -325,7 +549,7 @@ namespace CodeBuilder
         public void ApplyProfile()
         {
             UpdateObjectByProfile(lstObject.Items);
-            SelectItemAct(lstObject.SelectedItems.Count > 0 ? lstObject.SelectedItems[0].DataItem : null);
+            SelectItemAct?.Invoke(lstObject.HasSelectedItems ? lstObject.SelectedItems[0].DataItem : null);
         }
 
         /// <summary>
@@ -333,6 +557,11 @@ namespace CodeBuilder
         /// </summary>
         public void ReBuildSchema()
         {
+            if (lstObject.Items.Count == 0)
+            {
+                return;
+            }
+
             var tables = new List<Table>();
             foreach (var item in lstObject.Items)
             {
@@ -367,7 +596,7 @@ namespace CodeBuilder
                 }
             }
 
-            SelectItemAct(lstObject.SelectedItems.Count > 0 ? lstObject.SelectedItems[0].DataItem : null);
+            SelectItemAct?.Invoke(lstObject.HasSelectedItems ? lstObject.SelectedItems[0].DataItem : null);
         }
 
         public string SaveFile(bool isSaveAs = false)
@@ -375,6 +604,7 @@ namespace CodeBuilder
             var tables = GetTables(false);
             if (!tables.Any())
             {
+                _hosting.ShowWarn("列表中空空如也，没有什么东西可以保存。");
                 return string.Empty;
             }
 
@@ -427,9 +657,12 @@ namespace CodeBuilder
                 try
                 {
                     Cursor = Cursors.WaitCursor;
+
+                    lstObject.Items.Clear();
+
                     var tables = schemaRepos.ReadFile(filename);
 
-                    FillTables(tables, isNew: false);
+                    FillTables(tables);
                 }
                 catch (Exception exp)
                 {
@@ -499,6 +732,26 @@ namespace CodeBuilder
             }
         }
 
+        private void ClearAll()
+        {
+            lstObject.Items.Clear();
+            SelectItemAct?.Invoke(null);
+            CheckItemsAct(0);
+
+            lblLocCount.Text = "";
+            _filterItems?.Clear();
+            _filterIndex = 0;
+
+            _updatedBag?.Clear();
+            _updatedItems?.Clear();
+
+            _filterOpts[UpdateFlag.Added] = false;
+            _filterOpts[UpdateFlag.Modified] = false;
+            _filterOpts[UpdateFlag.Removed] = false;
+
+            ShowSynchronizedAct(0, 0, 0);
+        }
+
         /// <summary>
         /// 通用变量递归更新列表中的所有内容。
         /// </summary>
@@ -524,19 +777,7 @@ namespace CodeBuilder
                 {
                     var column = citem.DataItem as Column;
 
-                    //设置图标
-                    if (column.ForeignKey != null)
-                    {
-                        citem.Image = Properties.Resources.fk;
-                    }
-                    else if (column.IsPrimaryKey)
-                    {
-                        citem.Image = Properties.Resources.pk;
-                    }
-                    else
-                    {
-                        citem.Image = Properties.Resources.column;
-                    }
+                    SetColumnItemImage(citem, column);
 
                     if (citem.Selected)
                     {
@@ -557,27 +798,27 @@ namespace CodeBuilder
 
             foreach (var item in lstObject.Items)
             {
-                var filter = string.IsNullOrEmpty(keyword) || !chkTable.Checked ? false : Regex.IsMatch(item.Text, keyword, RegexOptions.IgnoreCase) ||
-                    (chkRemark.Checked && Regex.IsMatch(item.Cells[1].Text, keyword, RegexOptions.IgnoreCase));
+                var table = item.DataItem as Table;
+                var filter = string.IsNullOrEmpty(keyword) || !chkTable.Checked ? false : (Regex.IsMatch(table.Name, keyword, RegexOptions.IgnoreCase) ||
+                    (chkRemark.Checked && Regex.IsMatch(table.Description, keyword, RegexOptions.IgnoreCase)));
                 if (filter)
                 {
                     _filterItems.Add(item);
                 }
 
-                var color = filter ? Color.LightSkyBlue : Color.Empty;
+                var color = filter ? Color.LightSkyBlue : _updatedItems.TryGetValue(item, out UpdateFlag flag) ? GetColor(flag) : Color.Empty;
                 if (item.BackgroundColor != color)
                 {
                     item.BackgroundColor = color;
                 }
 
-                var table = item.DataItem as Table;
                 var findColumns = false;
-                if (item.Items.Count == 0)
+                if (!item.IsDemandLoad)
                 {
                     foreach (var column in table.Columns)
                     {
-                        if (string.IsNullOrEmpty(keyword) || !chkColumn.Checked ? false : Regex.IsMatch(column.Name, keyword, RegexOptions.IgnoreCase) ||
-                            (chkRemark.Checked && Regex.IsMatch(column.Description, keyword, RegexOptions.IgnoreCase)))
+                        if (string.IsNullOrEmpty(keyword) || !chkColumn.Checked ? false : (Regex.IsMatch(column.Name, keyword, RegexOptions.IgnoreCase) ||
+                            (chkRemark.Checked && Regex.IsMatch(column.Description, keyword, RegexOptions.IgnoreCase))))
                         {
                             findColumns = true;
                             break;
@@ -622,9 +863,82 @@ namespace CodeBuilder
             }
         }
 
+        private void FindAndFiltering(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+            {
+                lstObject.Filtering(_predicate);
+                return;
+            }
+            lstObject.BeginUpdate();
+            foreach (var item in lstObject.Items)
+            {
+                if (item.IsDemandLoad)
+                {
+                    continue;
+                }
+
+                var table = item.DataItem as Table;
+                var findColumns = false;
+                foreach (var column in table.Columns)
+                {
+                    if (string.IsNullOrEmpty(keyword) || !chkColumn.Checked ? false : (Regex.IsMatch(column.Name, keyword, RegexOptions.IgnoreCase) ||
+                        (chkRemark.Checked && Regex.IsMatch(column.Description, keyword, RegexOptions.IgnoreCase))))
+                    {
+                        findColumns = true;
+                        break;
+                    }
+                }
+
+                if (findColumns)
+                {
+                    item.ShowExpanded = false;
+                    LoadColumnNodes(item);
+                }
+            }
+            lstObject.EndUpdate();
+
+            var option = new TreeFilterOption
+            {
+                Filtered = s =>
+                {
+                    if (s.BackgroundColor != Color.Empty)
+                    {
+                        if (s.Level == 0 && _updatedItems.TryGetValue(s, out UpdateFlag flag))
+                        {
+                            s.BackgroundColor = GetColor(flag);
+                        }
+                        else
+                        {
+                            s.BackgroundColor = Color.Empty;
+                        }
+                    }
+                }
+            };
+
+            lstObject.Filtering(s =>
+            {
+                if (s.Level == 0)
+                {
+                    var table = s.DataItem as Table;
+                    var isfilter = s.Items.HasVisiableItems || (string.IsNullOrEmpty(keyword) || !chkTable.Checked ? false : (Regex.IsMatch(table.Name, keyword, RegexOptions.IgnoreCase) ||
+                        (chkRemark.Checked && Regex.IsMatch(table.Description, keyword, RegexOptions.IgnoreCase))));
+                    return isfilter && _predicate(s);
+                }
+                else
+                {
+                    var column = s.DataItem as Column;
+
+                    var isfilter = string.IsNullOrEmpty(keyword) || !chkColumn.Checked ? false : (Regex.IsMatch(column.Name, keyword, RegexOptions.IgnoreCase) ||
+                        (chkRemark.Checked && Regex.IsMatch(column.Description, keyword, RegexOptions.IgnoreCase)));
+                    return isfilter && _predicate(s);
+                }
+            }, option);
+        }
+
         private void lstObject_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            SelectItemAct?.Invoke(lstObject.SelectedItems.Count > 0 ? lstObject.SelectedItems[0].DataItem : null);
+            SelectItemAct?.Invoke(lstObject.HasSelectedItems ? lstObject.SelectedItems[0].DataItem : null);
         }
 
         private void lstObject_BeforeCellEditing(object sender, TreeListBeforeCellEditingEventArgs e)
@@ -680,28 +994,28 @@ namespace CodeBuilder
         {
             _isLoading = true;
 
-            foreach (var item in lstObject.Items)
+            foreach (var item in lstObject.Items.Where(s => s.Visible))
             {
                 item.Checked = true;
             }
 
             _isLoading = false;
 
-            CheckItemsAct(lstObject.CheckedItems.Where(s => s.DataItem is Table).Count());
+            CheckItemsAct(lstObject.CheckedItems.Where(s => s.Level == 0).Count());
         }
 
         private void mnuSelInvTable_Click(object sender, EventArgs e)
         {
             _isLoading = true;
 
-            foreach (var item in lstObject.Items)
+            foreach (var item in lstObject.Items.Where(s => s.Visible))
             {
                 item.Checked = !item.Checked;
             }
 
             _isLoading = false;
 
-            CheckItemsAct(lstObject.CheckedItems.Where(s => s.DataItem is Table).Count());
+            CheckItemsAct(lstObject.CheckedItems.Where(s => s.Level == 0).Count());
         }
 
         /// <summary>
@@ -711,7 +1025,7 @@ namespace CodeBuilder
         /// <param name="e"></param>
         private void mnuSelAllColumn_Click(object sender, EventArgs e)
         {
-            if (lstObject.SelectedItems.Count == 0)
+            if (!lstObject.HasSelectedItems)
             {
                 return;
             }
@@ -735,7 +1049,7 @@ namespace CodeBuilder
         /// <param name="e"></param>
         private void mnuSelInvColumn_Click(object sender, EventArgs e)
         {
-            if (lstObject.SelectedItems.Count == 0)
+            if (!lstObject.HasSelectedItems)
             {
                 return;
             }
@@ -749,6 +1063,19 @@ namespace CodeBuilder
             foreach (var child in item.Items)
             {
                 child.Checked = !child.Checked;
+            }
+        }
+
+        /// <summary>
+        /// 折叠所有。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuCollaps_Click(object sender, EventArgs e)
+        {
+            foreach (var item in lstObject.Items.Where(s => s.Visible))
+            {
+                item.Collapse();
             }
         }
 
@@ -772,159 +1099,15 @@ namespace CodeBuilder
         {
             if (panel1.Visible)
             {
-                lstObject.Focus();
                 panel1.Visible = false;
+                txtKeyword.Text = string.Empty;
+                txtKeyword.Focus();
             }
             else
             {
                 panel1.Visible = true;
                 txtKeyword.Focus();
             }
-        }
-
-        private void mnuPrimaryKey_Click(object sender, EventArgs e)
-        {
-            var count = 0;
-            var isCancellation = false;
-            var assistant = _hosting.ServiceProvider.GetRequiredService<ISourceAssistant>();
-
-            var time = Processor.Run(this, calcelToken =>
-            {
-                var tables = lstObject.Items.Select(s => s.DataItem as Table);
-                var columns = new List<Column>();
-
-                foreach (var table in tables)
-                {
-                    if (calcelToken.IsCancellationRequested)
-                    {
-                        return Task.CompletedTask;
-                    }
-
-                    foreach (var column in table.Columns.Where(s => !s.IsPrimaryKey))
-                    {
-                        if (calcelToken.IsCancellationRequested)
-                        {
-                            return Task.CompletedTask;
-                        }
-
-                        if (assistant.IsPrimaryKey(column))
-                        {
-                            columns.Add(column);
-                        }
-                    }
-                }
-
-                foreach (var column in columns)
-                {
-                    column.IsPrimaryKey = true;
-                    count++;
-                }
-
-                return Task.CompletedTask;
-            }, () => isCancellation = true);
-
-            if (isCancellation)
-            {
-                return;
-            }
-
-            if (count > 0)
-            {
-                RefreshReferences();
-
-                _hosting.ShowInfo($"一共发现并自动创建了 {count} 个主键。");
-            }
-        }
-
-        private void mnuRelation_Click(object sender, EventArgs e)
-        {
-            var count = 0;
-            var isCancellation = false;
-
-            var assistant = _hosting.ServiceProvider.GetRequiredService<ISourceAssistant>();
-
-            var time = Processor.Run(this, calcelToken =>
-            {
-                var tables = lstObject.Items.Select(s => s.DataItem as Table).ToList();
-                var references = new Dictionary<Column, Reference>();
-                var index = 0;
-                foreach (var table in tables)
-                {
-                    if (calcelToken.IsCancellationRequested)
-                    {
-                        return Task.CompletedTask;
-                    }
-
-                    var p = (int)((++index / (tables.Count * 1.0)) * 100);
-                    _hosting.ShowProgress($"{p}% 正在检索表 {table.Name}...", p);
-
-                    foreach (var column in table.Columns)
-                    {
-                        if (calcelToken.IsCancellationRequested)
-                        {
-                            return Task.CompletedTask;
-                        }
-
-                        var reference = assistant.FindForeignKey(column, tables);
-                        if (reference != null)
-                        {
-                            references.Add(column, reference);
-                        }
-                    }
-                }
-
-                foreach (var kvp in references)
-                {
-                    if (kvp.Key.BindForeignKey(kvp.Value))
-                    {
-                        count++;
-                    }
-                }
-
-                return Task.CompletedTask;
-            }, () => isCancellation = true);
-
-            if (isCancellation)
-            {
-                return;
-            }
-
-            if (count > 0)
-            {
-                RefreshReferences();
-
-                _hosting.ShowInfo($"一共发现并自动创建了 {count} 个外键。");
-            }
-        }
-
-        private void mnuClearRelation_Click(object sender, EventArgs e)
-        {
-            if (_hosting.ShowConfirm("确认清理所有外键关系吗?") == ShowMsgButton.No)
-            {
-                return;
-            }
-
-            var tables = lstObject.Items.Select(s => s.DataItem as Table);
-            var count = 0;
-
-            foreach (var table in tables)
-            {
-                foreach (var column in table.Columns)
-                {
-                    if (column.ForeignKey != null)
-                    {
-                        column.UnbindForeignKey();
-                        count++;
-                    }
-                }
-            }
-
-            if (count > 0)
-            {
-                RefreshReferences();
-            }
-
-            _hosting.ShowInfo("所有外键关系已被清理，你可以使用【创建外键关系】来重新生成。");
         }
 
         private void lstObject_ItemCheckChanged(object sender, TreeListItemEventArgs e)
@@ -934,7 +1117,7 @@ namespace CodeBuilder
                 return;
             }
 
-            CheckItemsAct(lstObject.CheckedItems.Where(s => s.DataItem is Table).Count());
+            CheckItemsAct(lstObject.CheckedItems.Where(s => s.Level == 0).Count());
         }
 
         private void lstObject_DemandLoad(object sender, TreeListItemEventArgs e)
@@ -979,7 +1162,7 @@ namespace CodeBuilder
                 return;
             }
 
-            if (lstObject.SelectedItems.Count == 0)
+            if (!lstObject.HasSelectedItems)
             {
                 _hosting.ShowWarn("请选择对象列表中的一个表。");
                 return;
@@ -997,7 +1180,7 @@ namespace CodeBuilder
             var colIndex = 0;
 
             //没有展开过节点
-            if (item.Items.Count == 0 && clTable.Columns.Count > 0)
+            if (!item.IsDemandLoad && clTable.Columns.Count > 0)
             {
                 var savedColumns = new List<Column>(clTable.Columns);
                 clTable.Columns.Clear();
@@ -1086,7 +1269,14 @@ namespace CodeBuilder
             else if (e.KeyCode == Keys.Enter)
             {
                 timer1.Enabled = false;
-                FindAndLocation(txtKeyword.Text);
+                if (chkFilterMode.Checked)
+                {
+                    FindAndFiltering(txtKeyword.Text);
+                }
+                else
+                {
+                    FindAndLocation(txtKeyword.Text);
+                }
             }
             else
             {
@@ -1095,13 +1285,25 @@ namespace CodeBuilder
             }
         }
 
+        private void txtKeyword_TextChanged(object sender, EventArgs e)
+        {
+            label3.Visible = txtKeyword.Text.Length > 0;
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Enabled = false;
-            FindAndLocation(txtKeyword.Text);
+            if (chkFilterMode.Checked)
+            {
+                FindAndFiltering(txtKeyword.Text);
+            }
+            else
+            {
+                FindAndLocation(txtKeyword.Text);
+            }
         }
 
-        private void btnLocation_Click(object sender, EventArgs e)
+        private void btnNext_Click(object sender, EventArgs e)
         {
             if ((_filterItems?.Count ?? 0) <= 0)
             {
@@ -1134,17 +1336,60 @@ namespace CodeBuilder
             }
         }
 
+        private void mnuRemove_Click(object sender, EventArgs e)
+        {
+            if (!lstObject.HasSelectedItems)
+            {
+                return;
+            }
+
+            var item = lstObject.SelectedItems[0];
+            if (item.Level == 0)
+            {
+                var host = lstObject.Items.Count > 0 ? (lstObject.Items[0].DataItem as Table).Host : null;
+                var table = item.DataItem as Table;
+                host?.Tables.Remove(table);
+                lstObject.Items.Remove(item);
+
+                if (_updatedItems.TryGetValue(item, out var flag))
+                {
+                    _updatedItems.Remove(item);
+
+                    if (!_updatedItems.Any(s => s.Value == flag))
+                    {
+                        _filterOpts[flag] = false;
+
+                        lstObject.Filtering(_predicate);
+                    }
+
+                    CheckItemsAct(lstObject.CheckedItems.Where(s => s.Level == 0).Count());
+                    ShowSynchronizedAct(_updatedItems.Count(s => s.Value == UpdateFlag.Added), _updatedItems.Count(s => s.Value == UpdateFlag.Modified), _updatedItems.Count(s => s.Value == UpdateFlag.Removed));
+                }
+            }
+            else if (item.Level == 1)
+            {
+                var column = item.DataItem as Column;
+                (item.Parent.DataItem as Table).Columns.Remove(column);
+                item.Parent.Items.Remove(item);
+                if (_updatedBag.TryGetValue(item.Parent, out var dic) && dic.Count > 0)
+                {
+                    dic.Remove(column._Name);
+
+                    if (dic.Count == 0)
+                    {
+                        _updatedItems.Remove(item.Parent);
+                        item.Parent.BackgroundColor = Color.Empty;
+                        ShowSynchronizedAct(_updatedItems.Count(s => s.Value == UpdateFlag.Added), _updatedItems.Count(s => s.Value == UpdateFlag.Modified), _updatedItems.Count(s => s.Value == UpdateFlag.Removed));
+                    }
+                }
+            }
+        }
+
         private void mnuClear_Click(object sender, EventArgs e)
         {
             if (lstObject.Items.Count > 0 && _hosting.ShowConfirm("是否清空所有对象?") == ShowMsgButton.Yes)
             {
-                lstObject.Items.Clear();
-                SelectItemAct(null);
-                CheckItemsAct(0);
-
-                lblLocCount.Text = "";
-                _filterItems?.Clear();
-                _filterIndex = 0;
+                ClearAll();
             }
         }
 
@@ -1166,14 +1411,15 @@ namespace CodeBuilder
         {
             foreach (var citem in item.Items)
             {
-                var filter = string.IsNullOrEmpty(keyword) ? false : Regex.IsMatch(citem.Text, keyword, RegexOptions.IgnoreCase) ||
-                    Regex.IsMatch(citem.Cells[1].Text, keyword, RegexOptions.IgnoreCase);
+                var column = citem.DataItem as Column;
+                var filter = string.IsNullOrEmpty(keyword) || !chkColumn.Checked ? false : (Regex.IsMatch(column.Name, keyword, RegexOptions.IgnoreCase) ||
+                    (chkRemark.Checked && Regex.IsMatch(column.Description, keyword, RegexOptions.IgnoreCase)));
                 if (filter)
                 {
                     _filterItems.Add(citem);
                 }
 
-                var color = filter ? Color.LightSkyBlue : Color.Empty;
+                var color = filter ? Color.LightSkyBlue : _updatedBag.TryGetValue(item, out var dic) && dic.TryGetValue(column._Name, out var flag) ? GetColor(flag) : Color.Empty;
                 if (citem.BackgroundColor != color)
                 {
                     citem.BackgroundColor = color;
@@ -1184,49 +1430,255 @@ namespace CodeBuilder
         private void LoadColumnNodes(TreeListItem item)
         {
             var table = item.DataItem as Table;
+            item.IsDemandLoad = true;
 
             //循环数据表的字段
             foreach (var column in table.Columns)
             {
-                var citem = new TreeListItem();
-                item.Items.Add(citem);
-
-                //初始化架构对象，比如格式化属性名
-                InitializerUnity.Initialize(_hosting, column);
-
-                //设置图标
-                if (column.ForeignKey != null)
+                var citem = LoadColumnNode(item, column);
+                if (item.BackgroundColor == Consts.AddedColor)
                 {
-                    citem.Image = Properties.Resources.fk;
+                    citem.BackgroundColor = Consts.AddedColor;
                 }
-                else if (column.IsPrimaryKey)
+                else if (item.BackgroundColor == Consts.RemovedColor)
                 {
-                    citem.Image = Properties.Resources.pk;
+                    citem.BackgroundColor = Consts.RemovedColor;
+                    citem.Checked = false;
                 }
-                else
+                else if (_updatedBag.TryGetValue(item, out var up))
                 {
-                    citem.Image = Properties.Resources.column;
+                    if (up.TryGetValue(column._Name, out var flag))
+                    {
+                        switch (flag)
+                        {
+                            case UpdateFlag.Added:
+                                citem.BackgroundColor = Consts.AddedColor;
+                                break;
+                            case UpdateFlag.Modified:
+                                citem.BackgroundColor = Consts.ModifiedColor;
+                                break;
+                            case UpdateFlag.Removed:
+                                citem.BackgroundColor = Consts.RemovedColor;
+                                citem.Checked = false;
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private TreeListItem LoadColumnNode(TreeListItem item, Column column)
+        {
+            var citem = new TreeListItem();
+            citem.Bind(column);
+
+            item.Items.Add(citem);
+
+            //初始化架构对象，比如格式化属性名
+            InitializerUnity.Initialize(_hosting, column);
+
+            SetColumnItemImage(citem, column);
+
+            if (column is INotifyPropertyChanged npc)
+            {
+                npc.PropertyChanged += (o1, e1) => UpdateObject(citem, e1.PropertyName);
+            }
+
+            citem.Checked = true;
+
+            return citem;
+        }
+
+        private void SetColumnItemImage(TreeListItem item, Column column)
+        {
+            //设置图标
+            if (column.ForeignKey != null)
+            {
+                item.Image = Properties.Resources.fk;
+            }
+            else if (column.IsPrimaryKey)
+            {
+                item.Image = Properties.Resources.pk;
+            }
+            else
+            {
+                item.Image = Properties.Resources.column;
+            }
+        }
+
+        private bool UpdateTable(Table currTable, Table newTable)
+        {
+            var isUpdated = false;
+            if (string.IsNullOrWhiteSpace(currTable.Description) && !string.IsNullOrEmpty(newTable.Description))
+            {
+                currTable.Description = newTable.Description;
+                isUpdated = true;
+            }
+
+            bool IsSynchronizable(string key)
+            {
+                return Config.Instance.SyncIgnore == null || !Config.Instance.SyncIgnore.Contains(key);
+            }
+
+            if (IsSynchronizable(nameof(Table.Indexes)))
+            {
+                if (currTable.Indexes.Count != newTable.Indexes.Count)
+                {
+                    isUpdated = true;
                 }
 
-                if (column is INotifyPropertyChanged npc)
+                for (var i = 0; i < currTable.Indexes.Count; i++)
                 {
-                    npc.PropertyChanged += (o1, e1) => UpdateObject(e1.PropertyName);
+                    if (currTable.Indexes[i].Name != newTable.Indexes[i].Name)
+                    {
+                        isUpdated = true;
+                    }
+                    else
+                    {
+                        for (var j = 0; j < currTable.Indexes[i].Columns.Count; j++)
+                        {
+                            if (currTable.Indexes[i].Columns[j].Name != newTable.Indexes[i].Columns[j].Name)
+                            {
+                                isUpdated = true;
+                                break;
+                            }
+                        }
+                    }
                 }
 
-                citem.Checked = true;
+                currTable.Indexes.Clear();
+                currTable.Indexes.AddRange(newTable.Indexes);
+            }
 
-                citem.Bind(column);
+            return isUpdated;
+        }
+
+        private bool UpdateColumn(Column currColumn, Column newColumn)
+        {
+            var changed = new List<ChangedProperty>();
+
+            bool IsSynchronizable(string key)
+            {
+                return Config.Instance.SyncIgnore == null || !Config.Instance.SyncIgnore.Contains(key);
+            }
+
+            if (IsSynchronizable(nameof(Column.ColumnType)) && currColumn.ColumnType != newColumn.ColumnType)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.ColumnType), currColumn.ColumnType, newColumn.ColumnType));
+                currColumn.ColumnType = newColumn.ColumnType;
+            }
+
+            if (IsSynchronizable(nameof(Column.DataType)) && currColumn.DataType != newColumn.DataType)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.DataType), currColumn.DataType, newColumn.DataType));
+                currColumn.DataType = newColumn.DataType;
+            }
+
+            if (IsSynchronizable(nameof(Column.DbType)) && currColumn.DbType != newColumn.DbType)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.DbType), currColumn.DbType, newColumn.DbType));
+                currColumn.DbType = newColumn.DbType;
+            }
+
+            if (IsSynchronizable(nameof(Column.DefaultValue)) && currColumn.DefaultValue != newColumn.DefaultValue)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.DefaultValue), currColumn.DefaultValue, newColumn.DefaultValue));
+                currColumn.DefaultValue = newColumn.DefaultValue;
+            }
+
+            if (IsSynchronizable(nameof(Column.IsPrimaryKey)) && currColumn.IsPrimaryKey != newColumn.IsPrimaryKey)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.IsPrimaryKey), currColumn.IsPrimaryKey, newColumn.IsPrimaryKey));
+                currColumn.IsPrimaryKey = newColumn.IsPrimaryKey;
+            }
+
+            if (IsSynchronizable(nameof(Column.ForeignKey)) && currColumn.ForeignKey != newColumn.ForeignKey)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.ForeignKey), currColumn.ForeignKey, newColumn.ForeignKey));
+                currColumn.UnbindForeignKey();
+                currColumn.BindForeignKey(newColumn.ForeignKey);
+            }
+
+            if (IsSynchronizable(nameof(Column.IsUniqueKey)) && currColumn.IsUniqueKey != newColumn.IsUniqueKey)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.IsUniqueKey), currColumn.IsUniqueKey, newColumn.IsUniqueKey));
+                currColumn.IsUniqueKey = newColumn.IsUniqueKey;
+            }
+
+            if (IsSynchronizable(nameof(Column.IsNullable)) && currColumn.IsNullable != newColumn.IsNullable)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.IsNullable), currColumn.IsNullable, newColumn.IsNullable));
+                currColumn.IsNullable = newColumn.IsNullable;
+            }
+
+            if (IsSynchronizable(nameof(Column.AutoIncrement)) && currColumn.AutoIncrement != newColumn.AutoIncrement)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.AutoIncrement), currColumn.AutoIncrement, newColumn.AutoIncrement));
+                currColumn.AutoIncrement = newColumn.AutoIncrement;
+            }
+
+            if (IsSynchronizable(nameof(Column.Length)) && currColumn.Length != newColumn.Length)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.Length), currColumn.Length, newColumn.Length));
+                currColumn.Length = newColumn.Length;
+            }
+
+            if (IsSynchronizable(nameof(Column.Scale)) && currColumn.Scale != newColumn.Scale)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.Scale), currColumn.Scale, newColumn.Scale));
+                currColumn.Scale = newColumn.Scale;
+            }
+
+            if (IsSynchronizable(nameof(Column.Precision)) && currColumn.Precision != newColumn.Precision)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.Precision), currColumn.Precision, newColumn.Precision));
+                currColumn.Precision = newColumn.Precision;
+            }
+
+            if (IsSynchronizable(nameof(Column.Description)) && currColumn.Description != newColumn.Description)
+            {
+                if (string.IsNullOrEmpty(currColumn.Description))
+                {
+                    changed.Add(new ChangedProperty(nameof(Column.Description), currColumn.Description, newColumn.Description));
+                    currColumn.Description = newColumn.Description;
+                }
+            }
+
+            if (IsSynchronizable(nameof(Column.Charset)) && currColumn.Charset != newColumn.Charset)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.Charset), currColumn.Charset, newColumn.Charset));
+                currColumn.Charset = newColumn.Charset;
+            }
+
+            if (IsSynchronizable(nameof(Column.Collation)) && currColumn.Collation != newColumn.Collation)
+            {
+                changed.Add(new ChangedProperty(nameof(Column.Collation), currColumn.Collation, newColumn.Collation));
+                currColumn.Collation = newColumn.Collation;
+            }
+
+            currColumn.SetChangeDetails(changed);
+
+            return changed.Any();
+        }
+
+        private Color GetColor(UpdateFlag flag)
+        {
+            switch (flag)
+            {
+                case UpdateFlag.Added:
+                    return Consts.AddedColor;
+                case UpdateFlag.Modified:
+                    return Consts.ModifiedColor;
+                case UpdateFlag.Removed:
+                    return Consts.RemovedColor;
+                default:
+                    return Color.Empty;
             }
         }
 
         private void label2_Click(object sender, EventArgs e)
         {
-            if (_popup.IsOpened)
-            {
-                return;
-            }
-
-            _popup.Show(label2);
+            _popup1.Show(label2);
         }
 
         private void panel3_Paint(object sender, PaintEventArgs e)
@@ -1241,6 +1693,58 @@ namespace CodeBuilder
             path.CloseFigure();
             e.Graphics.FillPath(SystemBrushes.Info, path);
             e.Graphics.DrawPath(Pens.Black, path);
+        }
+
+        private void chkFillOpt_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtKeyword.Text))
+            {
+                if (chkFilterMode.Checked)
+                {
+                    FindAndFiltering(txtKeyword.Text);
+                }
+                else
+                {
+                    FindAndLocation(txtKeyword.Text);
+                }
+            }
+        }
+
+        private void chkFilterMode_CheckedChanged(object sender, EventArgs e)
+        {
+            btnNext.Visible = lblLocCount.Visible = !chkFilterMode.Checked;
+            Config.Instance.Source_FilterMode = chkFilterMode.Checked;
+            Config.Instance.Save();
+
+            if (string.IsNullOrEmpty(txtKeyword.Text))
+            {
+                return;
+            }
+
+            if (chkFilterMode.Checked)
+            {
+                FindAndFiltering(txtKeyword.Text);
+            }
+            else
+            {
+                lstObject.Filtering(_predicate);
+                FindAndLocation(txtKeyword.Text);
+            }
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+            txtKeyword.Text = string.Empty;
+
+            if (chkFilterMode.Checked)
+            {
+                FindAndFiltering(txtKeyword.Text);
+            }
+            else
+            {
+                lstObject.Filtering(_predicate);
+                FindAndLocation(txtKeyword.Text);
+            }
         }
     }
 }

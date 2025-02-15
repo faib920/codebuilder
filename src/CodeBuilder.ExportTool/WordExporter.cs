@@ -8,10 +8,12 @@
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
 using NPOI.XWPF.UserModel;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using CB = CodeBuilder.Core.Source;
 
 namespace CodeBuilder.ExportTool
@@ -32,7 +34,7 @@ namespace CodeBuilder.ExportTool
         /// </summary>
         /// <param name="tables"></param>
         /// <param name="fileName"></param>
-        public void Export(IEnumerable<CB.Table> tables, string fileName)
+        public void Export(IEnumerable<CB.Table> tables, string fileName, CancellationToken cancellationToken)
         {
             if (!File.Exists(_template))
             {
@@ -46,9 +48,14 @@ namespace CodeBuilder.ExportTool
                 var document = new XWPFDocument(tempStream);
                 var processor = new TemplateProcessor(document);
 
-                processor.Process(tables);
+                processor.Process(tables, (s, i) => _hosting.ShowProgress(s, i), cancellationToken);
 
                 processor.Clear();
+
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 document.Write(fileStream);
 
@@ -100,10 +107,20 @@ namespace CodeBuilder.ExportTool
                 _document = document;
             }
 
-            public void Process(IEnumerable<CB.Table> tables)
+            public void Process(IEnumerable<CB.Table> tables, Action<string, int> progress, CancellationToken cancellationToken)
             {
+                var total = tables.Count();
+                var i = 0;
+
                 foreach (var tb in tables)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
+                    progress?.Invoke($"正在导出 {tb.Name}", (int)((i++ / (total * 1.0)) * 100));
+
                     CloneElements(tb, _elements);
                 }
             }

@@ -13,6 +13,7 @@ using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CodeBuilder.PDManer
 {
@@ -38,8 +39,6 @@ namespace CodeBuilder.PDManer
         }
 
         public List<Tuple<PdmEntity, Table>> Selected { get; private set; }
-
-        public bool Append { get; set; }
 
         private void frmTableSelector_Load(object sender, EventArgs e)
         {
@@ -86,12 +85,12 @@ namespace CodeBuilder.PDManer
             }
         }
 
-        private void CheckedItems(TreeListItemCollection items)
+        private void CheckedItems(TreeListItemCollection items, bool @checked)
         {
             foreach (var item in items)
             {
-                item.Checked = true;
-                CheckedItems(item.Items);
+                item.Checked = @checked;
+                CheckedItems(item.Items, @checked);
             }
         }
 
@@ -115,20 +114,12 @@ namespace CodeBuilder.PDManer
 
         private void lstTable_AfterItemCheckChange(object sender, TreeListItemEventArgs e)
         {
-            if (e.Item.Checked)
-            {
-                CheckedItems(e.Item.Items);
-            }
+            CheckedItems(e.Item.Items, e.Item.Checked);
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
             Selected = new List<Tuple<PdmEntity, Table>>();
-
-            if (_selectedNames.Count > 0)
-            {
-                Append = _hosting.ShowConfirm("是否已追加的方式添加表到对象列表中?") == ShowMsgButton.Yes;
-            }
 
             GetSelectedTables(lstTable.Items);
 
@@ -140,15 +131,6 @@ namespace CodeBuilder.PDManer
 
             DialogResult = System.Windows.Forms.DialogResult.OK;
             Close();
-        }
-
-        private void btnAll_Click(object sender, EventArgs e)
-        {
-            foreach (var item in lstTable.Items)
-            {
-                item.Checked = true;
-                CheckedItems(item.Items);
-            }
         }
 
         private void ProcessReferences()
@@ -186,6 +168,47 @@ namespace CodeBuilder.PDManer
                         }
                     }
                 }
+            }
+        }
+
+        private void lstTable_CheckAllChanged(object sender, TreeListCheckAllEventArgs e)
+        {
+            CheckedItems(lstTable.Items, e.Checked);
+        }
+
+        private void txtKeyword_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == System.Windows.Forms.Keys.Enter)
+            {
+                FindAndFiltering();
+            }
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+            txtKeyword.Text = string.Empty;
+            FindAndFiltering();
+        }
+
+        private void txtKeyword_TextChanged(object sender, EventArgs e)
+        {
+            label3.Visible = txtKeyword.Text.Length > 0;
+        }
+
+        private void FindAndFiltering()
+        {
+            if (txtKeyword.Text.Length == 0)
+            {
+                lstTable.Filtering(null);
+            }
+            else
+            {
+                lstTable.Filtering(s =>
+                {
+                    return s.Items.HasVisiableItems ||
+                        Regex.IsMatch(s.Text, txtKeyword.Text, RegexOptions.IgnoreCase) ||
+                        (s.Cells.Count > 1 && Regex.IsMatch(s.Cells[1].Text, txtKeyword.Text, RegexOptions.IgnoreCase));
+                });
             }
         }
     }

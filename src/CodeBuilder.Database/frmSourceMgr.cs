@@ -10,6 +10,7 @@ using CodeBuilder.Core;
 using CodeBuilder.Core.Forms;
 using Fireasy.Common.Extensions;
 using Fireasy.Data;
+using Fireasy.Data.Extensions;
 using Fireasy.Data.Provider;
 using Fireasy.Windows.Forms;
 using Newtonsoft.Json;
@@ -97,6 +98,10 @@ namespace CodeBuilder.Database
             {
                 try
                 {
+                    db.Provider.UpdateConnectionParameter(db.ConnectionString, p => p.ConnectTimeout = "3");
+
+                    Cursor = Cursors.WaitCursor;
+
                     var exp = await db.TryConnectAsync();
                     if (exp == null)
                     {
@@ -111,13 +116,17 @@ namespace CodeBuilder.Database
                 {
                     _hosting.ShowError(string.Format("{0} 连接失败。详细信息如下：\n\n{1}", item.Text, exp.Message));
                 }
+                finally
+                {
+                    Cursor = Cursors.Default;
+                }
             }
         }
 
         private void tbtnAdd_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             var source = new DbSourceStruct { Type = ((ProviderDescriptor)e.ClickedItem.Tag).Alais };
-            using (var frm = new frmSourceEdit(_hosting, source))
+            using (var frm = new frmSourceEdit(_hosting, source, true))
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
@@ -139,7 +148,7 @@ namespace CodeBuilder.Database
 
         private void tbtnEdit_Click(object sender, EventArgs e)
         {
-            if (lstProvider.SelectedItems.Count == 0)
+            if (!lstProvider.HasSelectedItems)
             {
                 return;
             }
@@ -161,7 +170,7 @@ namespace CodeBuilder.Database
 
         private void tbtnDelete_Click(object sender, EventArgs e)
         {
-            if (lstProvider.SelectedItems.Count == 0)
+            if (!lstProvider.HasSelectedItems)
             {
                 return;
             }
@@ -184,7 +193,7 @@ namespace CodeBuilder.Database
 
         private void tbtnSelect_Click(object sender, EventArgs e)
         {
-            if (lstProvider.SelectedItems.Count == 0)
+            if (!lstProvider.HasSelectedItems)
             {
                 return;
             }
@@ -195,15 +204,14 @@ namespace CodeBuilder.Database
             Close();
         }
 
-        private void lstProvider_DoubleClick(object sender, EventArgs e)
+        private void lstProvider_ItemDoubleClick(object sender, TreeListItemEventArgs e)
         {
             tbtnSelect_Click(null, null);
         }
 
         private void lstProvider_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            var isSelected = lstProvider.SelectedItems.Count > 0;
-            tbtnEdit.Enabled = tbtnSelect.Enabled = tbtnDelete.Enabled = tbtnTest.Enabled = isSelected;
+            tbtnEdit.Enabled = tbtnSelect.Enabled = tbtnDelete.Enabled = tbtnTest.Enabled = lstProvider.HasSelectedItems;
         }
     }
 }

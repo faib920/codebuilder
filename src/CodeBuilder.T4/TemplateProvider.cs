@@ -9,7 +9,6 @@
 using CodeBuilder.Core;
 using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Template;
-using Fireasy.Common;
 using Microsoft.VisualStudio.TextTemplating;
 using System;
 using System.CodeDom.Compiler;
@@ -115,7 +114,7 @@ namespace CodeBuilder.T4
 
             var proxyBuilder = new ProxyBuilder();
             var result = new GenerateResult();
-            var proxy = proxyBuilder.Rebuild(_hosting.ServiceProvider, option.Profile, tables);
+            var proxy = proxyBuilder.Rebuild(_hosting.ServiceProvider, option.Template, option.Profile, tables);
             var guids = new GuidDispatcher();
 
             var references = new List<dynamic>();
@@ -131,10 +130,12 @@ namespace CodeBuilder.T4
             var partitions = option.Partitions.Select(s => s.Name).ToList();
 
             var path = Path.Combine(_hosting.WorkPath, "templates\\T4");
-            var host = new TemplateHost(path, proxy.Tables, references, assemblyList, partitions, guids);
+            var debugger = new Debugger((_hosting as ILogQueueSupported)?.GetQueue());
+            var host = new TemplateHost(path, proxy.Tables, references, assemblyList, partitions, guids, debugger);
             using (var engine = new Engine())
             {
                 host.Profile = proxy.Profile;
+                host.DbType = tables.FirstOrDefault()?.Host?.DbType;
 
                 var tparts = option.Partitions.Where(s => s.Loop == PartitionLoop.Tables).ToList();
                 var nparts = option.Partitions.Where(s => s.Loop == PartitionLoop.None).ToList();

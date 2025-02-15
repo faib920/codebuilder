@@ -8,6 +8,7 @@
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
 using CodeBuilder.Core.Source;
+using CodeBuilder.Core.Template;
 using CodeBuilder.Core.Variable;
 using Fireasy.Common.Emit;
 using Fireasy.Common.Extensions;
@@ -30,7 +31,7 @@ namespace CodeBuilder.T4
         /// <param name="serviceProvider"></param>
         /// <param name="tables"></param>
         /// <returns></returns>
-        public (List<dynamic> Tables, dynamic Profile) Rebuild(IServiceProvider serviceProvider, Profile profile, List<Table> tables)
+        public (List<dynamic> Tables, dynamic Profile) Rebuild(IServiceProvider serviceProvider, TemplateDefinition definition, Profile profile, List<Table> tables)
         {
             using (var objectPoll = new ObjectPoll())
             {
@@ -38,8 +39,8 @@ namespace CodeBuilder.T4
                 if (_proxyType == null)
                 {
                     _proxyType = new ProxyType();
-                    BuildSchemaProxyType(_proxyType, serviceProvider, _assemblyList);
-                    BuildProfileProxyType(_proxyType, profile.GetType(), _assemblyList);
+                    BuildSchemaProxyType(_proxyType, serviceProvider, definition, _assemblyList);
+                    BuildProfileProxyType(_proxyType, profile.GetType(), definition, _assemblyList);
                 }
 
                 foreach (var table in tables)
@@ -121,11 +122,11 @@ namespace CodeBuilder.T4
             return result;
         }
 
-        private static ProxyType BuildSchemaProxyType(ProxyType proxyType, IServiceProvider serviceProvider, List<string> assemblyList)
+        private static ProxyType BuildSchemaProxyType(ProxyType proxyType, IServiceProvider serviceProvider, TemplateDefinition definition, List<string> assemblyList)
         {
             var schemaExtManager = serviceProvider.TryGetService<ISchemaExtensionManager>();
 
-            var fileName = Util.GenerateTempFileName(out _);
+            var fileName = Util.GenerateTempFileName(definition.TId, out _);
             assemblyList.Add(fileName);
             var assemblyBuilder = new DynamicAssemblyBuilder("__Schema_Proxy", fileName);
 
@@ -166,9 +167,9 @@ namespace CodeBuilder.T4
             return proxyType;
         }
 
-        private static ProxyType BuildProfileProxyType(ProxyType proxyType, Type profileType, List<string> assemblyList)
+        private static ProxyType BuildProfileProxyType(ProxyType proxyType, Type profileType, TemplateDefinition definition, List<string> assemblyList)
         {
-            var fileName = Util.GenerateTempFileName(out _);
+            var fileName = Util.GenerateTempFileName(definition.TId, out _);
             assemblyList.Add(fileName);
             var assemblyBuilder = new DynamicAssemblyBuilder("__Profile_Proxy", fileName);
 

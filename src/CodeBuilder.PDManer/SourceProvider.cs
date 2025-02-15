@@ -56,8 +56,6 @@ namespace CodeBuilder.PDManer
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    option.Append = frm.Append;
-
                     _historyStorage.Add(_pdmFileName);
                     _hosting.OnSourceHistoryChanged();
 
@@ -81,8 +79,6 @@ namespace CodeBuilder.PDManer
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    option.Append = frm.Append;
-
                     _historyStorage.Add(_pdmFileName);
                     _hosting.OnSourceHistoryChanged();
 

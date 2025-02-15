@@ -107,6 +107,17 @@ namespace CodeBuilder.Core.Source
 
             return string.Empty;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Reference reobj))
+            {
+                return false;
+            }
+
+            return reobj.PkTable?._Name == PkTable?._Name && reobj.FkTable?._Name == FkTable?._Name &&
+                reobj.PkColumn?._Name == PkColumn?._Name && reobj.FkColumn?._Name == FkColumn?._Name;
+        }
     }
 
     /// <summary>

@@ -75,6 +75,8 @@
             this.treeList1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeList1.BackColor = System.Drawing.SystemColors.Control;
+            this.treeList1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.treeList1.CheckAllChecked = false;
             this.treeList1.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1,
@@ -84,11 +86,15 @@
             this.treeList1.ContextMenuStrip = this.contextMenuStrip1;
             this.treeList1.DataSource = null;
             this.treeList1.Footer = null;
+            this.treeList1.FooterHeight = 28;
             this.treeList1.GroupFont = new System.Drawing.Font("Consolas", 12F);
             this.treeList1.HandCursor = false;
+            this.treeList1.HeaderHeight = 28;
             this.treeList1.ImageList = this.imageList1;
+            this.treeList1.ItemHeight = 28;
             this.treeList1.Location = new System.Drawing.Point(0, 46);
             this.treeList1.Name = "treeList1";
+            this.treeList1.NoneItemImage = null;
             this.treeList1.NoneItemText = "没有可显示的数据";
             this.treeList1.RowNumberIndex = 0;
             this.treeList1.ShowGridLines = false;
@@ -134,6 +140,7 @@
             // treeListColumn4
             // 
             this.treeListColumn4.CellForeColor = System.Drawing.Color.Empty;
+            this.treeListColumn4.DataFormat = "P0";
             this.treeListColumn4.DataType = Fireasy.Windows.Forms.TreeListCellDataType.Decimal;
             this.treeListColumn4.ForeColor = System.Drawing.Color.Empty;
             this.treeListColumn4.Formatter = null;
@@ -150,26 +157,26 @@
             this.mnuClear,
             this.mnuOpen});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(107, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(109, 76);
             // 
             // mnuRemove
             // 
             this.mnuRemove.Name = "mnuRemove";
-            this.mnuRemove.Size = new System.Drawing.Size(106, 24);
+            this.mnuRemove.Size = new System.Drawing.Size(108, 24);
             this.mnuRemove.Text = "移除";
             this.mnuRemove.Click += new System.EventHandler(this.mnuRemove_Click);
             // 
             // mnuClear
             // 
             this.mnuClear.Name = "mnuClear";
-            this.mnuClear.Size = new System.Drawing.Size(106, 24);
+            this.mnuClear.Size = new System.Drawing.Size(108, 24);
             this.mnuClear.Text = "清空";
             this.mnuClear.Click += new System.EventHandler(this.mnuClear_Click);
             // 
             // mnuOpen
             // 
             this.mnuOpen.Name = "mnuOpen";
-            this.mnuOpen.Size = new System.Drawing.Size(106, 24);
+            this.mnuOpen.Size = new System.Drawing.Size(108, 24);
             this.mnuOpen.Text = "打开";
             this.mnuOpen.Click += new System.EventHandler(this.mnuOpen_Click);
             // 
@@ -227,7 +234,7 @@
             this.rdbImg3.AutoSize = true;
             this.rdbImg3.Location = new System.Drawing.Point(150, 22);
             this.rdbImg3.Name = "rdbImg3";
-            this.rdbImg3.Size = new System.Drawing.Size(41, 16);
+            this.rdbImg3.Size = new System.Drawing.Size(45, 23);
             this.rdbImg3.TabIndex = 3;
             this.rdbImg3.Text = "Gif";
             this.rdbImg3.UseVisualStyleBackColor = true;
@@ -238,7 +245,7 @@
             this.rdbImg2.AutoSize = true;
             this.rdbImg2.Location = new System.Drawing.Point(84, 22);
             this.rdbImg2.Name = "rdbImg2";
-            this.rdbImg2.Size = new System.Drawing.Size(47, 16);
+            this.rdbImg2.Size = new System.Drawing.Size(55, 23);
             this.rdbImg2.TabIndex = 2;
             this.rdbImg2.Text = "Jpeg";
             this.rdbImg2.UseVisualStyleBackColor = true;
@@ -250,7 +257,7 @@
             this.rdbImg1.Checked = true;
             this.rdbImg1.Location = new System.Drawing.Point(21, 22);
             this.rdbImg1.Name = "rdbImg1";
-            this.rdbImg1.Size = new System.Drawing.Size(41, 16);
+            this.rdbImg1.Size = new System.Drawing.Size(51, 23);
             this.rdbImg1.TabIndex = 1;
             this.rdbImg1.TabStop = true;
             this.rdbImg1.Text = "Png";
@@ -274,7 +281,7 @@
             this.rdbFile2.Checked = true;
             this.rdbFile2.Location = new System.Drawing.Point(156, 23);
             this.rdbFile2.Name = "rdbFile2";
-            this.rdbFile2.Size = new System.Drawing.Size(83, 16);
+            this.rdbFile2.Size = new System.Drawing.Size(92, 23);
             this.rdbFile2.TabIndex = 1;
             this.rdbFile2.TabStop = true;
             this.rdbFile2.Text = "创建子目录";
@@ -286,7 +293,7 @@
             this.rdbFile1.AutoSize = true;
             this.rdbFile1.Location = new System.Drawing.Point(21, 23);
             this.rdbFile1.Name = "rdbFile1";
-            this.rdbFile1.Size = new System.Drawing.Size(119, 16);
+            this.rdbFile1.Size = new System.Drawing.Size(131, 23);
             this.rdbFile1.TabIndex = 0;
             this.rdbFile1.Text = "与源文件同一目录";
             this.rdbFile1.UseVisualStyleBackColor = true;

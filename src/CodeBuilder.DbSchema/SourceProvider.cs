@@ -52,13 +52,11 @@ namespace CodeBuilder.DbSchema
                 _pdmFileName = dialog.FileName;
             }
 
-            var pdm = PdmParser.Parse(_pdmFileName);
+            var pdm = PdmParser.Parse(_pdmFileName, option.View);
             using (var frm = new frmTableSelector(_hosting, pdm, option.Selected))
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    option.Append = frm.Append;
-
                     _historyStorage.Add(_pdmFileName);
                     _hosting.OnSourceHistoryChanged();
 
@@ -77,13 +75,11 @@ namespace CodeBuilder.DbSchema
                 return null;
             }
 
-            var pdm = PdmParser.Parse(_pdmFileName);
+            var pdm = PdmParser.Parse(_pdmFileName, option.View);
             using (var frm = new frmTableSelector(_hosting, pdm, option.Selected))
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    option.Append = frm.Append;
-
                     _historyStorage.Add(_pdmFileName);
                     _hosting.OnSourceHistoryChanged();
 

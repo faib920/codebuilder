@@ -6,7 +6,6 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
-using System.Threading.Tasks;
 
 namespace CodeBuilder.Core.Forms
 {
@@ -20,6 +19,6 @@ namespace CodeBuilder.Core.Forms
         /// <summary>
         /// 保存。
         /// </summary>
-        bool SaveChanges(bool notify);
+        bool SaveChanges(bool notify = true);
     }
 }

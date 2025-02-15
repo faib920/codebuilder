@@ -40,6 +40,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Fireasy.Windows.Forms.dll</HintPath>
     </Reference>
+    <Reference Include="Fireasy.Windows.Forms.Editors, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31261c3914251779, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Fireasy.Windows.Forms.Editors.dll</HintPath>
+    </Reference>
     <Reference Include="Fireasy.Windows.Forms.TreeList, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31261c3914251779, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Fireasy.Windows.Forms.TreeList.dll</HintPath>

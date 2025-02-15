@@ -77,7 +77,7 @@ namespace CodeBuilder
 
         private void tlbDelete_Click(object sender, EventArgs e)
         {
-            if (lstRes.SelectedItems.Count == 0)
+            if (!lstRes.HasSelectedItems)
             {
                 if (_hosting.ShowConfirm("是否清空所有资源?") == ShowMsgButton.No)
                 {
@@ -129,9 +129,19 @@ namespace CodeBuilder
 
                 if (tables != null && LoadHistoryAct != null)
                 {
+                    if (option.Selected?.Count > 0 && _hosting.ShowConfirm("是否以同步的方式加载并更新到列表中?") == ShowMsgButton.Yes)
+                    {
+                        option.Synchronize = true;
+                    }
+
                     LoadHistoryAct(provider, tables, option);
                 }
             }
+        }
+
+        private void lstRes_ItemSelectionChanged(object sender, Fireasy.Windows.Forms.TreeListItemSelectionEventArgs e)
+        {
+            tlbDelete.Enabled = lstRes.HasSelectedItems;
         }
     }
 }

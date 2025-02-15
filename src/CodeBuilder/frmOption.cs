@@ -7,6 +7,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.DynamicFunc;
 using CodeBuilder.Core.Forms;
 using CodeBuilder.Core.Variable;
 using Fireasy.Common.Extensions;
@@ -14,6 +15,8 @@ using Fireasy.Composition;
 using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -27,11 +30,16 @@ namespace CodeBuilder
         private List<string> _pluginRemoved = new List<string>();
         private List<string> _changeFlags = new List<string>();
         private readonly IDevHosting _hosting;
+        private Popup _popup;
+        private bool _isLoading;
+        private bool _isChanged;
 
         public frmOption(IDevHosting hosting)
         {
             InitializeComponent();
             _hosting = hosting;
+
+            _popup = new Popup(textBox1) { DropShadowEnabled = false };
         }
 
         public Action OnPluginUpdated { get; set; }
@@ -43,9 +51,48 @@ namespace CodeBuilder
 
         private void frmOption_Load(object sender, EventArgs e)
         {
+            _isLoading = true;
             LoadEncodings();
             LoadPlugins();
             LoadPluginConfigureControls();
+            _isLoading = false;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            foreach (TabPage pager in tabControl1.TabPages)
+            {
+                if (pager.Controls[0] is IConfigurableControl ctrl)
+                {
+                    if (!_isChanged && ctrl.IsChanged)
+                    {
+                        _isChanged = true;
+                    }
+                }
+            }
+
+            if (!_isChanged)
+            {
+                return;
+            }
+
+            var dialog = _hosting.ShowConfirm("选项已改变，关闭前是否保存?", 3);
+            if (dialog == ShowMsgButton.Cancel)
+            {
+                e.Cancel = true;
+            }
+            else if (dialog == ShowMsgButton.Yes)
+            {
+                btnOk_Click(null, null);
+
+                foreach (TabPage pager in tabControl1.TabPages)
+                {
+                    if (pager.Controls[0] is IConfigurableControl ctrl)
+                    {
+                        ctrl.Close();
+                    }
+                }
+            }
         }
 
         private void LoadEncodings()
@@ -89,13 +136,16 @@ namespace CodeBuilder
             var sources = _hosting.ServiceProvider.GetExportedServices<ISourceProvider>();
             var templates = _hosting.ServiceProvider.GetExportedServices<ITemplateProvider>();
             var tools = _hosting.ServiceProvider.GetExportedServices<IToolProvider>();
+            var funcs = _hosting.ServiceProvider.GetExportedServices<IDynamicFuncProvider>();
 
             var sourceGroup = new TreeListGroup("数据源");
             var templateGroup = new TreeListGroup("模板");
             var toolGroup = new TreeListGroup("工具");
+            var funcGroup = new TreeListGroup("函数");
             lstPlugin.Groups.Add(sourceGroup);
             lstPlugin.Groups.Add(templateGroup);
             lstPlugin.Groups.Add(toolGroup);
+            lstPlugin.Groups.Add(funcGroup);
 
             var cfg = PlugInConfig.Get();
 
@@ -118,6 +168,7 @@ namespace CodeBuilder
             sources.ForEach(s => Add(sourceGroup.Items, s, func));
             templates.ForEach(s => Add(templateGroup.Items, s, func));
             tools.ForEach(s => Add(toolGroup.Items, s, func));
+            funcs.ForEach(s => Add(funcGroup.Items, s, func));
         }
 
         private void LoadPluginConfigureControls()
@@ -147,6 +198,20 @@ namespace CodeBuilder
             if (item != null)
             {
                 items.Add(item);
+
+                if (plugin is IDynamicFuncProvider dfp)
+                {
+                    foreach (var desc in DynamicFuncHelper.GetMethodDescriptors(dfp))
+                    {
+                        var fxItem = item.Items.Add($"{desc.Name}");
+                        fxItem.Cells[2].Value = "说明";
+                        fxItem.Tag = desc;
+                        fxItem.Cells[2].ForeColor = Color.Blue;
+                        fxItem.Image = Properties.Resources.fx;
+                    }
+                }
+
+                item.Expended = true;
             }
         }
 
@@ -162,7 +227,7 @@ namespace CodeBuilder
                 else
                 {
                     Config.Instance.Encoding = ((EncodingInfo)cboEncoding.SelectedItem).Name;
-                    StaticUnity.Encoding = Encoding.GetEncoding(Config.Instance.Encoding);
+                    StaticUnity.Encoding = Util.GetEncoding(Config.Instance.Encoding);
                 }
             }
 
@@ -225,8 +290,19 @@ namespace CodeBuilder
 
         private void mnuRemove_Click(object sender, EventArgs e)
         {
-            if (lstPlugin.SelectedItems.Count == 0)
+            if (!lstPlugin.HasSelectedItems)
             {
+                return;
+            }
+
+            if (lstPlugin.SelectedItems[0].Level != 0)
+            {
+                return;
+            }
+
+            if (lstPlugin.SelectedItems[0].Cells[1].Text.Contains("CodeBuilder.Core"))
+            {
+                _hosting.ShowWarn("核心组件不允许移除!");
                 return;
             }
 
@@ -279,6 +355,11 @@ namespace CodeBuilder
         private void chkTempGroup_CheckedChanged(object sender, EventArgs e)
         {
             radioButton1.Enabled = radioButton2.Enabled = chkTempGroup.Checked;
+
+            if (!_isLoading)
+            {
+                _isChanged = true;
+            }
         }
 
         private void btnAssemblyOfCommon_Click(object sender, EventArgs e)
@@ -314,6 +395,39 @@ namespace CodeBuilder
                     AssemblyReferenceManager.SchemaAssemblies = frm.Assemblies;
                     AssemblyReferenceManager.Save();
                 }
+            }
+        }
+
+        private void lstPlugin_CellClick(object sender, TreeListCellEventArgs e)
+        {
+            if (e.Cell.Column.Index == 2)
+            {
+                var desc = e.Cell.Item.Tag as DynamicFuncAttribute;
+                if (desc == null)
+                {
+                    return;
+                }
+
+                var point = lstPlugin.GetCellPosition(e.Cell);
+
+                textBox1.Text = desc.Description;
+                _popup.Show(lstPlugin, point.X, point.Y + lstPlugin.ItemHeight);
+            }
+        }
+
+        private void combobox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_isLoading)
+            {
+                _isChanged = true;
+            }
+        }
+
+        private void checkbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_isLoading)
+            {
+                _isChanged = true;
             }
         }
     }

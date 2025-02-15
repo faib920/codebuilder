@@ -28,15 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTableSelector));
             this.lstTable = new Fireasy.Windows.Forms.TreeList();
             this.treeListColumn2 = new Fireasy.Windows.Forms.TreeListColumn();
             this.treeListColumn3 = new Fireasy.Windows.Forms.TreeListColumn();
-            this.imageList1 = new System.Windows.Forms.ImageList();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.treeListColumn1 = new Fireasy.Windows.Forms.TreeListColumn();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
-            this.btnAll = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtKeyword = new Fireasy.Windows.Forms.ComplexTextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lstTable
@@ -46,19 +49,26 @@
             this.lstTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstTable.BackColor = System.Drawing.SystemColors.Control;
+            this.lstTable.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstTable.CheckAllChecked = false;
             this.lstTable.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn2,
             this.treeListColumn3});
             this.lstTable.DataSource = null;
             this.lstTable.Footer = null;
+            this.lstTable.FooterHeight = 28;
             this.lstTable.GroupFont = new System.Drawing.Font("Consolas", 12F);
             this.lstTable.HandCursor = false;
+            this.lstTable.HeaderHeight = 28;
             this.lstTable.ImageList = this.imageList1;
+            this.lstTable.ItemHeight = 28;
             this.lstTable.Location = new System.Drawing.Point(12, 12);
             this.lstTable.Name = "lstTable";
+            this.lstTable.NoneItemImage = null;
             this.lstTable.NoneItemText = "没有可显示的数据";
             this.lstTable.RowNumberIndex = 0;
+            this.lstTable.ShowCheckAllBoxOnHeader = true;
             this.lstTable.ShowCheckBoxes = true;
             this.lstTable.ShowPlusMinus = true;
             this.lstTable.ShowPlusMinusLines = false;
@@ -67,6 +77,7 @@
             this.lstTable.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstTable.TabIndex = 2;
             this.lstTable.AfterItemCheckChange += new Fireasy.Windows.Forms.TreeListItemAfterCheckedEventHandler(this.lstTable_AfterItemCheckChange);
+            this.lstTable.CheckAllChanged += new Fireasy.Windows.Forms.TreeListCheckAllEventHandler(this.lstTable_CheckAllChanged);
             // 
             // treeListColumn2
             // 
@@ -94,6 +105,7 @@
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "package.png");
             this.imageList1.Images.SetKeyName(1, "table.png");
+            this.imageList1.Images.SetKeyName(2, "view.png");
             // 
             // treeListColumn1
             // 
@@ -127,21 +139,48 @@
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
-            // btnAll
+            // label1
             // 
-            this.btnAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnAll.Location = new System.Drawing.Point(12, 394);
-            this.btnAll.Name = "btnAll";
-            this.btnAll.Size = new System.Drawing.Size(80, 28);
-            this.btnAll.TabIndex = 9;
-            this.btnAll.Text = "全选(&A)";
-            this.btnAll.UseVisualStyleBackColor = true;
-            this.btnAll.Click += new System.EventHandler(this.btnAll_Click);
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 399);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(38, 19);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "筛选:";
+            // 
+            // txtKeyword
+            // 
+            this.txtKeyword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.txtKeyword.Location = new System.Drawing.Point(56, 396);
+            this.txtKeyword.Name = "txtKeyword";
+            this.txtKeyword.Size = new System.Drawing.Size(246, 24);
+            this.txtKeyword.TabIndex = 12;
+            this.txtKeyword.WaterMarkText = "输入关键字或正则表达式敲回车键";
+            this.txtKeyword.TextChanged += new System.EventHandler(this.txtKeyword_TextChanged);
+            this.txtKeyword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtKeyword_KeyDown);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.BackColor = System.Drawing.SystemColors.Window;
+            this.label3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label3.ForeColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label3.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
+            this.label3.Location = new System.Drawing.Point(285, 402);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(13, 13);
+            this.label3.TabIndex = 23;
+            this.label3.Visible = false;
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // frmTableSelector
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(640, 433);
-            this.Controls.Add(this.btnAll);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtKeyword);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lstTable);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
@@ -154,6 +193,7 @@
             this.Text = "选择要生成的表";
             this.Load += new System.EventHandler(this.frmTableSelector_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -166,6 +206,8 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
-        private System.Windows.Forms.Button btnAll;
+        private System.Windows.Forms.Label label1;
+        private Fireasy.Windows.Forms.ComplexTextBox txtKeyword;
+        private System.Windows.Forms.Label label3;
     }
 }

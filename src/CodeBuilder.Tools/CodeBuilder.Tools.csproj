@@ -132,6 +132,12 @@
     </Compile>
     <Compile Include="GeneralTools.cs" />
     <Compile Include="Tools\CodeDebugConfig.cs" />
+    <Compile Include="Tools\FileEncodeDetector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\FileEncodeDetector.Designer.cs">
+      <DependentUpon>FileEncodeDetector.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\PythonCodeDebuger.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -225,6 +231,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\FileEncodeDetector.resx">
+      <DependentUpon>FileEncodeDetector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\PythonCodeDebuger.resx">
       <DependentUpon>PythonCodeDebuger.cs</DependentUpon>

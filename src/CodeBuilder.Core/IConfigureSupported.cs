@@ -6,6 +6,7 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using System;
 using System.Windows.Forms;
 
 namespace CodeBuilder.Core
@@ -26,5 +27,15 @@ namespace CodeBuilder.Core
         /// </summary>
         /// <returns></returns>
         bool SaveChanges();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool IsChanged { get; }
+
+        /// <summary>
+        /// 关闭
+        /// </summary>
+        void Close();
     }
 }

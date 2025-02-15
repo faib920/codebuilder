@@ -162,19 +162,19 @@
             this.tlbOpen,
             this.tlbAddFav});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(135, 52);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 52);
             // 
             // tlbOpen
             // 
             this.tlbOpen.Name = "tlbOpen";
-            this.tlbOpen.Size = new System.Drawing.Size(134, 24);
+            this.tlbOpen.Size = new System.Drawing.Size(138, 24);
             this.tlbOpen.Text = "打开网页";
             this.tlbOpen.Click += new System.EventHandler(this.tlbOpen_Click);
             // 
             // tlbAddFav
             // 
             this.tlbAddFav.Name = "tlbAddFav";
-            this.tlbAddFav.Size = new System.Drawing.Size(134, 24);
+            this.tlbAddFav.Size = new System.Drawing.Size(138, 24);
             this.tlbAddFav.Text = "添加收藏";
             this.tlbAddFav.Click += new System.EventHandler(this.tlbAddFav_Click);
             // 
@@ -221,26 +221,26 @@
             this.tlbMove,
             this.tlbRemoveFav});
             this.contextMenuStrip3.Name = "contextMenuStrip1";
-            this.contextMenuStrip3.Size = new System.Drawing.Size(135, 76);
+            this.contextMenuStrip3.Size = new System.Drawing.Size(139, 76);
             // 
             // tlbOpen1
             // 
             this.tlbOpen1.Name = "tlbOpen1";
-            this.tlbOpen1.Size = new System.Drawing.Size(134, 24);
+            this.tlbOpen1.Size = new System.Drawing.Size(138, 24);
             this.tlbOpen1.Text = "打开网页";
             this.tlbOpen1.Click += new System.EventHandler(this.tlbOpen1_Click);
             // 
             // tlbMove
             // 
             this.tlbMove.Name = "tlbMove";
-            this.tlbMove.Size = new System.Drawing.Size(134, 24);
+            this.tlbMove.Size = new System.Drawing.Size(138, 24);
             this.tlbMove.Text = "调整栏目";
             this.tlbMove.Click += new System.EventHandler(this.tlbMove_Click);
             // 
             // tlbRemoveFav
             // 
             this.tlbRemoveFav.Name = "tlbRemoveFav";
-            this.tlbRemoveFav.Size = new System.Drawing.Size(134, 24);
+            this.tlbRemoveFav.Size = new System.Drawing.Size(138, 24);
             this.tlbRemoveFav.Text = "取消收藏";
             this.tlbRemoveFav.Click += new System.EventHandler(this.tlbRemoveFav_Click);
             // 
@@ -305,33 +305,33 @@
             this.tlbEditRss,
             this.tlbDelete});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(135, 100);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(139, 100);
             // 
             // tlbAddCat
             // 
             this.tlbAddCat.Name = "tlbAddCat";
-            this.tlbAddCat.Size = new System.Drawing.Size(134, 24);
+            this.tlbAddCat.Size = new System.Drawing.Size(138, 24);
             this.tlbAddCat.Text = "添加栏目";
             this.tlbAddCat.Click += new System.EventHandler(this.tlbAddCat_Click);
             // 
             // tlbAddRss
             // 
             this.tlbAddRss.Name = "tlbAddRss";
-            this.tlbAddRss.Size = new System.Drawing.Size(134, 24);
+            this.tlbAddRss.Size = new System.Drawing.Size(138, 24);
             this.tlbAddRss.Text = "添加源...";
             this.tlbAddRss.Click += new System.EventHandler(this.tlbAddRss_Click);
             // 
             // tlbEditRss
             // 
             this.tlbEditRss.Name = "tlbEditRss";
-            this.tlbEditRss.Size = new System.Drawing.Size(134, 24);
+            this.tlbEditRss.Size = new System.Drawing.Size(138, 24);
             this.tlbEditRss.Text = "修改源...";
             this.tlbEditRss.Click += new System.EventHandler(this.tlbEditRss_Click);
             // 
             // tlbDelete
             // 
             this.tlbDelete.Name = "tlbDelete";
-            this.tlbDelete.Size = new System.Drawing.Size(134, 24);
+            this.tlbDelete.Size = new System.Drawing.Size(138, 24);
             this.tlbDelete.Text = "删除";
             this.tlbDelete.Click += new System.EventHandler(this.tlbDelete_Click);
             // 
@@ -438,7 +438,6 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.toolStrip1);
-            this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmRssReader";
             this.Text = "订阅";

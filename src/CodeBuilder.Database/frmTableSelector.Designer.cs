@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTableSelector));
             this.treeListColumn1 = new Fireasy.Windows.Forms.TreeListColumn();
             this.treeListColumn2 = new Fireasy.Windows.Forms.TreeListColumn();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -43,6 +44,7 @@
             this.lstSaved = new Fireasy.Windows.Forms.TreeList();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btnSQL = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // treeListColumn1
@@ -112,28 +114,36 @@
             // lstTable
             // 
             this.lstTable.AllowUpdateDataItem = false;
-            this.lstTable.ShowAlternateBackColor = true;
+            this.lstTable.AlternateBackColor = System.Drawing.Color.Empty;
             this.lstTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstTable.BackColor = System.Drawing.SystemColors.Control;
+            this.lstTable.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstTable.CheckAllChecked = false;
             this.lstTable.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1,
             this.treeListColumn2});
             this.lstTable.DataSource = null;
             this.lstTable.Footer = null;
+            this.lstTable.FooterHeight = 28;
             this.lstTable.GroupFont = new System.Drawing.Font("宋体", 12F);
             this.lstTable.HandCursor = false;
+            this.lstTable.HeaderHeight = 28;
+            this.lstTable.ItemHeight = 28;
             this.lstTable.Location = new System.Drawing.Point(18, 50);
             this.lstTable.Name = "lstTable";
+            this.lstTable.NoneItemImage = null;
             this.lstTable.NoneItemText = "没有可显示的数据";
             this.lstTable.RowNumberIndex = 0;
+            this.lstTable.ShowAlternateBackColor = true;
             this.lstTable.ShowCheckBoxes = true;
             this.lstTable.ShowRowNumber = true;
             this.lstTable.Size = new System.Drawing.Size(591, 363);
             this.lstTable.SortKey = null;
             this.lstTable.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstTable.TabIndex = 3;
+            this.lstTable.AfterItemCheckChange += new Fireasy.Windows.Forms.TreeListItemAfterCheckedEventHandler(this.lstTable_AfterItemCheckChange);
             // 
             // txtKeyword
             // 
@@ -142,6 +152,7 @@
             this.txtKeyword.Size = new System.Drawing.Size(289, 24);
             this.txtKeyword.TabIndex = 9;
             this.txtKeyword.WaterMarkText = "输入关键字或正则表达式，停留1秒或回车后筛选";
+            this.txtKeyword.TextChanged += new System.EventHandler(this.txtKeyword_TextChanged);
             this.txtKeyword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtKeyword_KeyDown);
             // 
             // label1
@@ -179,18 +190,25 @@
             // lstSaved
             // 
             this.lstSaved.AllowUpdateDataItem = false;
+            this.lstSaved.AlternateBackColor = System.Drawing.Color.Empty;
             this.lstSaved.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstSaved.BackColor = System.Drawing.SystemColors.Control;
+            this.lstSaved.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstSaved.CheckAllChecked = false;
             this.lstSaved.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1,
             this.treeListColumn2});
             this.lstSaved.DataSource = null;
             this.lstSaved.Footer = null;
+            this.lstSaved.FooterHeight = 28;
             this.lstSaved.GroupFont = new System.Drawing.Font("宋体", 12F);
             this.lstSaved.HandCursor = false;
+            this.lstSaved.HeaderHeight = 28;
+            this.lstSaved.ItemHeight = 28;
             this.lstSaved.Location = new System.Drawing.Point(18, 236);
             this.lstSaved.Name = "lstSaved";
+            this.lstSaved.NoneItemImage = null;
             this.lstSaved.NoneItemText = "没有可显示的数据";
             this.lstSaved.RowNumberIndex = 0;
             this.lstSaved.ShowCheckBoxes = true;
@@ -217,9 +235,24 @@
             this.btnSQL.UseVisualStyleBackColor = true;
             this.btnSQL.Click += new System.EventHandler(this.btnSQL_Click);
             // 
+            // label3
+            // 
+            this.label3.BackColor = System.Drawing.SystemColors.Window;
+            this.label3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label3.ForeColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label3.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
+            this.label3.Location = new System.Drawing.Point(332, 19);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(13, 13);
+            this.label3.TabIndex = 23;
+            this.label3.Visible = false;
+            this.label3.Click += new System.EventHandler(this.label3_Click);
+            // 
             // frmTableSelector
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(626, 464);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.btnSQL);
             this.Controls.Add(this.lstSaved);
             this.Controls.Add(this.btnClear);
@@ -259,5 +292,6 @@
         private Fireasy.Windows.Forms.TreeList lstSaved;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnSQL;
+        private System.Windows.Forms.Label label3;
     }
 }

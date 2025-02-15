@@ -44,7 +44,7 @@ namespace CodeBuilder
                 template.Syntax = info.Directory.Name;
                 var item = lstTemplate.Items.Add(name);
                 item.Image = Properties.Resources.project;
-                item.GroupKey = info.Directory.Name;
+                item.GroupKey = info.Directory.FullName == path ? "/" : info.Directory.FullName.Substring(path.Length).Replace("\\", "/");
                 item.Tag = template;
             }
 
@@ -53,7 +53,7 @@ namespace CodeBuilder
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if (lstTemplate.SelectedItems.Count == 0)
+            if (!lstTemplate.HasSelectedItems)
             {
                 _hosting.ShowWarn("请选择一个模板。");
                 return;

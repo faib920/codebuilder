@@ -28,7 +28,7 @@ namespace CodeBuilder.RssReader
             _hosting = hosting;
         }
 
-        public Form Execute()
+        public Form Execute(params object[] arguments)
         {
             var form = new frmRssReader(_hosting);
             if (_hosting.DockContainer != null)

@@ -68,7 +68,7 @@ namespace CodeBuilder.RssReader
 
         private void tlbAdd_Click(object sender, System.EventArgs e)
         {
-            var item = lstCategory.SelectedItems.Count == 0 ? lstCategory.Items[0] : lstCategory.SelectedItems[0];
+            var item = !lstCategory.HasSelectedItems ? lstCategory.Items[0] : lstCategory.SelectedItems[0];
             var newitem = item.Items.Add(string.Empty);
             item.Expended = true;
             newitem.ImageIndex = 0;
@@ -125,7 +125,7 @@ namespace CodeBuilder.RssReader
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            var item = lstCategory.SelectedItems.Count == 0 ? lstCategory.Items[0] : lstCategory.SelectedItems[0];
+            var item = !lstCategory.HasSelectedItems ? lstCategory.Items[0] : lstCategory.SelectedItems[0];
             var category = item.Tag as RssFavCategory;
             RssFavoriteConfig.AddFavorite(category.Id, textBox1.Text, Url, Description);
             DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -153,7 +153,7 @@ namespace CodeBuilder.RssReader
 
         private void tlbRemove_Click(object sender, EventArgs e)
         {
-            if (lstCategory.SelectedItems.Count == 0 || lstCategory.SelectedItems[0].Level == 0)
+            if (!lstCategory.HasSelectedItems || lstCategory.SelectedItems[0].Level == 0)
             {
                 return;
             }
@@ -173,7 +173,7 @@ namespace CodeBuilder.RssReader
 
         private void lstCategory_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            tlbRemove.Enabled = lstCategory.SelectedItems.Count > 0 && lstCategory.SelectedItems[0].Level > 0;
+            tlbRemove.Enabled = lstCategory.HasSelectedItems && lstCategory.SelectedItems[0].Level > 0;
         }
     }
 }

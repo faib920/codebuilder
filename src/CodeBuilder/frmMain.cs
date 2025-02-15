@@ -7,14 +7,17 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.EventBus;
 using CodeBuilder.Core.Forms;
 using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Template;
 using CodeBuilder.Core.Tool;
 using CodeBuilder.Core.Validations;
 using CodeBuilder.Core.Variable;
+using Fireasy.Common.Compiler;
 using Fireasy.Common.Extensions;
 using Fireasy.Composition;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
@@ -24,11 +27,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using static CodeBuilder.frmTable;
 
 namespace CodeBuilder
 {
@@ -48,6 +53,13 @@ namespace CodeBuilder
         private bool _useGuide = false;
         private bool _isRebuiding;
         private readonly string _fileName;
+        private const string READYING = "就绪";
+        private Dictionary<UpdateFlag, bool> _filterOpts = new Dictionary<UpdateFlag, bool>
+        {
+            { UpdateFlag.Added, false },
+            { UpdateFlag.Modified, false },
+            { UpdateFlag.Removed, false },
+        };
 
         public Action OnLoaded { get; set; }
 
@@ -89,7 +101,7 @@ namespace CodeBuilder
             {
                 Invoke(new Action(() =>
                 {
-                    if (!spbar.Visible)
+                    if (!spbar.Visible && p >= 0 && p <= 100)
                     {
                         spbar.Value = 0;
                         spbar.Visible = true;
@@ -100,16 +112,19 @@ namespace CodeBuilder
                         spState.Text = s;
                     }
 
-                    spbar.Value = Math.Min(p, 100);
                     if (notifyIcon1.Visible)
                     {
                         notifyIcon1.Text = $"已完成 {Math.Min(p, 100)}%";
                     }
 
+                    if (p >= 0 && p <= 100)
+                    {
+                        spbar.Value = Math.Min(p, 100);
+                    }
                     if (p == 100)
                     {
                         spbar.Visible = false;
-                        spState.Text = "就绪";
+                        spState.Text = READYING;
                     }
                 }));
             };
@@ -124,7 +139,7 @@ namespace CodeBuilder
         private void frmMain_Load(object sender, EventArgs e)
         {
             StaticUnity.Encoding = string.IsNullOrWhiteSpace(Config.Instance.Encoding) ?
-                Encoding.Default : Encoding.GetEncoding(Config.Instance.Encoding);
+                Encoding.Default : Util.GetEncoding(Config.Instance.Encoding);
 
             InitializeSourceMenus();
             OnLoading(20);
@@ -166,12 +181,9 @@ namespace CodeBuilder
 
             OnLoading(100);
 
-            //Task.Run(() =>
-            //{
-            ReBuildSchemaAndProfile(true);
-            //});
-
             _frmProperty.Activate();
+
+            ReBuildSchemaAndProfile(true, clearExpired: true);
 
             ThreadHelper.Start(CheckPluginUpdate);
             ThreadHelper.Start(CheckTemplateUpdate);
@@ -230,6 +242,8 @@ namespace CodeBuilder
                         spCount.Text = $"选择了 {c} 个对象";
                     };
                 _frmTable.ShowValidationAct = ShowValidateResult;
+                _frmTable.ShowSynchronizedAct = ShowSyncStatusPanels;
+
                 _hosting.GetTablesFunc = () => _frmTable.GetTables(true);
                 _frmTable.InitializeBuildMenu();
                 _frmTable.Show(dockMgr, DockState.Document);
@@ -282,10 +296,7 @@ namespace CodeBuilder
                 {
                     _frmTable.InitializeBuildMenu();
                     ReInitializeTemplateSubMenus();
-                    if (_frmExtension != null)
-                    {
-                        _frmExtension.Reload();
-                    }
+                    _frmExtension?.Reload();
                 };
 
                 _frmTemplate.Show(dockMgr, DockState.DockRight);
@@ -340,7 +351,7 @@ namespace CodeBuilder
                                 return;
                             }
 
-                            ReBuildSchemaAndProfile();
+                            ReBuildSchemaAndProfile(forceBuild: true);
                         });
                     };
                 _frmExtension.Show(dockMgr, DockState.DockRight);
@@ -585,7 +596,7 @@ namespace CodeBuilder
             }
         }
 
-        private void ReBuildSchemaAndProfile(bool initEditorInsertMenus = false)
+        private void ReBuildSchemaAndProfile(bool initEditorInsertMenus = false, bool forceBuild = false, bool clearExpired = false)
         {
             using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)))
             {
@@ -599,44 +610,56 @@ namespace CodeBuilder
 
                 this.Invoke(new Action(() =>
                 {
-                    spState.Text = "正在编译本地代码，请稍候...";
+                    Cursor = Cursors.WaitCursor;
+                    spState.Text = "正在加载扩展，请稍候...";
                 }));
 
-                LocalDynamicCache.ClearAll();
-
                 try
                 {
+                    var compileManager = _hosting.ServiceProvider.GetService<ICompileManager>();
+
+                    if (clearExpired)
+                    {
+                        compileManager.ClearExpiredFiles();
+                    }
+
+                    compileManager.Compile(_hosting.Template, forceBuild);
+
                     _hosting.Profile = ProfileUnity.LoadProfile(_hosting, _hosting.Template);
 
-                    if (_frmProfile != null)
+                    _frmProfile?.Invoke(new Action(() =>
                     {
-                        _frmProfile.Invoke(new Action(() =>
-                        {
-                            _frmProfile.ReloadProfile();
-                        }));
-                    }
-                }
-                catch (CompileException exp)
-                {
-                    _hosting.ShowError("Profile 扩展代码编译失败。" + exp.FileName + "\r\n" + exp.Message);
-                }
+                        _frmProfile.ReloadProfile();
+                    }));
 
-                try
-                {
                     var schemaExtManager = _hosting.ServiceProvider.TryGetService<ISchemaExtensionManager>();
                     schemaExtManager.Initialize(_hosting.Template);
 
-                    if (_frmTable != null)
+                    _frmTable?.Invoke(new Action(() =>
                     {
-                        _frmTable.Invoke(new Action(() =>
-                        {
-                            _frmTable.ReBuildSchema();
-                        }));
-                    }
+                        _frmTable.ReBuildSchema();
+                    }));
                 }
-                catch (CompileException exp)
+                catch (CodeCompileException exp)
                 {
-                    _hosting.ShowError("Schema 扩展代码编译失败。" + exp.FileName + "\r\n" + exp.Message);
+                    this.Invoke(new Action(() =>
+                    {
+                        _hosting.ShowError(new TemplateLoadException($"加载模板 {_hosting.Template.Name} 时报错了，请检查相关扩展代码。", exp));
+                    }));
+                }
+                catch (Exception exp)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        _hosting.ShowError(new TemplateLoadException($"加载模板 {_hosting.Template.Name} 时报错了。", exp));
+                    }));
+                }
+                finally
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        Cursor = Cursors.Default;
+                    }));
                 }
 
                 if (initEditorInsertMenus)
@@ -652,7 +675,7 @@ namespace CodeBuilder
 
                 this.Invoke(new Action(() =>
                 {
-                    spState.Text = "就绪";
+                    spState.Text = READYING;
                 }));
 
                 _isRebuiding = false;
@@ -721,10 +744,15 @@ namespace CodeBuilder
             _frmGuide?.Hide();
             _frmTable.Activate();
 
+            if (option.Selected?.Count > 0 && _hosting.ShowConfirm("是否以同步的方式加载并更新到列表中?") == ShowMsgButton.Yes)
+            {
+                option.Synchronize = true;
+            }
+
             GetSchem(provider, tables, option);
         }
 
-        private void FillTables(IEnumerable<IObject> tables, bool append)
+        private void FillTables(IEnumerable<Table> tables, LoadMode loadMode)
         {
             if (tables == null)
             {
@@ -732,10 +760,10 @@ namespace CodeBuilder
             }
 
             var form = OpenTableForm();
-            form.Invoke(new Action(() => form.FillTables(tables, append)));
+            form.FillTables(tables, loadMode);
         }
 
-        /// <summary>
+        /// <summary>v
         /// 使用异步方式加载表的构架。
         /// </summary>
         /// <param name="provider"></param>
@@ -749,7 +777,7 @@ namespace CodeBuilder
             {
                 tables = source;
 
-                FillTables(tables, option.Append);
+                FillTables(tables, GetLoadMode(option));
                 Text = Text.Split('-')[0].Trim();
             }
             else
@@ -766,8 +794,12 @@ namespace CodeBuilder
                 {
                     _hosting.ConsoleInfo($"表、字段及外键信息已获取完毕，共耗时 {time.ToStringEx()}");
 
-                    FillTables(tables, option.Append);
-                    Text = Text.Split('-')[0].Trim();
+                    FillTables(tables, GetLoadMode(option));
+
+                    if (!option.Synchronize)
+                    {
+                        Text = Text.Split('-')[0].Trim();
+                    }
 
                     if (_useGuide)
                     {
@@ -987,13 +1019,33 @@ namespace CodeBuilder
                 return;
             }
 
-            if (item.Tag is IToolProvider provider)
+            if (item.Tag is IAsyncToolProvider asyncprovider)
             {
-                provider.Execute();
+                if ((asyncprovider as IPreExecuteSupported)?.CanExecutable() ?? true)
+                {
+                    Processor.Run(this, c => asyncprovider.ExecuteAsync(c), onBackground: true);
+                }
+            }
+            else if (item.Tag is IToolProvider provider)
+            {
+                if ((provider as IPreExecuteSupported)?.CanExecutable() ?? true)
+                {
+                    provider.Execute();
+                }
             }
             else if (item.Tag is Tuple<IMultipleToolProvider, string, object> mprovider)
             {
-                mprovider.Item1.Execute(mprovider.Item2, mprovider.Item3);
+                if ((mprovider.Item1 as IMultiplePreExecuteSupported)?.CanExecutable(mprovider.Item2, mprovider.Item3) ?? true)
+                {
+                    if (mprovider.Item1 is IAsyncMultipleToolProvider asyncmprovider)
+                    {
+                        Processor.Run(this, c => asyncmprovider.ExecuteAsync(mprovider.Item2, c, mprovider.Item3), onBackground: true);
+                    }
+                    else
+                    {
+                        mprovider.Item1.Execute(mprovider.Item2, mprovider.Item3);
+                    }
+                }
             }
         }
 
@@ -1001,7 +1053,7 @@ namespace CodeBuilder
         {
             if (_frmTable == null)
             {
-                _hosting.ShowWarn("你还没有选择要生成的对象，请从【数据源】菜单中选择或配置。");
+                _hosting.ShowWarn("列表中空空如也，请从【数据源】菜单中选择或配置。");
                 return;
             }
 
@@ -1016,7 +1068,7 @@ namespace CodeBuilder
             var tables = _frmTable.GetTables(true);
             if (!tables.Any())
             {
-                _hosting.ShowWarn("你还没有选择要生成的对象，请从【数据源】菜单中选择或配置。");
+                _hosting.ShowWarn("列表中空空如也，请从【数据源】菜单中选择或配置。");
                 return;
             }
 
@@ -1062,7 +1114,7 @@ namespace CodeBuilder
                     {
                         _hosting.ShowError("代码已生成完毕，但在生成过程中发生了错误，请到【输出】窗口查看。");
                     }
-                    else if (result != null)
+                    else if (result != null && !string.IsNullOrEmpty(Config.Instance.OutputDirectory))
                     {
                         Process.Start(Config.Instance.OutputDirectory);
                     }
@@ -1135,9 +1187,9 @@ namespace CodeBuilder
 
         private void mnuSave_Click(object sender, EventArgs e)
         {
-            if (dockMgr.ActiveContent is frmEditor editor)
+            if (dockMgr.ActiveContent is IChangeManager saveMgr)
             {
-                editor.SaveChanges();
+                saveMgr.SaveChanges();
             }
             else
             {
@@ -1156,9 +1208,9 @@ namespace CodeBuilder
 
         private void mnuSaveAs_Click(object sender, EventArgs e)
         {
-            if (dockMgr.ActiveContent is frmEditor editor)
+            if (dockMgr.ActiveContent is ISaveAsManager saveMgr)
             {
-                editor.SaveAs();
+                saveMgr.SaveAs();
             }
             else
             {
@@ -1176,6 +1228,7 @@ namespace CodeBuilder
             var isChangeCommon = false;
             var isChangeProfile = false;
             var isChangeSchema = false;
+
             foreach (DockContent content in dockMgr.Documents)
             {
                 if (content is frmEditor editor)
@@ -1196,6 +1249,10 @@ namespace CodeBuilder
                         }
                     }
                 }
+                else if (content is IChangeManager saveMgr)
+                {
+                    saveMgr.SaveChanges(false);
+                }
             }
 
             if (isChangeCommon || isChangeProfile || isChangeSchema)
@@ -1204,9 +1261,22 @@ namespace CodeBuilder
                 {
                     return;
                 }
-            }
 
-            ReBuildSchemaAndProfile();
+                ReBuildSchemaAndProfile();
+            }
+        }
+
+        private void mnuClose_Click(object sender, EventArgs e)
+        {
+            if (dockMgr.ActiveContent is ICloseManager form)
+            {
+                form.Close();
+            }
+            else
+            {
+                _frmTable?.CloseFile();
+                Text = Text.Split('-')[0].Trim();
+            }
         }
 
         private void mnuOption_Click(object sender, EventArgs e)
@@ -1409,8 +1479,8 @@ namespace CodeBuilder
 
         private void dockMgr_ActiveContentChanged(object sender, EventArgs e)
         {
-            InitializeActivedMainMenuItems(dockMgr.ActiveContent);
-            InitializeContextMenu(dockMgr.ActiveContent);
+            InitializeActivedMainMenuItems(dockMgr.ActiveDocument);
+            InitializeContextMenu(dockMgr.ActiveDocument);
         }
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1568,6 +1638,113 @@ namespace CodeBuilder
             }
         }
 
+        private void ShowSyncStatusPanels(int a, int m, int r)
+        {
+            statusStrip1.Items.RemoveByKey("SyncA");
+            statusStrip1.Items.RemoveByKey("SyncM");
+            statusStrip1.Items.RemoveByKey("SyncR");
+
+            if (r > 0)
+            {
+                var label = new ToolStripStatusLabel
+                {
+                    Name = "SyncR",
+                    Text = "移除:" + r.ToString(),
+                    ToolTipText = "移除项",
+                    Visible = true,
+                    Width = 30,
+                    BackColor = _filterOpts[frmTable.UpdateFlag.Removed] ? Consts.RemovedColor1 : Consts.RemovedColor,
+                };
+                label.Click += (o, e) =>
+                {
+                    var l = (ToolStripStatusLabel)o;
+                    if (l.BackColor == Consts.RemovedColor)
+                    {
+                        _filterOpts[frmTable.UpdateFlag.Removed] = true;
+                        l.BackColor = Consts.RemovedColor1;
+                        _frmTable?.SetFilterFlag(frmTable.UpdateFlag.Removed, true);
+                    }
+                    else
+                    {
+                        _filterOpts[frmTable.UpdateFlag.Removed] = false;
+                        l.BackColor = Consts.RemovedColor;
+                        _frmTable?.SetFilterFlag(frmTable.UpdateFlag.Removed, false);
+                    }
+                };
+                statusStrip1.Items.Insert(0, label);
+            }
+            else
+            {
+                _filterOpts[frmTable.UpdateFlag.Removed] = false;
+            }
+            if (m > 0)
+            {
+                var label = new ToolStripStatusLabel
+                {
+                    Name = "SyncM",
+                    Text = "修改:" + m.ToString(),
+                    ToolTipText = "修改项",
+                    Visible = true,
+                    Width = 30,
+                    BackColor = _filterOpts[frmTable.UpdateFlag.Modified] ? Consts.ModifiedColor1 : Consts.ModifiedColor,
+                };
+                label.Click += (o, e) =>
+                {
+                    var l = (ToolStripStatusLabel)o;
+                    if (l.BackColor == Consts.ModifiedColor)
+                    {
+                        _filterOpts[frmTable.UpdateFlag.Modified] = true;
+                        l.BackColor = Consts.ModifiedColor1;
+                        _frmTable?.SetFilterFlag(frmTable.UpdateFlag.Modified, true);
+                    }
+                    else
+                    {
+                        _filterOpts[frmTable.UpdateFlag.Modified] = false;
+                        l.BackColor = Consts.ModifiedColor;
+                        _frmTable?.SetFilterFlag(frmTable.UpdateFlag.Modified, false);
+                    }
+                };
+                statusStrip1.Items.Insert(0, label);
+            }
+            else
+            {
+                _filterOpts[frmTable.UpdateFlag.Modified] = false;
+            }
+            if (a > 0)
+            {
+                var label = new ToolStripStatusLabel
+                {
+                    Name = "SyncA",
+                    Text = "新增:" + a.ToString(),
+                    ToolTipText = "新增项",
+                    Visible = true,
+                    Width = 30,
+                    BackColor = _filterOpts[frmTable.UpdateFlag.Added] ? Consts.AddedColor1 : Consts.AddedColor,
+                };
+                label.Click += (o, e) =>
+                {
+                    var l = (ToolStripStatusLabel)o;
+                    if (l.BackColor == Consts.AddedColor)
+                    {
+                        _filterOpts[frmTable.UpdateFlag.Added] = true;
+                        l.BackColor = Consts.AddedColor1;
+                        _frmTable?.SetFilterFlag(frmTable.UpdateFlag.Added, true);
+                    }
+                    else
+                    {
+                        _filterOpts[frmTable.UpdateFlag.Added] = false;
+                        l.BackColor = Consts.AddedColor;
+                        _frmTable?.SetFilterFlag(frmTable.UpdateFlag.Added, false);
+                    }
+                };
+                statusStrip1.Items.Insert(0, label);
+            }
+            else
+            {
+                _filterOpts[frmTable.UpdateFlag.Added] = false;
+            }
+        }
+
         /// <summary>
         /// 检查插件是否可更新
         /// </summary>
@@ -1616,18 +1793,21 @@ namespace CodeBuilder
                 page++;
             }
 
-            statusStrip1.Items.RemoveByKey("ssPlugin");
+            this.Invoke(new Action(() =>
+            {
+                statusStrip1.Items.RemoveByKey("ssPlugin");
+            }));
 
             if (updateCount > 0)
             {
-                var ss = new ToolStripStatusLabel();
-                ss.IsLink = true;
-                ss.Name = "ssPlugin";
-                ss.Visible = true;
-                ss.LinkBehavior = LinkBehavior.HoverUnderline;
-                ss.Text = "插件更新(" + updateCount + ")";
-                ss.ToolTipText = "检查到 " + updateCount + " 个插件可更新";
-                ss.Click += (o, e) =>
+                var label = new ToolStripStatusLabel();
+                label.IsLink = true;
+                label.Name = "ssPlugin";
+                label.Visible = true;
+                label.LinkBehavior = LinkBehavior.HoverUnderline;
+                label.Text = "插件更新(" + updateCount + ")";
+                label.ToolTipText = "检查到 " + updateCount + " 个插件可更新";
+                label.Click += (o, e) =>
                 {
                     var frm = new frmPluginShop(_hosting);
                     frm.OnUpdated = () => ThreadHelper.Start(CheckPluginUpdate);
@@ -1636,7 +1816,7 @@ namespace CodeBuilder
 
                 this.Invoke(new Action(() =>
                 {
-                    statusStrip1.Items.Add(ss);
+                    statusStrip1.Items.Add(label);
                 }));
             }
         }
@@ -1688,19 +1868,22 @@ namespace CodeBuilder
                 page++;
             }
 
-            statusStrip1.Items.RemoveByKey("ssTemp");
+            this.Invoke(new Action(() =>
+            {
+                statusStrip1.Items.RemoveByKey("ssTemp");
+            }));
 
             if (updateItems.Count > 0)
             {
-                var ss = new ToolStripStatusLabel();
-                ss.IsLink = true;
-                ss.Name = "ssTemp";
-                ss.Visible = true;
-                ss.Tag = updateItems;
-                ss.LinkBehavior = LinkBehavior.HoverUnderline;
-                ss.Text = "模板更新(" + updateItems.Count + ")";
-                ss.ToolTipText = "检查到 " + updateItems.Count + " 个模板可更新";
-                ss.Click += (o, e) =>
+                var label = new ToolStripStatusLabel();
+                label.IsLink = true;
+                label.Name = "ssTemp";
+                label.Visible = true;
+                label.Tag = updateItems;
+                label.LinkBehavior = LinkBehavior.HoverUnderline;
+                label.Text = "模板更新(" + updateItems.Count + ")";
+                label.ToolTipText = "检查到 " + updateItems.Count + " 个模板可更新";
+                label.Click += (o, e) =>
                 {
                     var frm = new frmTemplateShop(_hosting, (o as ToolStripStatusLabel).Tag as List<string>);
                     frm.OnUpdated = () => ThreadHelper.Start(CheckTemplateUpdate);
@@ -1710,7 +1893,7 @@ namespace CodeBuilder
 
                 this.Invoke(new Action(() =>
                 {
-                    statusStrip1.Items.Add(ss);
+                    statusStrip1.Items.Add(label);
                 }));
             }
         }
@@ -1882,6 +2065,7 @@ namespace CodeBuilder
             Activate();
             Processor.TryRestore();
             notifyIcon1.Visible = false;
+            _hosting.HideProgress();
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -1918,6 +2102,12 @@ namespace CodeBuilder
                     Config.Instance.UserAccount = frm.UserAccount;
                     Config.Instance.Save();
                     SetLoginMenu(frm.UserName);
+
+                    var eventBus = _hosting.ServiceProvider.TryGetService<IEventBusHandler>();
+                    if (eventBus != null)
+                    {
+                        eventBus.Publish("Login");
+                    }
                 }
             }
         }
@@ -1978,7 +2168,27 @@ namespace CodeBuilder
                 mnuLogin.Text = "登录...";
                 mnuLogin.DropDownItems.Clear();
                 _hosting.IsAuthorized = false;
+
+                var eventBus = _hosting.ServiceProvider.TryGetService<IEventBusHandler>();
+                if (eventBus != null)
+                {
+                    eventBus.Publish("Logout");
+                }
             };
+        }
+
+        private LoadMode GetLoadMode(SourceOption option)
+        {
+            if (option.Synchronize)
+            {
+                return LoadMode.Synchronize;
+            }
+            else if (option.Append)
+            {
+                return LoadMode.Append;
+            }
+
+            return LoadMode.Default;
         }
     }
 }

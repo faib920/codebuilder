@@ -188,7 +188,7 @@
             this.panel3.Controls.Add(this.label5);
             this.panel3.Location = new System.Drawing.Point(224, 208);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(353, 34);
+            this.panel3.Size = new System.Drawing.Size(371, 34);
             this.panel3.TabIndex = 19;
             this.panel3.Visible = false;
             // 
@@ -197,7 +197,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(7, 6);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(327, 17);
+            this.label5.Size = new System.Drawing.Size(355, 19);
             this.label5.TabIndex = 0;
             this.label5.Text = "按【Delete】键删除当前行，按【F9】键设定/取消正则匹配";
             // 
@@ -208,6 +208,7 @@
             this.Controls.Add(this.lstDataType);
             this.Controls.Add(this.toolStrip1);
             this.Name = "frmDataTypeManager";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "数据类型编辑器";
             this.Load += new System.EventHandler(this.frmDataTypeManager_Load);
             this.toolStrip1.ResumeLayout(false);

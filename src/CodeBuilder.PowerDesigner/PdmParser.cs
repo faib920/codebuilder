@@ -71,6 +71,8 @@ namespace CodeBuilder.PowerDesigner
             var ndColumns = node.SelectNodes("c:Columns/o:Column", _nms);
             var newtable = schemaExtManager.Build<Table>();
 
+            var ndIndexes = node.SelectNodes("c:Indexes/o:Index", _nms);
+
             var pkRootNode = node.SelectSingleNode("c:PrimaryKey/o:Key", _nms);
             var pkRefId = pkRootNode == null ? string.Empty : pkRootNode.Attributes["Ref"].InnerText;
 
@@ -138,6 +140,46 @@ namespace CodeBuilder.PowerDesigner
                 }
 
                 newtable.Columns.Add(column);
+            }
+
+            foreach (XmlNode child in ndIndexes)
+            {
+                var nameNode = child.SelectSingleNode("a:Name", _nms);
+                var columnNodes = child.SelectNodes("c:IndexColumns/o:IndexColumn", _nms);
+                var isUnique = child.SelectSingleNode("a:Unique", _nms)?.InnerText == "1";
+                var index = new Index(nameNode.InnerText);
+                index.IsUniqueKey = isUnique;
+
+                foreach (XmlNode c in columnNodes)
+                {
+                    var columnName = string.Empty;
+                    var col = c.SelectSingleNode("a:IndexColumn.Expression", _nms);
+                    if (col == null)
+                    {
+                        col = c.SelectSingleNode("c:Column/o:Column", _nms);
+                        var ref1 = col.Attributes["Ref"].Value;
+                        col = node.SelectSingleNode("c:Columns/o:Column[@Id='" + ref1 + "']", _nms);
+                        columnName = col.SelectSingleNode("a:Name", _nms).InnerText;
+                    }
+                    else
+                    {
+                        columnName = col.InnerText;
+                    }
+                    var column = newtable.Columns.Find(s => s._Name == columnName);
+                    if (column == null)
+                    {
+                        continue;
+                    }
+                    var sort = c.SelectSingleNode("a:Sort", _nms)?.InnerText;
+                    column.IsUniqueKey = isUnique;
+                    var idxc = index.AddColumn(column);
+                    if (sort == "0")
+                    {
+                        idxc.SortOrder = "DESC";
+                    }
+                }
+
+                newtable.Indexes.Add(index);
             }
 
             return newtable;

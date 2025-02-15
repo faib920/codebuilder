@@ -32,6 +32,7 @@
             this.treeListColumn1 = new Fireasy.Windows.Forms.TreeListColumn();
             this.treeListColumn2 = new Fireasy.Windows.Forms.TreeListColumn();
             this.label1 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // lstData
@@ -101,8 +102,21 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "维护 PDM 文件中 DBMS 标识与数据库类型的对应关系";
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(335, 5);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(89, 12);
+            this.linkLabel1.TabIndex = 4;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "维护数据库类型";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // OptionPanel
             // 
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lstData);
             this.Name = "OptionPanel";
@@ -119,5 +133,6 @@
         private Fireasy.Windows.Forms.TreeListColumn treeListColumn1;
         private Fireasy.Windows.Forms.TreeListColumn treeListColumn2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

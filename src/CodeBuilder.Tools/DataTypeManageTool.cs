@@ -25,10 +25,14 @@ namespace CodeBuilder.Tools
             _hosting = hosting;
         }
 
-        public Form Execute()
+        public Form Execute(params object[] arguments)
         {
             var form = new frmDataTypeManager(_hosting);
-            if (_hosting.DockContainer != null)
+            if (arguments?.Length == 1 && arguments[0]?.ToString() == "Dialog")
+            {
+                form.ShowDialog(_hosting.MainWindow);
+            }
+            else if (_hosting.DockContainer != null)
             {
                 form.Show((DockPanel)_hosting.DockContainer, DockState.Document);
             }

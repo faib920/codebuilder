@@ -291,6 +291,7 @@
     <Compile Include="Consts.cs" />
     <Compile Include="CustomMenuItem.cs" />
     <Compile Include="DevHosting.cs" />
+    <Compile Include="LoadMode.cs" />
     <Compile Include="frmAssemblyOption.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -359,7 +360,9 @@
     </Compile>
     <Compile Include="OnlinePluginData.cs" />
     <Compile Include="OnlineTemplateData.cs" />
+    <Compile Include="SourceAssistant.cs" />
     <Compile Include="TemplateHelper.cs" />
+    <Compile Include="TemplateLoadException.cs" />
     <Compile Include="TitlePanel.cs" />
     <Compile Include="IdentityHelper.cs" />
     <Compile Include="VersionHelper.cs" />
@@ -520,6 +523,7 @@
     <None Include="Resources\gzh.jpg" />
     <None Include="Resources\wx.jpg" />
     <None Include="Resources\qq.jpg" />
+    <None Include="Resources\fx.png" />
     <Content Include="version.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

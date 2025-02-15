@@ -86,7 +86,7 @@
             this.tbtnSelect.Image = ((System.Drawing.Image)(resources.GetObject("tbtnSelect.Image")));
             this.tbtnSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbtnSelect.Name = "tbtnSelect";
-            this.tbtnSelect.Size = new System.Drawing.Size(57, 24);
+            this.tbtnSelect.Size = new System.Drawing.Size(59, 24);
             this.tbtnSelect.Text = "选择";
             this.tbtnSelect.Click += new System.EventHandler(this.tbtnSelect_Click);
             // 
@@ -100,7 +100,7 @@
             this.tbtnAdd.Image = ((System.Drawing.Image)(resources.GetObject("tbtnAdd.Image")));
             this.tbtnAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbtnAdd.Name = "tbtnAdd";
-            this.tbtnAdd.Size = new System.Drawing.Size(66, 24);
+            this.tbtnAdd.Size = new System.Drawing.Size(68, 24);
             this.tbtnAdd.Text = "添加";
             this.tbtnAdd.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tbtnAdd_DropDownItemClicked);
             // 
@@ -110,7 +110,7 @@
             this.tbtnEdit.Image = ((System.Drawing.Image)(resources.GetObject("tbtnEdit.Image")));
             this.tbtnEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbtnEdit.Name = "tbtnEdit";
-            this.tbtnEdit.Size = new System.Drawing.Size(57, 24);
+            this.tbtnEdit.Size = new System.Drawing.Size(59, 24);
             this.tbtnEdit.Text = "修改";
             this.tbtnEdit.Click += new System.EventHandler(this.tbtnEdit_Click);
             // 
@@ -120,7 +120,7 @@
             this.tbtnDelete.Image = ((System.Drawing.Image)(resources.GetObject("tbtnDelete.Image")));
             this.tbtnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbtnDelete.Name = "tbtnDelete";
-            this.tbtnDelete.Size = new System.Drawing.Size(57, 24);
+            this.tbtnDelete.Size = new System.Drawing.Size(59, 24);
             this.tbtnDelete.Text = "删除";
             this.tbtnDelete.Click += new System.EventHandler(this.tbtnDelete_Click);
             // 
@@ -130,13 +130,16 @@
             this.tbtnTest.Image = ((System.Drawing.Image)(resources.GetObject("tbtnTest.Image")));
             this.tbtnTest.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbtnTest.Name = "tbtnTest";
-            this.tbtnTest.Size = new System.Drawing.Size(57, 24);
+            this.tbtnTest.Size = new System.Drawing.Size(59, 24);
             this.tbtnTest.Text = "测试";
             this.tbtnTest.Click += new System.EventHandler(this.tbtnTest_Click);
             // 
             // lstProvider
             // 
             this.lstProvider.AllowUpdateDataItem = false;
+            this.lstProvider.AlternateBackColor = System.Drawing.Color.Empty;
+            this.lstProvider.BackColor = System.Drawing.SystemColors.Control;
+            this.lstProvider.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstProvider.CheckAllChecked = false;
             this.lstProvider.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1,
@@ -160,8 +163,8 @@
             this.lstProvider.SortKey = null;
             this.lstProvider.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstProvider.TabIndex = 1;
+            this.lstProvider.ItemDoubleClick += new Fireasy.Windows.Forms.TreeListItemDoubleClickEventHandler(this.lstProvider_ItemDoubleClick);
             this.lstProvider.ItemSelectionChanged += new Fireasy.Windows.Forms.TreeListItemSelectionChangedEventHandler(this.lstProvider_ItemSelectionChanged);
-            this.lstProvider.DoubleClick += new System.EventHandler(this.lstProvider_DoubleClick);
             // 
             // imageList1
             // 
@@ -171,6 +174,7 @@
             // 
             // frmSourceMgr
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(902, 470);
             this.Controls.Add(this.lstProvider);
             this.Controls.Add(this.toolStrip1);

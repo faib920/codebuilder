@@ -1,4 +1,5 @@
-﻿// -----------------------------------------------------------------------
+﻿//#define BETA
+// -----------------------------------------------------------------------
 // <copyright license="GPL"
 //      company="fireasy.cn"
 //      email="faib920@126.com"
@@ -13,6 +14,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 
 namespace CodeBuilder
 {
@@ -40,7 +42,11 @@ namespace CodeBuilder
 
         private void frmAbout_Load(object sender, EventArgs e)
         {
+#if BETA
+            var version = string.IsNullOrEmpty(_app) ? GetType().Assembly.GetName().Version.ToString() + " beta" : $"{_version} beta for {_app}";
+#else
             var version = string.IsNullOrEmpty(_app) ? GetType().Assembly.GetName().Version.ToString() : $"{_version} for {_app}";
+#endif
             lblVer.Text = version;
 
             label2.Text = string.Format("Copyright © 2010 - {0} Fireasy", DateTime.Today.Year);

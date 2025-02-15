@@ -68,7 +68,7 @@ namespace CodeBuilder.Database
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
                     option.SkipSchema = frm.IsCustomSQL;
-                    option.Append = frm.Append;
+
                     _historyStorage.Add(_con);
                     _hosting.OnSourceHistoryChanged();
 
@@ -95,7 +95,7 @@ namespace CodeBuilder.Database
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
                         option.SkipSchema = frm.IsCustomSQL;
-                        option.Append = frm.Append;
+
                         _historyStorage.Add(_con);
                         _hosting.OnSourceHistoryChanged();
 
@@ -234,7 +234,7 @@ namespace CodeBuilder.Database
                         return (int)((i / (tableCount * 1.0)) * 100);
                     });
 
-                var host = new Host();
+                var host = new Host { DbType = _con.Type };
 
                 var result = schema.RestrictionMultipleQuerySupport ?
                     await BatchGetSchemaAsync(host, providerName, db, tables, processHandler, calc, cancellationToken) :
@@ -259,7 +259,7 @@ namespace CodeBuilder.Database
 
                 if (indexColumns != null)
                 {
-                    ProcessUniqueKeys(result, indexColumns);
+                    ProcessIndexKeys(result, indexColumns);
                 }
 
                 return result;
@@ -279,10 +279,7 @@ namespace CodeBuilder.Database
                     return null;
                 }
 
-                if (processHandler != null)
-                {
-                    processHandler.Invoke(t.Name, calc(++index));
-                }
+                processHandler?.Invoke(t.Name, calc(++index));
 
                 if (t.IsView)
                 {
@@ -322,11 +319,8 @@ namespace CodeBuilder.Database
 
                     var names = splitTables.Select(s => s.Name);
 
-                    if (processHandler != null)
-                    {
-                        index += splitTables.Count();
-                        processHandler.Invoke(splitTables.Last().Name, calc(index));
-                    }
+                    index += splitTables.Count();
+                    processHandler?.Invoke(splitTables.Last().Name, calc(index));
 
                     if (g.Key)
                     {
@@ -394,6 +388,8 @@ namespace CodeBuilder.Database
                 column.DbType = c.DbType;
                 column.DefaultValue = c.Default?.ToString();
                 column.ColumnType = c.ColumnType ?? string.Empty;
+                column.Charset = c.CharsetName;
+                column.Collation = c.CollationName;
 
                 var dbType = DataTypeManager.GetDataType(providerName, column.DataType);
                 if (dbType != null && dbType != column.DbType)
@@ -464,18 +460,46 @@ namespace CodeBuilder.Database
             }
         }
 
-        private void ProcessUniqueKeys(List<Table> tables, List<Schema.IndexColumn> indexColumns)
+        private void ProcessIndexKeys(List<Table> tables, List<Schema.IndexColumn> indexColumns)
         {
-            var dict = tables.ToDictionary(s => s._Name);
+            var dict = indexColumns.GroupBy(s => s.TableName).ToDictionary(s => s.Key, s => s.ToList());
+            var indexKeys = new Dictionary<string, List<IndexColumn>>();
 
-            foreach (var idxColumn in indexColumns.Where(s => s.Type == Schema.IndexType.Unique))
+            foreach (var table in tables)
             {
-                if (dict.TryGetValue(idxColumn.TableName, out var table))
+                if (!dict.TryGetValue(table._Name, out var columns))
+                {
+                    continue;
+                }
+
+                foreach (var idxColumn in columns)
                 {
                     var column = table.FindColumn(idxColumn.ColumnName);
-                    if (column != null)
+                    if (column == null)
                     {
-                        column.IsUniqueKey = true;
+                        continue;
+                    }
+
+                    if (!column.IsUniqueKey)
+                    {
+                        column.IsUniqueKey = idxColumn.Type == Schema.IndexType.Unique;
+                    }
+
+                    var icolumn = new IndexColumn(column);
+                    if (idxColumn.SortOrder != null)
+                    {
+                        icolumn.SortOrder = idxColumn.SortOrder == Schema.SortOrder.Ascending ? "ASC" : "DESC";
+                    }
+
+                    if (indexKeys.TryGetValue(table._Name + idxColumn.IndexName, out var icolumns))
+                    {
+                        icolumns.Add(icolumn);
+                    }
+                    else
+                    {
+                        icolumns = new List<IndexColumn> { icolumn };
+                        table.Indexes.Add(new Index(idxColumn.IndexName, icolumns) { IsUniqueKey = idxColumn.Type == Schema.IndexType.Unique });
+                        indexKeys.Add(table._Name + idxColumn.IndexName, icolumns);
                     }
                 }
             }

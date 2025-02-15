@@ -122,7 +122,7 @@ namespace CodeBuilder
 
         private void lvwTemplate_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            if (lvwTemplate.SelectedItems.Count == 0)
+            if (!lvwTemplate.HasSelectedItems)
             {
                 btnUpdate.Visible = false;
                 return;
@@ -156,7 +156,7 @@ namespace CodeBuilder
 
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (lvwTemplate.SelectedItems.Count == 0)
+            if (!lvwTemplate.HasSelectedItems)
             {
                 return;
             }
@@ -243,7 +243,7 @@ namespace CodeBuilder
 
         private void btnLocation_Click(object sender, EventArgs e)
         {
-            if (lvwTemplate.SelectedItems.Count == 0)
+            if (!lvwTemplate.HasSelectedItems)
             {
                 return;
             }

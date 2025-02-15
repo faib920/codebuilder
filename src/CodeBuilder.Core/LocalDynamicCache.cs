@@ -21,8 +21,6 @@ namespace CodeBuilder.Core
     {
         internal static Dictionary<Type, List<ISchemaInitializer>> SchemaInitializerCache { get; private set; } = new Dictionary<Type, List<ISchemaInitializer>>();
         internal static List<IProfileInitializer> ProfileCache { get; private set; } = new List<IProfileInitializer>();
-        internal static List<string> CommonAssemblies { get; private set; } = new List<string>();
-        internal static List<Type> CommonExtendTypes { get; private set; } = new List<Type>();
         internal static List<IPartitionOutputParser> PartitionOutputParsers { get; private set; } = new List<IPartitionOutputParser>();
         internal static Dictionary<Type, List<ISchemaValidator>> SchemaValidatorCache { get; private set; } = new Dictionary<Type, List<ISchemaValidator>>();
 
@@ -33,8 +31,6 @@ namespace CodeBuilder.Core
         {
             SchemaInitializerCache.Clear();
             ProfileCache.Clear();
-            CommonAssemblies.Clear();
-            CommonExtendTypes.Clear();
             PartitionOutputParsers.Clear();
             SchemaValidatorCache.Clear();
             StaticUnity.DynamicAssemblies.Clear();

@@ -21,7 +21,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder.PdfTool
 {
-    public partial class frmToImg : DockFormBase, IContextMenuManager
+    public partial class frmToImg : DockFormBase, IContextMenuManager, ICloseManager
     {
         private Popup _popup;
         private bool _isCancellation;
@@ -91,11 +91,6 @@ namespace CodeBuilder.PdfTool
 
         private void btnConvert_Click(object sender, EventArgs e)
         {
-            foreach (var item in treeList1.Items)
-            {
-                item.Cells[3].Value = 0;
-            }
-
             _isCancellation = false;
             var time = Processor.Run(this, async calcelToken =>
             {
@@ -156,11 +151,11 @@ namespace CodeBuilder.PdfTool
 
                     var rat = ((i + 1) / (count * 1m));
 
-                    _hosting.ShowProgress($"正在转换 {item.Cells[0].Text}...", (int)(Math.Round((++_index / (_total * 1m)), 2) * 100));
+                    _hosting.ShowProgress($"正在转换 {item.Cells[0].Text}...", -1);
 
                     this.Invoke(() =>
                     {
-                        item.Cells[3].Value = Math.Round(rat, 2);
+                        item.Cells[3].Value = rat;
                     });
 
                     var fileName = item.Cells[1].Text.Replace("{Page}", (i + 1).ToString());
@@ -200,7 +195,7 @@ namespace CodeBuilder.PdfTool
             {
                 if (cell.Column.Index == 3)
                 {
-                    return new TreeListProgressDecorationRenderer();
+                    return new TreeListProgressDecorationRenderer { DisplayValue = true };
                 }
 
                 return base.CreateDecorationRenderer(cell);
@@ -215,11 +210,11 @@ namespace CodeBuilder.PdfTool
             }
             else if (sender == rdbImg2)
             {
-                _imageFormat= ImageFormat.Jpeg;
+                _imageFormat = ImageFormat.Jpeg;
             }
             else if (sender == rdbImg3)
             {
-                _imageFormat=_imageFormat= ImageFormat.Gif;
+                _imageFormat = _imageFormat = ImageFormat.Gif;
             }
 
             ApplyOption();
@@ -227,7 +222,7 @@ namespace CodeBuilder.PdfTool
 
         private void mnuRemove_Click(object sender, EventArgs e)
         {
-            if (treeList1.SelectedItems.Count > 0)
+            if (treeList1.HasSelectedItems)
             {
                 treeList1.Items.Remove(treeList1.SelectedItems[0]);
             }
@@ -240,7 +235,7 @@ namespace CodeBuilder.PdfTool
 
         private void mnuOpen_Click(object sender, EventArgs e)
         {
-            if (treeList1.SelectedItems.Count > 0)
+            if (treeList1.HasSelectedItems)
             {
                 var fileInfo = new FileInfo(treeList1.SelectedItems[0].Cells[1].Text);
                 if (fileInfo.Directory.Exists)

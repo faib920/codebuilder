@@ -6,7 +6,10 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using Fireasy.Windows.Forms;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CodeBuilder.Core.Source
 {
@@ -15,19 +18,22 @@ namespace CodeBuilder.Core.Source
     /// </summary>
     public interface ISourceAssistant
     {
-        /// <summary>
-        /// 检查是否可为主键。
-        /// </summary>
-        /// <param name="column"></param>
-        /// <returns></returns>
-        bool IsPrimaryKey(Column column);
+        string Name { get; }
 
-        /// <summary>
-        /// 查找外键关系。
-        /// </summary>
-        /// <param name="column"></param>
-        /// <param name="tables"></param>
-        /// <returns></returns>
-        Reference FindForeignKey(Column column, IEnumerable<Table> tables);
+        bool PreHandle(IEnumerable<Table> tables);
+
+        Task HandleAsync(IEnumerable<Table> tables, CancellationToken calcelToken);
+
+        void PostHandle(SourceAssistantPostHandleContext context);
+    }
+
+    public class SourceAssistantPostHandleContext
+    {
+        public SourceAssistantPostHandleContext(TreeList treeList)
+        {
+            TreeList = treeList;
+        }
+
+        public TreeList TreeList { get; set; }
     }
 }

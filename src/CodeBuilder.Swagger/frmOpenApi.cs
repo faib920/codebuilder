@@ -16,6 +16,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Policy;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -157,12 +158,15 @@ namespace CodeBuilder.Swagger
 
         private void lstTable_AfterItemCheckChange(object sender, Fireasy.Windows.Forms.TreeListItemEventArgs e)
         {
-            if (e.Item.Level == 0)
+            CheckedItems(e.Item.Items, e.Item.Checked);
+        }
+
+        private void CheckedItems(TreeListItemCollection items, bool @checked)
+        {
+            foreach (var item in items)
             {
-                foreach (var item in e.Item.Items)
-                {
-                    item.Checked = e.Item.Checked;
-                }
+                item.Checked = @checked;
+                CheckedItems(item.Items, @checked);
             }
         }
 
@@ -208,6 +212,47 @@ namespace CodeBuilder.Swagger
             if (e.KeyCode == Keys.Enter)
             {
                 btnOpen_Click(null, null);
+            }
+        }
+
+        private void txtKeyword_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == System.Windows.Forms.Keys.Enter)
+            {
+                FindAndFiltering();
+            }
+        }
+
+        private void lstTable_CheckAllChanged(object sender, TreeListCheckAllEventArgs e)
+        {
+            CheckedItems(lstTable.Items, e.Checked);
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+            txtKeyword.Text = string.Empty;
+            FindAndFiltering();
+        }
+
+        private void txtKeyword_TextChanged(object sender, EventArgs e)
+        {
+            label3.Visible = txtKeyword.Text.Length > 0;
+        }
+
+        private void FindAndFiltering()
+        {
+            if (txtKeyword.Text.Length == 0)
+            {
+                lstTable.Filtering(null);
+            }
+            else
+            {
+                lstTable.Filtering(s =>
+                {
+                    return s.Items.HasVisiableItems ||
+                        Regex.IsMatch(s.Text, txtKeyword.Text, RegexOptions.IgnoreCase) ||
+                        (s.Cells.Count > 1 && Regex.IsMatch(s.Cells[1].Text, txtKeyword.Text, RegexOptions.IgnoreCase));
+                });
             }
         }
     }

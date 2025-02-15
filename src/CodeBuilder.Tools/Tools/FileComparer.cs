@@ -47,7 +47,7 @@ namespace CodeBuilder.Tools.Tools
 
         private void btnCompare_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text.Length == 0)
+            if (textBox1.Text.Length == 0 || !File.Exists(textBox1.Text) || !File.Exists(textBox2.Text))
             {
                 Hosting.ShowWarn("请选择文件。");
                 return;

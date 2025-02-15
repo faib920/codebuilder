@@ -17,12 +17,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace CodeBuilder.JsonTool
 {
-    public partial class frmJsonFormatter : DockFormBase, IContextMenuManager
+    public partial class frmJsonFormatter : DockFormBase, IContextMenuManager, ICloseManager
     {
         private bool _isNew = false;
         private List<TreeListItem> _searchItems;
@@ -34,6 +35,7 @@ namespace CodeBuilder.JsonTool
         private readonly IDevHosting _hosting;
         private Popup _popup;
         private Color _markColor = Color.Red;
+        private bool _isFilterPath = false;
 
         public frmJsonFormatter(IDevHosting hosting)
         {
@@ -41,7 +43,7 @@ namespace CodeBuilder.JsonTool
             Icon = Util.GetIcon();
             _hosting = hosting;
 
-            txtResult.Language = FastColoredTextBoxNS.Language.JSON;
+            txtResult.Language = txtSource.Language = FastColoredTextBoxNS.Language.JSON;
 
             txtResult.Font = txtSource.Font = new System.Drawing.Font(txtResult.Font.FontFamily, (int)_hosting.GetConfig("FontSize"));
 
@@ -71,9 +73,17 @@ namespace CodeBuilder.JsonTool
                         {
                             var subitem = item.Items.Add("[" + i++ + "]");
                             subitem.ImageIndex = 1;
+                            subitem.Flags = 1;
                             if (!Parse(subitem.Items, v))
                             {
-                                subitem.Cells[1].Value = v?.ToString();
+                                if (v is JValue val && val.Value is bool bval)
+                                {
+                                    subitem.Cells[1].Value = bval ? "true" : "false";
+                                }
+                                else
+                                {
+                                    subitem.Cells[1].Value = v?.ToString();
+                                }
                             }
 
                             subitem.Expended = true;
@@ -99,6 +109,7 @@ namespace CodeBuilder.JsonTool
                 {
                     var subitem = items.Add(i++.ToString());
                     subitem.ImageIndex = 1;
+                    subitem.Flags = 1;
                     if (!Parse(subitem.Items, v))
                     {
                         subitem.Cells[1].Value = v?.ToString();
@@ -146,23 +157,17 @@ namespace CodeBuilder.JsonTool
                 var obj = JsonConvert.DeserializeObject(txtSource.Text);
 
                 treeList1.Items.Clear();
+                if (_isFilterPath)
+                {
+                    mnuViewPath_Click(null, null);
+                }
+
                 treeList1.BeginUpdate();
                 Parse(treeList1.Items, obj);
                 treeList1.EndUpdate();
 
                 var str = (obj as JToken).ToString(Formatting.Indented);
-                if (str.Length < 100000)
-                {
-                    txtResult.Text = str;
-                    txtResult.Visible = true;
-                    txtResult1.Visible = false;
-                }
-                else
-                {
-                    txtResult1.Text = str;
-                    txtResult.Visible = false;
-                    txtResult1.Visible = true;
-                }
+                txtResult.Text = str;
             }
             catch (Exception exp)
             {
@@ -212,22 +217,29 @@ namespace CodeBuilder.JsonTool
 
         private void mnuCopyKey_Click(object sender, EventArgs e)
         {
-            if (treeList1.SelectedItems.Count != 0)
+            if (treeList1.HasSelectedItems)
             {
-                var item = treeList1.SelectedItems[0];
-                Clipboard.SetText(item.Text);
+                var strs = new List<string>();
+                foreach (var item in treeList1.SelectedItems)
+                {
+                    strs.Add(item.Text);
+                }
+
+                Clipboard.SetText(string.Join(Environment.NewLine, strs));
             }
         }
 
         private void mnuCopy_Click(object sender, EventArgs e)
         {
-            if (treeList1.SelectedItems.Count != 0)
+            if (treeList1.HasSelectedItems)
             {
-                var item = treeList1.SelectedItems[0];
-                if (item.Cells[1].Value != null)
+                var strs = new List<string>();
+                foreach (var item in treeList1.SelectedItems)
                 {
-                    Clipboard.SetText(item.Cells[1].Text);
+                    strs.Add(item.Cells[1].Text);
                 }
+
+                Clipboard.SetText(string.Join(Environment.NewLine, strs));
             }
         }
 
@@ -240,6 +252,7 @@ namespace CodeBuilder.JsonTool
         {
             plnFind.Visible = true;
             txtTreeKeyword.Focus();
+            treeList1.MultiSelect = false;
         }
 
         private void mnuMark_Click(object sender, EventArgs e)
@@ -260,10 +273,38 @@ namespace CodeBuilder.JsonTool
             _searchItems = null;
             _searchIndex = 0;
             plnFind.Visible = false;
+            treeList1.MultiSelect = true;
         }
 
         private void btnTreeFind_Click(object sender, EventArgs e)
         {
+            if (_isFilterPath)
+            {
+                mnuViewPath_Click(null, null);
+            }
+
+            if (chkFilter.Checked)
+            {
+                _searchItems = null;
+
+                if (string.IsNullOrEmpty(txtTreeKeyword.Text))
+                {
+                    treeList1.Filtering();
+                }
+                else
+                {
+                    treeList1.Filtering(s =>
+                    {
+                        var keyword = txtTreeKeyword.Text;
+                        return s.Items.HasVisiableItems || IsMatch(s, keyword);
+                    });
+                }
+
+                return;
+            }
+
+            treeList1.Filtering();
+
             if (_searchItems == null || _lastSearchText != txtTreeKeyword.Text)
             {
                 _searchItems = new List<TreeListItem>();
@@ -300,6 +341,74 @@ namespace CodeBuilder.JsonTool
             {
                 _searchIndex++;
             }
+        }
+
+        private void mnuViewPath_Click(object sender, EventArgs e)
+        {
+            if (_isFilterPath)
+            {
+                treeList1.Filtering();
+                mnuViewPath.Text = "只看此路径";
+                _isFilterPath = false;
+                return;
+            }
+
+            if (!treeList1.HasSelectedItems)
+            {
+                return;
+            }
+
+            var stack = new Dictionary<int, List<TreeListItem>>();
+
+            foreach (var item in treeList1.SelectedItems)
+            {
+                var node = item;
+                while (node != null)
+                {
+                    if (!stack.TryGetValue(node.Level, out var list))
+                    {
+                        list = new List<TreeListItem>();
+                        stack.Add(node.Level, list);
+                    }
+
+                    list.Add(node);
+                    node = node.Parent;
+                }
+            }
+
+            treeList1.Filtering(s =>
+            {
+                if (!stack.TryGetValue(s.Level, out var list))
+                {
+                    return false;
+                }
+
+                var flag = list.Any(t => t.Text == s.Text) || (list.Any(t => t.Flags == s.Flags) && s.Flags == 1);
+                return flag;
+            });
+
+            mnuViewPath.Text = "恢复所有";
+            _isFilterPath = true;
+        }
+
+        private bool IsMatch(TreeListItem item, string keyword)
+        {
+            if (keyword.Contains("=="))
+            {
+                var d = keyword.Split(new[] { "==" }, StringSplitOptions.RemoveEmptyEntries);
+                if (item.Text.Equals(d[0].Trim(), StringComparison.InvariantCultureIgnoreCase)
+                    && item.Cells[1].Value != null && item.Cells[1].Text.Equals(d[1].Trim(), StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            if (Regex.IsMatch(item.Text, keyword, RegexOptions.IgnoreCase) || (item.Cells[1].Value != null && Regex.IsMatch(item.Cells[1].Text, keyword, RegexOptions.IgnoreCase)))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void Find(TreeListItemCollection items, string keyword)
@@ -354,7 +463,7 @@ namespace CodeBuilder.JsonTool
 
         private void treeList1_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            if (treeList1.SelectedItems.Count > 0)
+            if (treeList1.HasSelectedItems)
             {
                 var item = treeList1.SelectedItems[0];
                 if (item.Cells[1].Value == null)
@@ -387,19 +496,23 @@ namespace CodeBuilder.JsonTool
 
         private void mnuColor_Click(object sender, EventArgs e)
         {
-            if (treeList1.SelectedItems.Count > 0)
+            if (treeList1.HasSelectedItems)
             {
-                var item = treeList1.SelectedItems[0];
-                item.BackgroundColor = ((ToolStripMenuItem)sender).BackColor;
+                foreach (var item in treeList1.SelectedItems)
+                {
+                    item.BackgroundColor = ((ToolStripMenuItem)sender).BackColor;
+                }
             }
         }
 
         private void mnuClearMark_Click(object sender, EventArgs e)
         {
-            if (treeList1.SelectedItems.Count > 0)
+            if (treeList1.HasSelectedItems)
             {
-                var item = treeList1.SelectedItems[0];
-                item.BackgroundColor = Color.Empty;
+                foreach (var item in treeList1.SelectedItems)
+                {
+                    item.BackgroundColor = Color.Empty;
+                }
             }
         }
 
@@ -442,6 +555,11 @@ namespace CodeBuilder.JsonTool
             {
                 ToolShortcutHelper.Create(_hosting, "JsonFormatter");
             });
+        }
+
+        private void chkFilter_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

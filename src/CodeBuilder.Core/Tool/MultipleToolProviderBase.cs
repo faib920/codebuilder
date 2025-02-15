@@ -20,9 +20,9 @@ namespace CodeBuilder.Core.Tool
 
         public abstract string Name { get; }
 
-        public abstract Form Execute(string name, object parameter);
+        public abstract Form Execute(string name, params object[] arguments);
 
-        public Form Execute()
+        public Form Execute(params object[] arguments)
         {
             throw new NotImplementedException();
         }

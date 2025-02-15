@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ForeignKeyEditorForm));
             this.lstObject = new Fireasy.Windows.Forms.TreeList();
             this.treeListColumn1 = new Fireasy.Windows.Forms.TreeListColumn();
             this.treeListColumn2 = new Fireasy.Windows.Forms.TreeListColumn();
@@ -36,11 +37,11 @@
             this.btnBind = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.lblLocCount = new System.Windows.Forms.Label();
-            this.btnLocation = new System.Windows.Forms.Button();
             this.txtKeyword = new Fireasy.Windows.Forms.ComplexTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.chkPrimaryKey = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lstObject
@@ -50,6 +51,8 @@
             this.lstObject.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstObject.BackColor = System.Drawing.SystemColors.Control;
+            this.lstObject.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstObject.CheckAllChecked = false;
             this.lstObject.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1,
@@ -136,23 +139,14 @@
             this.lblLocCount.Size = new System.Drawing.Size(0, 19);
             this.lblLocCount.TabIndex = 19;
             // 
-            // btnLocation
-            // 
-            this.btnLocation.Location = new System.Drawing.Point(406, 11);
-            this.btnLocation.Name = "btnLocation";
-            this.btnLocation.Size = new System.Drawing.Size(60, 27);
-            this.btnLocation.TabIndex = 18;
-            this.btnLocation.Text = "下一个";
-            this.btnLocation.UseVisualStyleBackColor = true;
-            this.btnLocation.Click += new System.EventHandler(this.btnLocation_Click);
-            // 
             // txtKeyword
             // 
             this.txtKeyword.Location = new System.Drawing.Point(57, 12);
             this.txtKeyword.Name = "txtKeyword";
             this.txtKeyword.Size = new System.Drawing.Size(342, 24);
             this.txtKeyword.TabIndex = 16;
-            this.txtKeyword.WaterMarkText = "输入关键字或正则表达式，停留1秒或回车后定位";
+            this.txtKeyword.WaterMarkText = "输入关键字或正则表达式，停留1秒或回车后筛选";
+            this.txtKeyword.TextChanged += new System.EventHandler(this.txtKeyword_TextChanged);
             this.txtKeyword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtKeyword_KeyDown);
             // 
             // label1
@@ -162,7 +156,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(38, 19);
             this.label1.TabIndex = 17;
-            this.label1.Text = "查找:";
+            this.label1.Text = "筛选:";
             // 
             // timer1
             // 
@@ -172,7 +166,7 @@
             // chkPrimaryKey
             // 
             this.chkPrimaryKey.AutoSize = true;
-            this.chkPrimaryKey.Location = new System.Drawing.Point(12, 467);
+            this.chkPrimaryKey.Location = new System.Drawing.Point(409, 14);
             this.chkPrimaryKey.Name = "chkPrimaryKey";
             this.chkPrimaryKey.Size = new System.Drawing.Size(93, 23);
             this.chkPrimaryKey.TabIndex = 20;
@@ -180,14 +174,27 @@
             this.chkPrimaryKey.UseVisualStyleBackColor = true;
             this.chkPrimaryKey.CheckedChanged += new System.EventHandler(this.chkPrimaryKey_CheckedChanged);
             // 
+            // label2
+            // 
+            this.label2.BackColor = System.Drawing.SystemColors.Window;
+            this.label2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label2.ForeColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
+            this.label2.Location = new System.Drawing.Point(381, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(13, 13);
+            this.label2.TabIndex = 21;
+            this.label2.Visible = false;
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
             // ForeignKeyEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(660, 500);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.chkPrimaryKey);
             this.Controls.Add(this.lblLocCount);
-            this.Controls.Add(this.btnLocation);
             this.Controls.Add(this.txtKeyword);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCancel);
@@ -217,10 +224,10 @@
         private System.Windows.Forms.Button btnBind;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label lblLocCount;
-        private System.Windows.Forms.Button btnLocation;
         private Fireasy.Windows.Forms.ComplexTextBox txtKeyword;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox chkPrimaryKey;
+        private System.Windows.Forms.Label label2;
     }
 }

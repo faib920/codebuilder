@@ -41,16 +41,23 @@ namespace CodeBuilder
             // lstRes
             // 
             this.lstRes.AllowUpdateDataItem = false;
+            this.lstRes.AlternateBackColor = System.Drawing.Color.Empty;
+            this.lstRes.BackColor = System.Drawing.SystemColors.Control;
+            this.lstRes.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstRes.CheckAllChecked = false;
             this.lstRes.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1});
             this.lstRes.DataSource = null;
             this.lstRes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstRes.Footer = null;
+            this.lstRes.FooterHeight = 28;
             this.lstRes.GroupFont = new System.Drawing.Font("宋体", 12F);
             this.lstRes.HandCursor = false;
+            this.lstRes.HeaderHeight = 28;
+            this.lstRes.ItemHeight = 28;
             this.lstRes.Location = new System.Drawing.Point(0, 25);
             this.lstRes.Name = "lstRes";
+            this.lstRes.NoneItemImage = null;
             this.lstRes.NoneItemText = "";
             this.lstRes.RowNumberIndex = 0;
             this.lstRes.ShowGridLines = false;
@@ -61,6 +68,7 @@ namespace CodeBuilder
             this.lstRes.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstRes.TabIndex = 12;
             this.lstRes.ItemDoubleClick += new Fireasy.Windows.Forms.TreeListItemDoubleClickEventHandler(this.lstRes_ItemDoubleClick);
+            this.lstRes.ItemSelectionChanged += new Fireasy.Windows.Forms.TreeListItemSelectionChangedEventHandler(this.lstRes_ItemSelectionChanged);
             // 
             // treeListColumn1
             // 
@@ -112,6 +120,7 @@ namespace CodeBuilder
             this.ClientSize = new System.Drawing.Size(241, 603);
             this.Controls.Add(this.lstRes);
             this.Controls.Add(this.toolStrip1);
+            this.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Name = "frmResource";
             this.Text = "资源";
             this.Load += new System.EventHandler(this.frmResource_Load);

@@ -7,7 +7,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.EventBus;
 using CodeBuilder.Core.Source;
+using Fireasy.Common.Extensions;
 using Fireasy.Windows.Forms;
 using System.Collections.Generic;
 using System.Data;
@@ -47,7 +49,7 @@ namespace CodeBuilder.PDManer
 
         private void lstData_KeyUp(object sender, KeyEventArgs e)
         {
-            if (lstData.SelectedItems.Count == 0)
+            if (!lstData.HasSelectedItems)
             {
                 return;
             }
@@ -76,9 +78,9 @@ namespace CodeBuilder.PDManer
                 {
                     lstData.Items.Add(string.Empty);
                 }
-            }
 
-            _isChanged = true;
+                _isChanged = true;
+            }
         }
 
         bool IConfigurableControl.SaveChanges()
@@ -110,7 +112,21 @@ namespace CodeBuilder.PDManer
             }
 
             DbTypeManager.SaveMappers(dict);
+            _isChanged = false;
+
             return true;
+        }
+
+        bool IConfigurableControl.IsChanged => _isChanged;
+
+        void IConfigurableControl.Close()
+        {
+            base.DestroyHandle();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            _hosting.Start("DataTypeManageTool", "Dialog");
         }
     }
 }

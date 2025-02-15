@@ -55,16 +55,22 @@ namespace CodeBuilder
             // 
             this.lvwTemplate.AllowDemandLoadWhenScrollEnd = true;
             this.lvwTemplate.AllowUpdateDataItem = false;
+            this.lvwTemplate.AlternateBackColor = System.Drawing.Color.Empty;
+            this.lvwTemplate.BackColor = System.Drawing.SystemColors.Control;
+            this.lvwTemplate.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lvwTemplate.CheckAllChecked = false;
             this.lvwTemplate.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1});
             this.lvwTemplate.DataSource = null;
             this.lvwTemplate.Footer = null;
+            this.lvwTemplate.FooterHeight = 28;
             this.lvwTemplate.GroupFont = new System.Drawing.Font("Consolas", 12F);
             this.lvwTemplate.HandCursor = false;
+            this.lvwTemplate.HeaderHeight = 28;
             this.lvwTemplate.ItemHeight = 100;
             this.lvwTemplate.Location = new System.Drawing.Point(12, 48);
             this.lvwTemplate.Name = "lvwTemplate";
+            this.lvwTemplate.NoneItemImage = null;
             this.lvwTemplate.NoneItemText = "没有可显示的数据";
             this.lvwTemplate.RowNumberIndex = 0;
             this.lvwTemplate.ShowHeader = false;
@@ -171,9 +177,10 @@ namespace CodeBuilder
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolStripButton2});
-            this.toolStrip1.Location = new System.Drawing.Point(728, 11);
+            this.toolStrip1.Location = new System.Drawing.Point(738, 21);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(63, 28);
+            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.toolStrip1.Size = new System.Drawing.Size(53, 28);
             this.toolStrip1.TabIndex = 17;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -195,21 +202,21 @@ namespace CodeBuilder
             this.tlbDown.Checked = true;
             this.tlbDown.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tlbDown.Name = "tlbDown";
-            this.tlbDown.Size = new System.Drawing.Size(134, 24);
+            this.tlbDown.Size = new System.Drawing.Size(180, 24);
             this.tlbDown.Text = "下载次数";
             this.tlbDown.Click += new System.EventHandler(this.tlbDown_Click);
             // 
             // tlbUse
             // 
             this.tlbUse.Name = "tlbUse";
-            this.tlbUse.Size = new System.Drawing.Size(134, 24);
+            this.tlbUse.Size = new System.Drawing.Size(180, 24);
             this.tlbUse.Text = "使用次数";
             this.tlbUse.Click += new System.EventHandler(this.tlbUse_Click);
             // 
             // tlbPub
             // 
             this.tlbPub.Name = "tlbPub";
-            this.tlbPub.Size = new System.Drawing.Size(134, 24);
+            this.tlbPub.Size = new System.Drawing.Size(180, 24);
             this.tlbPub.Text = "更新时间";
             this.tlbPub.Click += new System.EventHandler(this.tlbPub_Click);
             // 
@@ -228,7 +235,6 @@ namespace CodeBuilder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(803, 465);
-            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtKeyword);
@@ -236,6 +242,7 @@ namespace CodeBuilder
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.lvwTemplate);
+            this.Controls.Add(this.toolStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

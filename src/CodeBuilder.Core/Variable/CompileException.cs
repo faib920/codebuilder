@@ -12,11 +12,9 @@ namespace CodeBuilder.Core.Variable
 {
     public class CompileException : Exception
     {
-        public CompileException(string message)
-            : base(message)
+        public CompileException(string message, Exception exception)
+            : base(message, exception)
         {
         }
-
-        public string FileName { get; set; }
     }
 }

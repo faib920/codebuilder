@@ -29,13 +29,12 @@ namespace CodeBuilder.Tools
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTools));
             this.listView1 = new Fireasy.Windows.Forms.TreeList();
             this.treeListColumn1 = new Fireasy.Windows.Forms.TreeListColumn();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip();
             this.mnuDefault = new System.Windows.Forms.ToolStripMenuItem();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.imageList1 = new System.Windows.Forms.ImageList();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
@@ -91,12 +90,12 @@ namespace CodeBuilder.Tools
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuDefault});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(135, 28);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 28);
             // 
             // mnuDefault
             // 
             this.mnuDefault.Name = "mnuDefault";
-            this.mnuDefault.Size = new System.Drawing.Size(134, 24);
+            this.mnuDefault.Size = new System.Drawing.Size(138, 24);
             this.mnuDefault.Text = "设为默认";
             this.mnuDefault.Click += new System.EventHandler(this.mnuDefault_Click);
             // 

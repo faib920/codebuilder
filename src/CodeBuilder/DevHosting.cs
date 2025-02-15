@@ -7,10 +7,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.DynamicFunc;
 using CodeBuilder.Core.Forms;
 using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Template;
 using Fireasy.Common;
+using Fireasy.Composition;
 using Fireasy.Windows.Forms;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,12 +20,14 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
+using static CodeBuilder.DevHosting;
 
 namespace CodeBuilder
 {
-    public sealed class DevHosting : IDevHosting
+    public sealed class DevHosting : IDevHosting, ILogQueueSupported
     {
         internal Action<object> ViewInPropGridAct;
         internal Action<string, int> ProgressAct;
@@ -34,7 +38,7 @@ namespace CodeBuilder
         internal Action<int, DateTime, string> LogPollAct;
         private ITemplateProvider _templateProvider;
         private TemplateDefinition _template;
-        private Queue<LogData> _logQueue = new Queue<LogData>();
+        private LogQueue _logQueue = new LogQueue();
         private System.Threading.Timer _logTimer;
         private bool _isQueueLog = false;
 
@@ -42,10 +46,15 @@ namespace CodeBuilder
         {
             IServiceCollection services = new ServiceCollection();
             services.AddLogging(builder => builder.AddConsole());
-            services = services.AddFireasy(options => 
+            services = services.AddFireasy(options =>
                 options.DiscoverOptions
                     .SetUseAnalyzers(false)
-                    .AddAssemblyFilterPredicate(assembly => !assembly.GetName().Name.StartsWith("Fireasy") && !assembly.GetName().Name.StartsWith("CodeBuilder")))
+                    .AddFileFilterPredicate(s =>
+                    {
+                        var fileName = s.Substring(s.LastIndexOf("\\") + 1);
+                        return fileName.StartsWith("Fireasy", StringComparison.OrdinalIgnoreCase) || 
+                            fileName.StartsWith("CodeBuilder", StringComparison.OrdinalIgnoreCase);
+                    }))
                 .Services;
 
             var configuration = new ConfigurationBuilder()
@@ -111,7 +120,7 @@ namespace CodeBuilder
             {
                 _logTimer.Change(TimeSpan.FromSeconds(0), TimeSpan.FromMilliseconds(10));
 
-                _logQueue.Enqueue(new LogData(0, msg));
+                _logQueue.Push(0, msg);
             }
         }
 
@@ -119,7 +128,7 @@ namespace CodeBuilder
         {
             _logTimer.Change(TimeSpan.FromSeconds(0), TimeSpan.FromMilliseconds(10));
 
-            _logQueue.Enqueue(new LogData(1, msg));
+            _logQueue.Push(1, msg);
         }
 
         public void ShowInfo(string msg)
@@ -150,7 +159,7 @@ namespace CodeBuilder
             {
                 control.Invoke(new Action(() =>
                 {
-                    ErrorMessageBox.Show(MainWindow, "CodeBuilder", exp);
+                    ErrorMessageBox.Show(MainWindow, "CodeBuilder", exp, false);
                 }));
             }
         }
@@ -240,6 +249,35 @@ namespace CodeBuilder
             return null;
         }
 
+        private dynamic _funcs;
+        public dynamic Funcs
+        {
+            get
+            {
+                if (_funcs == null)
+                {
+                    _funcs = DynamicFuncBuilder.Build(this, this.ServiceProvider.GetExportedServices<IDynamicFuncProvider>().ToArray());
+                }
+
+                return _funcs;
+            }
+        }
+
+        /// <summary>
+        /// 启动工具
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="arguments"></param>
+        public void Start(string name, params object[] arguments)
+        {
+            var tools = ServiceProvider.GetExportedServices<IToolProvider>();
+            var tool = tools.FirstOrDefault(s => s.Name == name || s.GetType().Name == name);
+            if (tool != null)
+            {
+                tool.Execute(arguments);
+            }
+        }
+
         private void PollLogMessage(object state)
         {
             if (_isQueueLog)
@@ -251,7 +289,7 @@ namespace CodeBuilder
             _isQueueLog = true;
             while (_logQueue.Count > 0)
             {
-                var log = _logQueue.Dequeue();
+                var log = _logQueue.Pop();
                 LogPollAct?.Invoke(log.Type, log.Time, log.Message);
             }
 
@@ -263,7 +301,27 @@ namespace CodeBuilder
             _isQueueLog = false;
         }
 
-        private class LogData
+        ILogQueue ILogQueueSupported.GetQueue()
+        {
+            return _logQueue;
+        }
+    }
+
+    [Serializable]
+    public class LogQueue : MarshalByRefObject, ILogQueue
+    {
+        private Queue<LogData> _logQueue = new Queue<LogData>();
+
+        public void Push(int type, string msg)
+        {
+            _logQueue.Enqueue(new LogData(type, msg));
+        }
+
+        public int Count => _logQueue.Count;
+
+        public LogData Pop() => _logQueue.Dequeue();
+
+        public class LogData
         {
             public LogData(int type, string message)
             {

@@ -24,7 +24,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder
 {
-    public partial class frmEditor : ChangedFormBase, IContextMenuManager, IMainMenuManager
+    public partial class frmEditor : ChangedFormBase, IContextMenuManager, IMainMenuManager, ISaveAsManager, ICloseManager
     {
         private string _caption = "未命名";
         private readonly frmFindAndReplace _findForm;
@@ -263,7 +263,7 @@ namespace CodeBuilder
         private string GetExtensionByLanguage(string language)
         {
             var strategy = HighlightingManager.Manager.FindHighlighter(language);
-            if (strategy != null)
+            if (strategy != null && strategy.Extensions.Length > 0)
             {
                 return strategy.Extensions[0];
             }

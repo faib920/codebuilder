@@ -35,6 +35,7 @@ namespace CodeBuilder.Core.Source
             Columns = new List<Column>();
             PrimaryKeys = new List<Column>();
             UniqueKeys = new List<Column>();
+            Indexes = new List<Index>();
         }
 
         public Table(bool isView)
@@ -118,7 +119,7 @@ namespace CodeBuilder.Core.Source
         [Description("外键集合。")]
         [Category(CategoryConsts.Auxiliary)]
         [TypeConverter(typeof(Designer.CollectionConverter))]
-        [Editor(typeof(Designer.CollectionViewEditor), typeof(UITypeEditor))]
+        [Editor(typeof(Designer.ForeignKeyViewEditor), typeof(UITypeEditor))]
         [UnPersistently]
         public List<Reference> ForeignKeys { get; private set; }
 
@@ -128,7 +129,7 @@ namespace CodeBuilder.Core.Source
         [Description("子键集合。")]
         [Category(CategoryConsts.Auxiliary)]
         [TypeConverter(typeof(Designer.CollectionConverter))]
-        [Editor(typeof(Designer.CollectionViewEditor), typeof(UITypeEditor))]
+        [Editor(typeof(Designer.SubKeyViewEditor), typeof(UITypeEditor))]
         [UnPersistently]
         public List<Reference> SubKeys { get; private set; }
 
@@ -161,6 +162,16 @@ namespace CodeBuilder.Core.Source
         [Editor(typeof(Designer.CollectionViewEditor), typeof(UITypeEditor))]
         [UnPersistently]
         public List<Column> UniqueKeys { get; private set; }
+
+        /// <summary>
+        /// 索引集合。
+        /// </summary>
+        [Description("索引集合。")]
+        [Category(CategoryConsts.Auxiliary)]
+        [TypeConverter(typeof(Designer.CollectionConverter))]
+        [Editor(typeof(Designer.IndexViewEditor), typeof(UITypeEditor))]
+        [UnPersistently]
+        public List<Index> Indexes { get; private set; }
 
         List<IField> IObject.Fields
         {
@@ -203,7 +214,7 @@ namespace CodeBuilder.Core.Source
         /// </summary>
         /// <param name="table"></param>
         /// <param name="columnFactory"></param>
-        public void Refactoring(Table table, Func<Column> columnFactory)
+        public void Refactoring(Table table, Func<Table, Column> columnFactory)
         {
             _name = table.Name;
             _Name = table._Name;
@@ -212,11 +223,12 @@ namespace CodeBuilder.Core.Source
             IsView = table.IsView;
             Index = table.Index;
             Schema = table.Schema;
+            Indexes = table.Indexes;
             Host = table.Host;
 
             foreach (var column in table.Columns)
             {
-                var newColumn = columnFactory();
+                var newColumn = columnFactory(this);
                 newColumn.Refactoring(this, column);
                 Columns.Add(newColumn);
             }

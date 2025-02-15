@@ -20,7 +20,7 @@ namespace CodeBuilder.PdfTool
 
         public string Name => "PDF转换器";
 
-        public Form Execute()
+        public Form Execute(params object[] arguments)
         {
             var form = new frmToImg(_hosting);
             if (_hosting.DockContainer != null)

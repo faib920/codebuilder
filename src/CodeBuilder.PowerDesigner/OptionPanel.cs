@@ -7,8 +7,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.EventBus;
 using CodeBuilder.Core.Source;
+using Fireasy.Common.Extensions;
 using Fireasy.Windows.Forms;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -18,6 +21,7 @@ namespace CodeBuilder.PowerDesigner
     {
         private readonly IDevHosting _hosting;
         private bool _isChanged;
+        private string _eventId;
 
         public OptionPanel(IDevHosting hosting)
         {
@@ -42,11 +46,25 @@ namespace CodeBuilder.PowerDesigner
             }
 
             lstData.Items.Add(string.Empty);
+
+            var eventBus = _hosting.ServiceProvider.TryGetService<IEventBusHandler>();
+            if (eventBus != null)
+            {
+                _eventId = eventBus.Subscribe("DataTypeChanged", _ =>
+                {
+                    editor = (TreeListComboBoxEditor)treeListColumn2.Editor;
+                    editor.Inner.Items.Clear();
+                    foreach (var value in DataTypeManager.GetDatabaseKeys())
+                    {
+                        editor.Inner.Items.Add(value);
+                    }
+                });
+            }
         }
 
         private void lstData_KeyUp(object sender, KeyEventArgs e)
         {
-            if (lstData.SelectedItems.Count == 0)
+            if (!lstData.HasSelectedItems)
             {
                 return;
             }
@@ -75,9 +93,9 @@ namespace CodeBuilder.PowerDesigner
                 {
                     lstData.Items.Add(string.Empty);
                 }
-            }
 
-            _isChanged = true;
+                _isChanged = true;
+            }
         }
 
         bool IConfigurableControl.SaveChanges()
@@ -109,7 +127,27 @@ namespace CodeBuilder.PowerDesigner
             }
 
             DBMSManager.SaveMappers(dict);
+            _isChanged = false;
+
             return true;
+        }
+
+        bool IConfigurableControl.IsChanged => _isChanged;
+
+        void IConfigurableControl.Close()
+        {
+            var eventBus = _hosting.ServiceProvider.TryGetService<IEventBusHandler>();
+            if (eventBus != null && !string.IsNullOrWhiteSpace(_eventId))
+            {
+                eventBus.UnSubscribe("DataTypeChanged", _eventId);
+            }
+
+            base.DestroyHandle();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            _hosting.Start("DataTypeManageTool", "Dialog");
         }
     }
 }

@@ -7,8 +7,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 using CodeBuilder.Core;
+using CodeBuilder.Core.EventBus;
 using CodeBuilder.Core.Forms;
 using CodeBuilder.Core.Source;
+using Fireasy.Common.Extensions;
 using Fireasy.Windows.Forms;
 using System;
 using System.Collections.Generic;
@@ -20,7 +22,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder.Tools
 {
-    public partial class frmDataTypeManager : DockFormBase, IContextMenuManager
+    public partial class frmDataTypeManager : DockFormBase, IContextMenuManager, ICloseManager
     {
         private string _selectDatabase;
         private readonly IDevHosting _hosting;
@@ -175,6 +177,12 @@ namespace CodeBuilder.Tools
                 DataTypeManager.SaveDataTypes(_selectDatabase, null);
                 _selectDatabase = null;
                 LoadDatabases();
+
+                var eventBus = _hosting.ServiceProvider.TryGetService<IEventBusHandler>();
+                if (eventBus != null)
+                {
+                    eventBus.Publish("DataTypeChanged");
+                }
             }
         }
 
@@ -186,12 +194,19 @@ namespace CodeBuilder.Tools
             }
 
             SaveDataTypes();
+
+            var eventBus = _hosting.ServiceProvider.TryGetService<IEventBusHandler>();
+            if (eventBus != null)
+            {
+                eventBus.Publish("DataTypeChanged");
+            }
+
             _isChanged = false;
         }
 
         private void lstDataType_KeyUp(object sender, KeyEventArgs e)
         {
-            if (lstDataType.SelectedItems.Count == 0)
+            if (!lstDataType.HasSelectedItems)
             {
                 return;
             }

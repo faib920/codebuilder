@@ -68,9 +68,7 @@ namespace CodeBuilder
 
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-            //var log = LoggerFactory.CreateLogger();
-            //log.Error("应用程序错误", e.Exception);
-            ErrorMessageBox.Show("应用程序错误", e.Exception);
+            ErrorMessageBox.Show("应用程序错误", e.Exception, false);
 
             if (_frmStart != null)
             {

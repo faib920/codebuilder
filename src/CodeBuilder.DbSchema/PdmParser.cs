@@ -34,12 +34,12 @@ namespace CodeBuilder.DbSchema
             _databaseType = dbNode.Attributes["database"].InnerText;
         }
 
-        public static PdmDefinition Parse(string pdmFileName)
+        public static PdmDefinition Parse(string pdmFileName, bool hasView)
         {
-            return new PdmParser(pdmFileName).ParseDefinition();
+            return new PdmParser(pdmFileName).ParseDefinition(hasView);
         }
 
-        private PdmDefinition ParseDefinition()
+        private PdmDefinition ParseDefinition(bool hasView)
         {
             var definition = new PdmDefinition();
 
@@ -62,6 +62,17 @@ namespace CodeBuilder.DbSchema
                     schema.Tables.Add(table);
                 }
 
+                if (hasView)
+                {
+                    foreach (XmlNode tNode in node.SelectNodes("view"))
+                    {
+                        var table = new PdmTable(true);
+                        table.Name = tNode.Attributes["name"].InnerText;
+                        table.Uri = $"//project/schema[@name='{schema.Name}']/view[@name='{tNode.Attributes["name"].InnerText}']";
+                        schema.Tables.Add(table);
+                    }
+                }
+
                 definition.Schemas.Add(schema);
             }
 
@@ -74,7 +85,8 @@ namespace CodeBuilder.DbSchema
 
             var node = _doc.SelectSingleNode(table.Uri);
             var ndColumns = node.SelectNodes("column");
-            var newtable = schemaExtManager.Build<Table>();
+            var ndIndexes = node.SelectNodes("index");
+            var newtable = schemaExtManager.Build<Table>(table.IsView);
             var descNode = node.SelectSingleNode("comment");
 
             newtable.Name = table.Name;
@@ -139,6 +151,25 @@ namespace CodeBuilder.DbSchema
                 }
 
                 newtable.Columns.Add(column);
+            }
+
+            foreach (XmlNode child in ndIndexes)
+            {
+                var name = child.Attributes["name"].Value;
+                var index = new Index(name);
+                index.IsUniqueKey = child.Attributes["unique"]?.Value == "UNIQUE";
+
+                foreach (XmlNode c in child.SelectNodes("column"))
+                {
+                    var column = newtable.FindColumn(c.Attributes["name"].Value);
+                    if (column != null)
+                    {
+                        column.IsUniqueKey = index.IsUniqueKey;
+                        index.AddColumn(column);
+                    }
+                }
+
+                newtable.Indexes.Add(index);
             }
 
             return newtable;

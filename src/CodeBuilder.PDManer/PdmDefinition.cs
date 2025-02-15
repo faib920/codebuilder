@@ -111,6 +111,26 @@ namespace CodeBuilder.PDManer
                 newtable.Columns.Add(column);
             }
 
+            foreach (var index in entity.Indexes)
+            {
+                var idx = new Index(index.DefKey);
+                idx.IsUniqueKey = index.Unique;
+
+                foreach (var field in index.Fields)
+                {
+                    Column column = null;
+                    var obj = entity.Fields.FirstOrDefault(s => s.Id == field.FieldDefKey);
+                    if (obj != null && (column = newtable.FindColumn(obj.DefKey)) != null)
+                    {
+                        column.IsUniqueKey = idx.IsUniqueKey;
+                        var idxc = idx.AddColumn(column);
+                        idxc.SortOrder = field.AscOrDesc == "D" ? "DESC" : (field.AscOrDesc == "A" ? "ASC" : string.Empty);
+                    }
+                }
+
+                newtable.Indexes.Add(idx);
+            }
+
             return newtable;
         }
     }
@@ -141,6 +161,8 @@ namespace CodeBuilder.PDManer
         public string Comment { get; set; }
 
         public List<PdmField> Fields { get; set; }
+
+        public List<PdmIndex> Indexes { get; set; }
 
         public List<PdmRelation> Correlations { get; set; }
     }
@@ -193,5 +215,19 @@ namespace CodeBuilder.PDManer
 
     public class PdmDataTypeSupport : PdmAbstract
     {
+    }
+
+    public class PdmIndex : PdmAbstract
+    {
+        public bool Unique { get; set; }
+
+        public List<PdmIndexField> Fields { get; set; }
+    }
+
+    public class PdmIndexField
+    {
+        public string FieldDefKey { get; set; }
+
+        public string AscOrDesc { get; set; }
     }
 }

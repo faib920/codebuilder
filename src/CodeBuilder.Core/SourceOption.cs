@@ -31,6 +31,11 @@ namespace CodeBuilder.Core
         public bool Append { get; set; }
 
         /// <summary>
+        /// 获取或设置是否为同步方式。
+        /// </summary>
+        public bool Synchronize { get; set; }
+
+        /// <summary>
         /// 获取或设置选中的数据表名称。
         /// </summary>
         public List<string> Selected { get; set; }

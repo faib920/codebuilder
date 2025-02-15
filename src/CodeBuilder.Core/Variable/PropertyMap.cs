@@ -22,6 +22,7 @@ namespace CodeBuilder.Core.Variable
             Name = property.Name;
             Type = property.PropertyType;
             TypeName = Util.GetTypeName(Type);
+            IsReadonly = !property.CanWrite;
 
             var desc = property.GetCustomAttribute<DescriptionAttribute>();
             if (desc != null)
@@ -76,5 +77,10 @@ namespace CodeBuilder.Core.Variable
         /// 获取显示的宽度。
         /// </summary>
         public int Width { get; private set; }
+
+        /// <summary>
+        /// 获取是否只读。
+        /// </summary>
+        public bool IsReadonly { get; private set; }
     }
 }

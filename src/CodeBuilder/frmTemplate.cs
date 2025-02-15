@@ -121,7 +121,7 @@ namespace CodeBuilder
 
         private void lstPart_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            tlbEdit.Enabled = lstPart.SelectedItems.Count > 0 && lstPart.SelectedItems[0].Tag is TemplateFile;
+            tlbEdit.Enabled = lstPart.HasSelectedItems && lstPart.SelectedItems[0].Tag is TemplateFile;
         }
 
         private void tlbNew_Click(object sender, EventArgs e)
@@ -137,7 +137,7 @@ namespace CodeBuilder
 
         private void tlbEdit_Click(object sender, EventArgs e)
         {
-            if (lstPart.SelectedItems.Count == 0)
+            if (!lstPart.HasSelectedItems)
             {
                 return;
             }

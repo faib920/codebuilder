@@ -21,8 +21,6 @@ namespace CodeBuilder.Core.Designer
     public partial class ForeignKeyEditorForm : FormBase
     {
         private Column _column;
-        private int _filterIndex;
-        private List<TreeListItem> _filterItems = null;
 
         public ForeignKeyEditorForm(Column column)
         {
@@ -52,7 +50,7 @@ namespace CodeBuilder.Core.Designer
 
         private void btnBind_Click(object sender, EventArgs e)
         {
-            if (lstObject.SelectedItems.Count == 0)
+            if (!lstObject.HasSelectedItems)
             {
                 MessageBox.Show("请选择要绑定的列。", "CodeBuilder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
@@ -79,7 +77,7 @@ namespace CodeBuilder.Core.Designer
             if (e.KeyCode == Keys.Enter)
             {
                 timer1.Enabled = false;
-                FindAndLocation(txtKeyword.Text);
+                FindAndFiltering(txtKeyword.Text);
             }
             else
             {
@@ -88,35 +86,15 @@ namespace CodeBuilder.Core.Designer
             }
         }
 
+        private void txtKeyword_TextChanged(object sender, EventArgs e)
+        {
+            label2.Visible = txtKeyword.Text.Length > 0;
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Enabled = false;
-            FindAndLocation(txtKeyword.Text);
-        }
-
-        private void btnLocation_Click(object sender, EventArgs e)
-        {
-            if ((_filterItems?.Count ?? 0) <= 0)
-            {
-                return;
-            }
-
-            if (_filterIndex >= _filterItems.Count)
-            {
-                _filterIndex = 0;
-            }
-
-            var item = _filterItems[_filterIndex++];
-            if (item.Level > 0 && !item.Parent.Expended)
-            {
-                item.Parent.Expended = true;
-            }
-
-            lblLocCount.Text = $"第 {_filterIndex} 个，共搜索到 {_filterItems.Count} 个";
-
-            item.Selected = true;
-            item.EnsureVisible();
-            lstObject.Focus();
+            FindAndFiltering(txtKeyword.Text);
         }
 
         private void chkPrimaryKey_CheckedChanged(object sender, EventArgs e)
@@ -125,14 +103,12 @@ namespace CodeBuilder.Core.Designer
 
             if (!string.IsNullOrEmpty(txtKeyword.Text))
             {
-                FindAndLocation(txtKeyword.Text);
+                FindAndFiltering(txtKeyword.Text);
             }
         }
 
         private void LoadTables()
         {
-            _filterItems = null;
-            _filterIndex = 0;
             lblLocCount.Text = string.Empty;
 
             TreeListItem selected = null;
@@ -183,71 +159,71 @@ namespace CodeBuilder.Core.Designer
             }
         }
 
-        private void FindAndLocation(string keyword)
+        private void FindAndFiltering(string keyword)
         {
-            _filterItems = new List<TreeListItem>();
-            _filterIndex = 0;
+            if (string.IsNullOrEmpty(keyword))
+            {
+                lstObject.Filtering(null);
+                return;
+            }
 
+            var showItems = new List<TreeListItem>();
+
+            lstObject.BeginUpdate();
             foreach (var item in lstObject.Items)
             {
-                var filter = string.IsNullOrEmpty(keyword) ? false : Regex.IsMatch(item.Text, keyword, RegexOptions.IgnoreCase) ||
-                    Regex.IsMatch(item.Cells[1].Text, keyword, RegexOptions.IgnoreCase);
-                if (filter)
-                {
-                    _filterItems.Add(item);
-                }
-
-                var color = filter ? Color.LightSkyBlue : Color.Empty;
-                if (item.BackgroundColor != color)
-                {
-                    item.BackgroundColor = color;
-                }
-
                 var table = item.Tag as Table;
                 var findColumns = false;
-                if (item.Items.Count == 0)
+                foreach (var column in table.Columns)
                 {
-                    foreach (var column in table.Columns)
+                    if (string.IsNullOrEmpty(keyword) ? false : Regex.IsMatch(column.Name, keyword, RegexOptions.IgnoreCase) &&
+                        (chkPrimaryKey.Checked ? column.IsPrimaryKey : true))
                     {
-                        if (string.IsNullOrEmpty(keyword) ? false : Regex.IsMatch(column.Name, keyword, RegexOptions.IgnoreCase) ||
-                            Regex.IsMatch(column.Description, keyword, RegexOptions.IgnoreCase))
-                        {
-                            findColumns = true;
-                            break;
-                        }
+                        findColumns = true;
+                        break;
                     }
+                }
 
-                    if (findColumns)
+                if (findColumns)
+                {
+                    showItems.Add(item);
+
+                    if (!item.IsDemandLoad)
                     {
                         item.ShowExpanded = false;
                         LoadColumnNodes(item);
-                        SearchColumns(keyword, item);
+                        item.Expended = true;
                     }
                 }
-                else
+            }
+            lstObject.EndUpdate();
+
+            lstObject.Filtering(s =>
+            {
+                if (s.Level == 0 && s.Tag is Table table)
                 {
-                    SearchColumns(keyword, item);
+                    var isfilter = showItems.Contains(s) || (string.IsNullOrEmpty(keyword) ? false : (Regex.IsMatch(table.Name, keyword, RegexOptions.IgnoreCase)));
+                    return isfilter;
+                }
+                else if (s.Tag is Column column)
+                {
+                    if (!showItems.Contains(s.Parent))
+                    {
+                        return true;
+                    }
+
+                    var isfilter = string.IsNullOrEmpty(keyword) ? false : (Regex.IsMatch(column.Name, keyword, RegexOptions.IgnoreCase));
+                    return isfilter && (chkPrimaryKey.Checked ? column.IsPrimaryKey : true);
                 }
 
-            }
-
-            if (_filterItems.Count > 0)
-            {
-                var item = _filterItems[_filterIndex++];
-
-                lblLocCount.Text = $"第 {_filterIndex} 个，共搜索到 {_filterItems.Count} 个";
-                item.Selected = true;
-                item.EnsureVisible();
-            }
-            else
-            {
-                lblLocCount.Text = string.Empty;
-            }
+                return false;
+            });
         }
 
         private void LoadColumnNodes(TreeListItem item)
         {
             var table = item.Tag as Table;
+            item.IsDemandLoad = true;
 
             foreach (var column in table.Columns)
             {
@@ -271,28 +247,10 @@ namespace CodeBuilder.Core.Designer
             }
         }
 
-        private void SearchColumns(string keyword, TreeListItem item)
+        private void label2_Click(object sender, EventArgs e)
         {
-            foreach (var citem in item.Items)
-            {
-                var filter = string.IsNullOrEmpty(keyword) ? false : Regex.IsMatch(citem.Text, keyword, RegexOptions.IgnoreCase) ||
-                    Regex.IsMatch(citem.Cells[1].Text, keyword, RegexOptions.IgnoreCase);
-                if (filter && chkPrimaryKey.Checked && !(citem.Tag as Column).IsPrimaryKey)
-                {
-                    filter = false;
-                }
-
-                if (filter)
-                {
-                    _filterItems.Add(citem);
-                }
-
-                var color = filter ? Color.LightSkyBlue : Color.Empty;
-                if (citem.BackgroundColor != color)
-                {
-                    citem.BackgroundColor = color;
-                }
-            }
+            txtKeyword.Text = string.Empty;
+            FindAndFiltering(string.Empty);
         }
     }
 }

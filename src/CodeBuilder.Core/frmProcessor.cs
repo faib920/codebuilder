@@ -22,12 +22,17 @@ namespace CodeBuilder.Core
         private Task _task;
         private Size _size;
 
-        public frmProcessor(Func<CancellationToken, Task> taskFunc, Action calcelAct, bool onBackground)
+        public frmProcessor(Func<CancellationToken, Task> taskFunc, Action calcelAct, bool onBackground, string title)
         {
             InitializeComponent();
             _taskFunc = taskFunc;
             _calcelAct = calcelAct;
             _cancelToken = new CancellationTokenSource();
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                label1.Text = title;
+            }
 
             panel1.Visible = onBackground;
         }

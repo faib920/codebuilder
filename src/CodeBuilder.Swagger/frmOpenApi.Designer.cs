@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmOpenApi));
             this.label1 = new System.Windows.Forms.Label();
             this.cboUrl = new System.Windows.Forms.ComboBox();
@@ -36,9 +35,12 @@
             this.lstTable = new Fireasy.Windows.Forms.TreeList();
             this.treeListColumn1 = new Fireasy.Windows.Forms.TreeListColumn();
             this.treeListColumn2 = new Fireasy.Windows.Forms.TreeListColumn();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.imageList1 = new System.Windows.Forms.ImageList();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtKeyword = new Fireasy.Windows.Forms.ComplexTextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -100,6 +102,7 @@
             this.lstTable.NoneItemImage = null;
             this.lstTable.NoneItemText = "暂无数据，请输入Json文档地址";
             this.lstTable.RowNumberIndex = 0;
+            this.lstTable.ShowCheckAllBoxOnHeader = true;
             this.lstTable.ShowCheckBoxes = true;
             this.lstTable.ShowPlusMinus = true;
             this.lstTable.ShowPlusMinusLines = false;
@@ -108,6 +111,7 @@
             this.lstTable.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstTable.TabIndex = 3;
             this.lstTable.AfterItemCheckChange += new Fireasy.Windows.Forms.TreeListItemAfterCheckedEventHandler(this.lstTable_AfterItemCheckChange);
+            this.lstTable.CheckAllChanged += new Fireasy.Windows.Forms.TreeListCheckAllEventHandler(this.lstTable_CheckAllChanged);
             // 
             // treeListColumn1
             // 
@@ -159,10 +163,48 @@
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.BackColor = System.Drawing.SystemColors.Window;
+            this.label3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.label3.ForeColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label3.Image = ((System.Drawing.Image)(resources.GetObject("label3.Image")));
+            this.label3.Location = new System.Drawing.Point(288, 507);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(13, 13);
+            this.label3.TabIndex = 32;
+            this.label3.Visible = false;
+            this.label3.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // txtKeyword
+            // 
+            this.txtKeyword.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.txtKeyword.Location = new System.Drawing.Point(59, 501);
+            this.txtKeyword.Name = "txtKeyword";
+            this.txtKeyword.Size = new System.Drawing.Size(246, 24);
+            this.txtKeyword.TabIndex = 31;
+            this.txtKeyword.WaterMarkText = "输入关键字或正则表达式敲回车键";
+            this.txtKeyword.TextChanged += new System.EventHandler(this.txtKeyword_TextChanged);
+            this.txtKeyword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtKeyword_KeyDown);
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(15, 504);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(38, 19);
+            this.label2.TabIndex = 30;
+            this.label2.Text = "筛选:";
+            // 
             // frmOpenApi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(699, 539);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtKeyword);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.lstTable);
@@ -196,5 +238,8 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.Label label3;
+        private Fireasy.Windows.Forms.ComplexTextBox txtKeyword;
+        private System.Windows.Forms.Label label2;
     }
 }

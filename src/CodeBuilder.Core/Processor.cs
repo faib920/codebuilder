@@ -45,12 +45,14 @@ namespace CodeBuilder.Core
         /// <param name="owner">进度提示框的所有者。</param>
         /// <param name="taskFunc">要启动的任务。</param>
         /// <param name="cancelAct">取消后进行的动作。</param>
+        /// <param name="onBackground"></param>
+        /// <param name="title"></param>
         /// <returns></returns>
-        public static TimeSpan Run(IWin32Window owner, Func<CancellationToken, Task> taskFunc, Action cancelAct = null, bool onBackground = false)
+        public static TimeSpan Run(IWin32Window owner, Func<CancellationToken, Task> taskFunc, Action cancelAct = null, bool onBackground = false, string title = null)
         {
             return TimeWatcher.Watch(() =>
                 {
-                    _processForm = new frmProcessor(taskFunc, cancelAct, onBackground);
+                    _processForm = new frmProcessor(taskFunc, cancelAct, onBackground, title);
                     _processForm.ShowDialog(owner);
                     _processForm = null;
                     

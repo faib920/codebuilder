@@ -139,6 +139,7 @@ namespace CodeBuilder
             this.txtId.Name = "txtId";
             this.txtId.Size = new System.Drawing.Size(247, 24);
             this.txtId.TabIndex = 0;
+            this.txtId.TextChanged += new System.EventHandler(this.control_TextChanged);
             // 
             // treeListColumn1
             // 
@@ -204,13 +205,13 @@ namespace CodeBuilder
             this.toolStripSeparator2,
             this.mnuDelete});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 136);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(189, 136);
             // 
             // mnuAddRoot
             // 
             this.mnuAddRoot.Image = global::CodeBuilder.Properties.Resources.add2;
             this.mnuAddRoot.Name = "mnuAddRoot";
-            this.mnuAddRoot.Size = new System.Drawing.Size(180, 24);
+            this.mnuAddRoot.Size = new System.Drawing.Size(188, 24);
             this.mnuAddRoot.Text = "添加顶级组";
             this.mnuAddRoot.Click += new System.EventHandler(this.mnuAddRoot_Click);
             // 
@@ -218,7 +219,7 @@ namespace CodeBuilder
             // 
             this.mnuAddGroup.Image = global::CodeBuilder.Properties.Resources.add1;
             this.mnuAddGroup.Name = "mnuAddGroup";
-            this.mnuAddGroup.Size = new System.Drawing.Size(180, 24);
+            this.mnuAddGroup.Size = new System.Drawing.Size(188, 24);
             this.mnuAddGroup.Text = "添加组";
             this.mnuAddGroup.Click += new System.EventHandler(this.mnuAddGroup_Click);
             // 
@@ -227,14 +228,14 @@ namespace CodeBuilder
             this.mnuAdd.Image = global::CodeBuilder.Properties.Resources.add3;
             this.mnuAdd.Name = "mnuAdd";
             this.mnuAdd.ShortcutKeys = System.Windows.Forms.Keys.Insert;
-            this.mnuAdd.Size = new System.Drawing.Size(180, 24);
+            this.mnuAdd.Size = new System.Drawing.Size(188, 24);
             this.mnuAdd.Text = "添加部件";
             this.mnuAdd.Click += new System.EventHandler(this.mnuAdd_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(185, 6);
             // 
             // mnuColor
             // 
@@ -247,14 +248,14 @@ namespace CodeBuilder
             this.greenToolStripMenuItem,
             this.emptyToolStripMenuItem});
             this.mnuColor.Name = "mnuColor";
-            this.mnuColor.Size = new System.Drawing.Size(180, 24);
+            this.mnuColor.Size = new System.Drawing.Size(188, 24);
             this.mnuColor.Text = "颜色标记";
             // 
             // redToolStripMenuItem
             // 
             this.redToolStripMenuItem.BackColor = System.Drawing.Color.Red;
             this.redToolStripMenuItem.Name = "redToolStripMenuItem";
-            this.redToolStripMenuItem.Size = new System.Drawing.Size(133, 24);
+            this.redToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
             this.redToolStripMenuItem.Text = "Red";
             this.redToolStripMenuItem.Click += new System.EventHandler(this.mnuColor_Click);
             // 
@@ -262,7 +263,7 @@ namespace CodeBuilder
             // 
             this.blueToolStripMenuItem.BackColor = System.Drawing.Color.Blue;
             this.blueToolStripMenuItem.Name = "blueToolStripMenuItem";
-            this.blueToolStripMenuItem.Size = new System.Drawing.Size(133, 24);
+            this.blueToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
             this.blueToolStripMenuItem.Text = "Blue";
             this.blueToolStripMenuItem.Click += new System.EventHandler(this.mnuColor_Click);
             // 
@@ -270,7 +271,7 @@ namespace CodeBuilder
             // 
             this.cyanToolStripMenuItem.BackColor = System.Drawing.Color.DarkCyan;
             this.cyanToolStripMenuItem.Name = "cyanToolStripMenuItem";
-            this.cyanToolStripMenuItem.Size = new System.Drawing.Size(133, 24);
+            this.cyanToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
             this.cyanToolStripMenuItem.Text = "Cyan";
             this.cyanToolStripMenuItem.Click += new System.EventHandler(this.mnuColor_Click);
             // 
@@ -278,7 +279,7 @@ namespace CodeBuilder
             // 
             this.orangeToolStripMenuItem.BackColor = System.Drawing.Color.DarkOrange;
             this.orangeToolStripMenuItem.Name = "orangeToolStripMenuItem";
-            this.orangeToolStripMenuItem.Size = new System.Drawing.Size(133, 24);
+            this.orangeToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
             this.orangeToolStripMenuItem.Text = "Orange";
             this.orangeToolStripMenuItem.Click += new System.EventHandler(this.mnuColor_Click);
             // 
@@ -286,7 +287,7 @@ namespace CodeBuilder
             // 
             this.crimsonToolStripMenuItem.BackColor = System.Drawing.Color.Crimson;
             this.crimsonToolStripMenuItem.Name = "crimsonToolStripMenuItem";
-            this.crimsonToolStripMenuItem.Size = new System.Drawing.Size(133, 24);
+            this.crimsonToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
             this.crimsonToolStripMenuItem.Text = "Crimson";
             this.crimsonToolStripMenuItem.Click += new System.EventHandler(this.mnuColor_Click);
             // 
@@ -294,27 +295,27 @@ namespace CodeBuilder
             // 
             this.greenToolStripMenuItem.BackColor = System.Drawing.Color.DarkGreen;
             this.greenToolStripMenuItem.Name = "greenToolStripMenuItem";
-            this.greenToolStripMenuItem.Size = new System.Drawing.Size(133, 24);
+            this.greenToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
             this.greenToolStripMenuItem.Text = "Green";
             this.greenToolStripMenuItem.Click += new System.EventHandler(this.mnuColor_Click);
             // 
             // emptyToolStripMenuItem
             // 
             this.emptyToolStripMenuItem.Name = "emptyToolStripMenuItem";
-            this.emptyToolStripMenuItem.Size = new System.Drawing.Size(133, 24);
+            this.emptyToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
             this.emptyToolStripMenuItem.Text = "无";
             this.emptyToolStripMenuItem.Click += new System.EventHandler(this.mnuColor_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(185, 6);
             // 
             // mnuDelete
             // 
             this.mnuDelete.Image = global::CodeBuilder.Properties.Resources.delete;
             this.mnuDelete.Name = "mnuDelete";
-            this.mnuDelete.Size = new System.Drawing.Size(180, 24);
+            this.mnuDelete.Size = new System.Drawing.Size(188, 24);
             this.mnuDelete.Text = "删除";
             this.mnuDelete.Click += new System.EventHandler(this.mnuDelete_Click);
             // 
@@ -337,7 +338,7 @@ namespace CodeBuilder
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 28);
             this.btnCancel.TabIndex = 5;
-            this.btnCancel.Text = "取消(&C)";
+            this.btnCancel.Text = "关闭(&X)";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnLocation
@@ -357,6 +358,7 @@ namespace CodeBuilder
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(247, 24);
             this.txtName.TabIndex = 1;
+            this.txtName.TextChanged += new System.EventHandler(this.control_TextChanged);
             // 
             // label4
             // 
@@ -397,9 +399,12 @@ namespace CodeBuilder
             // 
             this.lstPart.AllowDragItem = true;
             this.lstPart.AllowUpdateDataItem = false;
+            this.lstPart.AlternateBackColor = System.Drawing.Color.Empty;
             this.lstPart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstPart.BackColor = System.Drawing.Color.Transparent;
+            this.lstPart.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstPart.CheckAllChecked = false;
             this.lstPart.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn1,
@@ -410,10 +415,14 @@ namespace CodeBuilder
             this.lstPart.ContextMenuStrip = this.contextMenuStrip1;
             this.lstPart.DataSource = null;
             this.lstPart.Footer = null;
+            this.lstPart.FooterHeight = 28;
             this.lstPart.GroupFont = new System.Drawing.Font("Consolas", 12F);
             this.lstPart.HandCursor = false;
+            this.lstPart.HeaderHeight = 28;
+            this.lstPart.ItemHeight = 28;
             this.lstPart.Location = new System.Drawing.Point(3, 28);
             this.lstPart.Name = "lstPart";
+            this.lstPart.NoneItemImage = null;
             this.lstPart.NoneItemText = "右键弹出菜单点击“添加组”或“添加部件”";
             this.lstPart.RowNumberIndex = 0;
             this.lstPart.ShowGridLines = false;
@@ -422,6 +431,7 @@ namespace CodeBuilder
             this.lstPart.SortKey = null;
             this.lstPart.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstPart.TabIndex = 4;
+            this.lstPart.ItemSelectionChanged += new Fireasy.Windows.Forms.TreeListItemSelectionChangedEventHandler(this.lstPart_ItemSelectionChanged);
             this.lstPart.BeforeCellEditing += new Fireasy.Windows.Forms.TreeListBeforeCellEditingEventHandler(this.lstPart_BeforeCellEditing);
             this.lstPart.AfterCellEditCanceled += new Fireasy.Windows.Forms.TreeListAfterCellEditCanceledEventHandler(this.lstPart_AfterCellEditCanceled);
             this.lstPart.AfterCellUpdated += new Fireasy.Windows.Forms.TreeListAfterCellUpdatedEventHandler(this.lstPart_AfterCellUpdated);
@@ -517,6 +527,9 @@ namespace CodeBuilder
             // 
             this.lstExt.AllowDragItem = true;
             this.lstExt.AllowUpdateDataItem = false;
+            this.lstExt.AlternateBackColor = System.Drawing.Color.Empty;
+            this.lstExt.BackColor = System.Drawing.Color.Transparent;
+            this.lstExt.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstExt.CheckAllChecked = false;
             this.lstExt.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn6});
@@ -524,10 +537,14 @@ namespace CodeBuilder
             this.lstExt.DataSource = null;
             this.lstExt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstExt.Footer = null;
+            this.lstExt.FooterHeight = 28;
             this.lstExt.GroupFont = new System.Drawing.Font("Consolas", 12F);
             this.lstExt.HandCursor = false;
+            this.lstExt.HeaderHeight = 28;
+            this.lstExt.ItemHeight = 28;
             this.lstExt.Location = new System.Drawing.Point(3, 28);
             this.lstExt.Name = "lstExt";
+            this.lstExt.NoneItemImage = null;
             this.lstExt.NoneItemText = "";
             this.lstExt.RowNumberIndex = 0;
             this.lstExt.ShowGridLines = false;
@@ -561,14 +578,14 @@ namespace CodeBuilder
             this.mnuSelect,
             this.mnuDelExt});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(149, 76);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(154, 76);
             // 
             // mnuAddExt
             // 
             this.mnuAddExt.Enabled = false;
             this.mnuAddExt.Image = global::CodeBuilder.Properties.Resources.add1;
             this.mnuAddExt.Name = "mnuAddExt";
-            this.mnuAddExt.Size = new System.Drawing.Size(148, 24);
+            this.mnuAddExt.Size = new System.Drawing.Size(153, 24);
             this.mnuAddExt.Text = "添加";
             this.mnuAddExt.Click += new System.EventHandler(this.mnuAddExt_Click);
             // 
@@ -577,7 +594,7 @@ namespace CodeBuilder
             this.mnuSelect.Enabled = false;
             this.mnuSelect.Image = global::CodeBuilder.Properties.Resources.browse;
             this.mnuSelect.Name = "mnuSelect";
-            this.mnuSelect.Size = new System.Drawing.Size(148, 24);
+            this.mnuSelect.Size = new System.Drawing.Size(153, 24);
             this.mnuSelect.Text = "从文件添加";
             this.mnuSelect.Click += new System.EventHandler(this.mnuSelect_Click);
             // 
@@ -586,7 +603,7 @@ namespace CodeBuilder
             this.mnuDelExt.Enabled = false;
             this.mnuDelExt.Image = global::CodeBuilder.Properties.Resources.delete;
             this.mnuDelExt.Name = "mnuDelExt";
-            this.mnuDelExt.Size = new System.Drawing.Size(148, 24);
+            this.mnuDelExt.Size = new System.Drawing.Size(153, 24);
             this.mnuDelExt.Text = "删除";
             this.mnuDelExt.Click += new System.EventHandler(this.mnuDelExt_Click);
             // 
@@ -660,7 +677,7 @@ namespace CodeBuilder
             this.tlbUseBase.Checked = true;
             this.tlbUseBase.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tlbUseBase.Name = "tlbUseBase";
-            this.tlbUseBase.Size = new System.Drawing.Size(276, 24);
+            this.tlbUseBase.Size = new System.Drawing.Size(296, 24);
             this.tlbUseBase.Text = "使用基础类（base.cs;base.vb）";
             this.tlbUseBase.Click += new System.EventHandler(this.tlbUseBase_Click);
             // 
@@ -754,18 +771,25 @@ namespace CodeBuilder
             // 
             this.lstRes.AllowDrop = true;
             this.lstRes.AllowUpdateDataItem = false;
+            this.lstRes.AlternateBackColor = System.Drawing.Color.Empty;
             this.lstRes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstRes.BackColor = System.Drawing.Color.Transparent;
+            this.lstRes.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstRes.CheckAllChecked = false;
             this.lstRes.Columns.AddRange(new Fireasy.Windows.Forms.TreeListColumn[] {
             this.treeListColumn7});
             this.lstRes.DataSource = null;
             this.lstRes.Footer = null;
+            this.lstRes.FooterHeight = 28;
             this.lstRes.GroupFont = new System.Drawing.Font("Consolas", 12F);
             this.lstRes.HandCursor = false;
+            this.lstRes.HeaderHeight = 28;
+            this.lstRes.ItemHeight = 28;
             this.lstRes.Location = new System.Drawing.Point(3, 28);
             this.lstRes.Name = "lstRes";
+            this.lstRes.NoneItemImage = null;
             this.lstRes.NoneItemText = "";
             this.lstRes.RowNumberIndex = 0;
             this.lstRes.ShowGridLines = false;
@@ -774,6 +798,7 @@ namespace CodeBuilder
             this.lstRes.SortKey = null;
             this.lstRes.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstRes.TabIndex = 0;
+            this.lstRes.ItemSelectionChanged += new Fireasy.Windows.Forms.TreeListItemSelectionChangedEventHandler(this.lstRes_ItemSelectionChanged);
             this.lstRes.AfterCellEdited += new Fireasy.Windows.Forms.TreeListAfterCellEditedEventHandler(this.lstRes_AfterCellEdited);
             this.lstRes.AfterCellEditCanceled += new Fireasy.Windows.Forms.TreeListAfterCellEditCanceledEventHandler(this.lstRes_AfterCellEditCanceled);
             this.lstRes.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstRes_DragDrop);
@@ -806,6 +831,7 @@ namespace CodeBuilder
             this.cboLanguage.Name = "cboLanguage";
             this.cboLanguage.Size = new System.Drawing.Size(125, 27);
             this.cboLanguage.TabIndex = 3;
+            this.cboLanguage.TextChanged += new System.EventHandler(this.control_TextChanged);
             // 
             // label8
             // 
@@ -823,6 +849,7 @@ namespace CodeBuilder
             this.cboCategory.Name = "cboCategory";
             this.cboCategory.Size = new System.Drawing.Size(125, 27);
             this.cboCategory.TabIndex = 2;
+            this.cboCategory.TextChanged += new System.EventHandler(this.control_TextChanged);
             // 
             // panel1
             // 
@@ -854,6 +881,7 @@ namespace CodeBuilder
             this.txtDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtDesc.Size = new System.Drawing.Size(450, 45);
             this.txtDesc.TabIndex = 18;
+            this.txtDesc.TextChanged += new System.EventHandler(this.control_TextChanged);
             // 
             // label9
             // 
@@ -887,6 +915,7 @@ namespace CodeBuilder
             this.txtVer.Size = new System.Drawing.Size(125, 24);
             this.txtVer.TabIndex = 19;
             this.txtVer.Text = "1.0";
+            this.txtVer.TextChanged += new System.EventHandler(this.control_TextChanged);
             // 
             // label3
             // 
@@ -896,6 +925,10 @@ namespace CodeBuilder
             this.label3.Size = new System.Drawing.Size(38, 19);
             this.label3.TabIndex = 20;
             this.label3.Text = "版本:";
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.Position = System.Windows.Forms.DockStyle.None;
             // 
             // panel3
             // 

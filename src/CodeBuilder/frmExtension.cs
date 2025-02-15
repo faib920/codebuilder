@@ -132,7 +132,7 @@ namespace CodeBuilder
 
         private void lstExt_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            tlbEdit.Enabled = lstExt.SelectedItems.Count > 0 && lstExt.SelectedItems[0].Level == 1;
+            tlbEdit.Enabled = lstExt.HasSelectedItems && lstExt.SelectedItems[0].Level == 1;
         }
 
         private void tlbRefresh_Click(object sender, EventArgs e)
@@ -142,7 +142,7 @@ namespace CodeBuilder
 
         private void tlbEdit_Click(object sender, EventArgs e)
         {
-            if (lstExt.SelectedItems.Count == 0)
+            if (!lstExt.HasSelectedItems)
             {
                 return;
             }

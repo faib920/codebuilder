@@ -74,7 +74,7 @@ namespace CodeBuilder
 
         private void btnNext2_Click(object sender, EventArgs e)
         {
-            if (lstTemplate.SelectedItems.Count > 0)
+            if (lstTemplate.HasSelectedItems)
             {
                 var p = lstTemplate.SelectedItems[0].Group.Text;
                 var tmp = lstTemplate.SelectedItems[0].Tag as TemplateDefinition;
@@ -114,9 +114,30 @@ namespace CodeBuilder
                         return;
                     }
 
+                    var isChanged = false;
+                    if (Config.Instance.OutputDirectoryHistory.Contains(dialog.SelectedPath))
+                    {
+                        if (Config.Instance.OutputDirectoryHistory.FirstOrDefault() != dialog.SelectedPath)
+                        {
+                            Config.Instance.OutputDirectoryHistory.Remove(dialog.SelectedPath);
+                            Config.Instance.OutputDirectoryHistory.Insert(0, dialog.SelectedPath);
+                            isChanged = true;
+                        }
+                    }
+                    else
+                    {
+                        Config.Instance.OutputDirectoryHistory.Insert(0, dialog.SelectedPath);
+                        isChanged = true;
+                    }
+
                     if (Config.Instance.OutputDirectory != dialog.SelectedPath)
                     {
                         Config.Instance.OutputDirectory = dialog.SelectedPath;
+                        isChanged = true;
+                    }
+
+                    if (isChanged)
+                    {
                         Config.Instance.Save();
                     }
 
@@ -335,7 +356,7 @@ namespace CodeBuilder
 
         private void trlTemplate_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            btnNext2.Enabled = lstTemplate.SelectedItems.Count > 0;
+            btnNext2.Enabled = lstTemplate.HasSelectedItems;
         }
 
         private void CheckItems(TreeListItemCollection items, bool isChecked)

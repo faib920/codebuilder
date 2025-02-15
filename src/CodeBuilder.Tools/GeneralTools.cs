@@ -24,7 +24,7 @@ namespace CodeBuilder.Tools
             _hosting = hosting;
         }
 
-        public Form Execute()
+        public Form Execute(params object[] arguments)
         {
             var form = new frmTools(_hosting);
             if (_hosting.DockContainer != null)

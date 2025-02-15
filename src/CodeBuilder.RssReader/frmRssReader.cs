@@ -23,7 +23,7 @@ using System.Windows.Forms;
 
 namespace CodeBuilder.RssReader
 {
-    public partial class frmRssReader : DockFormBase, IContextMenuManager
+    public partial class frmRssReader : DockFormBase, IContextMenuManager, ICloseManager
     {
         private RssConfig _rssConfig;
         private readonly IDevHosting _hosting;
@@ -165,7 +165,7 @@ namespace CodeBuilder.RssReader
             Cursor = Cursors.WaitCursor;
 
             var categoryIds = new List<string>();
-            if (tlbCategory.Checked && lstFavCategory.SelectedItems.Count > 0 && lstFavCategory.SelectedItems[0].Level > 0)
+            if (tlbCategory.Checked && lstFavCategory.HasSelectedItems && lstFavCategory.SelectedItems[0].Level > 0)
             {
                 GetCategoryIds(new List<TreeListItem> { lstFavCategory.SelectedItems[0] }, categoryIds);
             }
@@ -374,7 +374,7 @@ namespace CodeBuilder.RssReader
 
         private void tlbOpen_Click(object sender, System.EventArgs e)
         {
-            if (lstItems.SelectedItems.Count == 0)
+            if (!lstItems.HasSelectedItems)
             {
                 return;
             }
@@ -385,7 +385,7 @@ namespace CodeBuilder.RssReader
 
         private void tlbOpen1_Click(object sender, EventArgs e)
         {
-            if (lstFavItems.SelectedItems.Count == 0)
+            if (!lstFavItems.HasSelectedItems)
             {
                 return;
             }
@@ -396,7 +396,7 @@ namespace CodeBuilder.RssReader
 
         private void tlbAddFav_Click(object sender, System.EventArgs e)
         {
-            if (lstItems.SelectedItems.Count == 0)
+            if (!lstItems.HasSelectedItems)
             {
                 return;
             }
@@ -429,7 +429,7 @@ namespace CodeBuilder.RssReader
 
         private void tlbRemoveFav_Click(object sender, EventArgs e)
         {
-            if (lstFavItems.SelectedItems.Count == 0)
+            if (!lstFavItems.HasSelectedItems)
             {
                 return;
             }
@@ -505,7 +505,7 @@ namespace CodeBuilder.RssReader
 
         private void tlbAddRss_Click(object sender, System.EventArgs e)
         {
-            if (lstCategory.SelectedItems.Count == 0)
+            if (!lstCategory.HasSelectedItems)
             {
                 return;
             }
@@ -530,7 +530,7 @@ namespace CodeBuilder.RssReader
 
         private void tlbEditRss_Click(object sender, System.EventArgs e)
         {
-            if (lstCategory.SelectedItems.Count == 0)
+            if (!lstCategory.HasSelectedItems)
             {
                 return;
             }
@@ -553,7 +553,7 @@ namespace CodeBuilder.RssReader
 
         private void tlbDelete_Click(object sender, EventArgs e)
         {
-            if (lstCategory.SelectedItems.Count == 0)
+            if (!lstCategory.HasSelectedItems)
             {
                 return;
             }
@@ -661,7 +661,7 @@ namespace CodeBuilder.RssReader
 
         private void tlbMove_Click(object sender, EventArgs e)
         {
-            if (lstFavItems.SelectedItems.Count == 0)
+            if (!lstFavItems.HasSelectedItems)
             {
                 return;
             }

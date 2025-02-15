@@ -15,6 +15,7 @@ using ICSharpCode.TextEditor.Document;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -33,6 +34,8 @@ namespace CodeBuilder
         private readonly Popup _popup3;
         private TreeListItem _resRootNode;
         private TreeListItem _newItem;
+        private bool _isLoading;
+        private bool _isChanged;
 
         public frmTemplateEditor(IDevHosting hosting)
         {
@@ -50,6 +53,8 @@ namespace CodeBuilder
 
         private void frmTemplateEditor_Load(object sender, EventArgs e)
         {
+            _isLoading = true;
+
             var editor = new TreeListComboBoxEditor();
             editor.Inner.DropDownStyle = ComboBoxStyle.DropDownList;
             editor.Inner.Items.Add("None");
@@ -101,6 +106,8 @@ namespace CodeBuilder
             FillExtensions(lstExt.Items.Add("common"), Template?.Extension?.Common);
             FillExtensions(lstExt.Items.Add("profile"), Template?.Extension?.Profile);
             FillExtensions(lstExt.Items.Add("schema"), Template?.Extension?.Schema);
+
+            _isLoading = false;
         }
 
         private void LoadResources(TreeListItemCollection items, List<string> resources)
@@ -240,7 +247,7 @@ namespace CodeBuilder
         private void mnuAddGroup_Click(object sender, EventArgs e)
         {
             TreeListItem item;
-            if (lstPart.SelectedItems.Count != 0)
+            if (lstPart.HasSelectedItems)
             {
                 var parent = GetGroupItem();
                 if (parent != null)
@@ -268,7 +275,7 @@ namespace CodeBuilder
         private void mnuAdd_Click(object sender, EventArgs e)
         {
             TreeListItem item;
-            if (lstPart.SelectedItems.Count != 0)
+            if (lstPart.HasSelectedItems)
             {
                 var parent = GetGroupItem();
                 item = (parent == null ? lstPart.Items : parent.Items).Add(string.Empty);
@@ -292,7 +299,7 @@ namespace CodeBuilder
 
         private void mnuDelete_Click(object sender, EventArgs e)
         {
-            if (lstPart.SelectedItems.Count == 0)
+            if (!lstPart.HasSelectedItems)
             {
                 return;
             }
@@ -308,6 +315,8 @@ namespace CodeBuilder
             {
                 item.Parent.Items.Remove(item);
             }
+
+            _isChanged = true;
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -353,6 +362,8 @@ namespace CodeBuilder
             InitResources(lstRes.Items, Template.Resources);
             SaveTemplate(root);
 
+            _isChanged = false;
+
             DialogResult = System.Windows.Forms.DialogResult.OK;
             Close();
         }
@@ -363,6 +374,11 @@ namespace CodeBuilder
             {
                 mnuDelete_Click(null, null);
             }
+        }
+
+        private void lstPart_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
+        {
+            mnuDelete.Enabled = tlbDelete.Enabled = lstPart.HasSelectedItems;
         }
 
         private void lstPart_BeforeCellEditing(object sender, TreeListBeforeCellEditingEventArgs e)
@@ -389,6 +405,8 @@ namespace CodeBuilder
             {
                 e.EnterKey = false;
             }
+
+            _isChanged = true;
         }
 
         private void btnLocation_Click(object sender, EventArgs e)
@@ -620,9 +638,14 @@ namespace CodeBuilder
             }
         }
 
+        private void lstRes_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
+        {
+            tlbDeleteRes.Enabled = lstRes.HasSelectedItems && lstRes.SelectedItems[0].Level != 0;
+        }
+
         private void mnuAddExt_Click(object sender, EventArgs e)
         {
-            if (lstExt.SelectedItems.Count == 0)
+            if (!lstExt.HasSelectedItems)
             {
                 return;
             }
@@ -656,6 +679,7 @@ namespace CodeBuilder
             }
 
             _newItem = null;
+            _isChanged = true;
         }
 
         private void lstExt_AfterCellEditCanceled(object sender, TreeListAfterCellEditCanceledEventArgs e)
@@ -682,7 +706,7 @@ namespace CodeBuilder
 
         private void mnuDelExt_Click(object sender, EventArgs e)
         {
-            if (lstExt.SelectedItems.Count == 0)
+            if (!lstExt.HasSelectedItems)
             {
                 return;
             }
@@ -696,6 +720,7 @@ namespace CodeBuilder
             }
 
             item.Parent.Items.Remove(item);
+            _isChanged = true;
         }
 
         private void tlbUseBase_Click(object sender, EventArgs e)
@@ -705,7 +730,7 @@ namespace CodeBuilder
 
         private void mnuSelect_Click(object sender, EventArgs e)
         {
-            if (lstExt.SelectedItems.Count == 0)
+            if (!lstExt.HasSelectedItems)
             {
                 return;
             }
@@ -736,8 +761,8 @@ namespace CodeBuilder
 
         private void lstExt_ItemSelectionChanged(object sender, TreeListItemSelectionEventArgs e)
         {
-            mnuAddExt.Enabled = mnuSelect.Enabled = tlbAddExt.Enabled = tlbSelect.Enabled = lstExt.SelectedItems.Count > 0;
-            mnuDelExt.Enabled = tlbDelExt.Enabled = lstExt.SelectedItems.Count > 0 && lstExt.SelectedItems[0].Level == 1;
+            mnuAddExt.Enabled = mnuSelect.Enabled = tlbAddExt.Enabled = tlbSelect.Enabled = lstExt.HasSelectedItems;
+            mnuDelExt.Enabled = tlbDelExt.Enabled = lstExt.HasSelectedItems && lstExt.SelectedItems[0].Level == 1;
         }
 
         private void lstPart_ItemDragOver(object sender, TreeListItemDragOverEventArgs e)
@@ -767,7 +792,7 @@ namespace CodeBuilder
 
         private void mnuColor_Click(object sender, EventArgs e)
         {
-            if (lstPart.SelectedItems.Count == 0)
+            if (!lstPart.HasSelectedItems)
             {
                 return;
             }
@@ -809,7 +834,7 @@ namespace CodeBuilder
 
         private void tlbAddResFiles_Click(object sender, EventArgs e)
         {
-            var items = lstRes.SelectedItems.Count > 0 ? lstRes.SelectedItems[0].Items : lstRes.Items;
+            var items = lstRes.HasSelectedItems ? lstRes.SelectedItems[0].Items : lstRes.Items;
 
             using (var dialog = new OpenFileDialog { Filter = "所有文件(*.*)|*.*", Multiselect = true })
             {
@@ -850,11 +875,12 @@ namespace CodeBuilder
             var items = e.Cell.Item.Parent == null ? lstRes.Items : e.Cell.Item.Parent.Items;
             items.Remove(e.Cell.Item);
             lstRes.Columns[0].Editable = false;
+            _isChanged = true;
         }
 
         private void tlbDeleteRes_Click(object sender, EventArgs e)
         {
-            if (lstRes.SelectedItems.Count == 0)
+            if (!lstRes.HasSelectedItems)
             {
                 return;
             }
@@ -865,6 +891,11 @@ namespace CodeBuilder
             }
 
             var item = lstRes.SelectedItems[0];
+            if (item.Level == 0)
+            {
+                return;
+            }
+
             if (item.Level == 0 && _hosting.ShowConfirm("是否删除所有资源?") != ShowMsgButton.Yes)
             {
                 return;
@@ -888,6 +919,8 @@ namespace CodeBuilder
                     _resRootNode.Items.RemoveAt(i);
                 }
             }
+
+            _isChanged = true;
         }
 
         private void tlbTip1_Click(object sender, EventArgs e)
@@ -913,6 +946,32 @@ namespace CodeBuilder
             }
 
             public string FileName { get; }
+        }
+
+        private void control_TextChanged(object sender, EventArgs e)
+        {
+            if (!_isLoading && !_isChanged)
+            {
+                _isChanged = true;
+            }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (!_isChanged)
+            {
+                return;
+            }
+
+            var dialog = _hosting.ShowConfirm("模板已修改，关闭前是否保存?", 3);
+            if (dialog == ShowMsgButton.Cancel)
+            {
+                e.Cancel = true;
+            }
+            else if (dialog == ShowMsgButton.Yes)
+            {
+                btnOk_Click(null, null);
+            }
         }
     }
 

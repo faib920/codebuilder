@@ -28,7 +28,7 @@ namespace CodeBuilder.JsonTool
             _hosting = hosting;
         }
 
-        public Form Execute()
+        public Form Execute(params object[] arguments)
         {
             var form = new frmJsonFormatter(_hosting);
             if (_hosting.DockContainer != null)

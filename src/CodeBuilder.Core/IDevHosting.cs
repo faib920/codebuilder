@@ -155,6 +155,18 @@ namespace CodeBuilder.Core
         /// <param name="name"></param>
         /// <returns></returns>
         object GetConfig(string name);
+
+        /// <summary>
+        /// 获取函数集。
+        /// </summary>
+        dynamic Funcs { get; }
+
+        /// <summary>
+        /// 启动工具
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="arguments"></param>
+        void Start(string name, params object[] arguments);
     }
 
     /// <summary>

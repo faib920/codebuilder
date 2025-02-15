@@ -39,6 +39,8 @@
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.chkTempGroup = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.cboLogLevel = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.chkCheckUpdate = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.chkOverFile = new System.Windows.Forms.CheckBox();
@@ -63,8 +65,7 @@
             this.mnuRemove = new System.Windows.Forms.ToolStripButton();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.cboLogLevel = new System.Windows.Forms.ComboBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -146,6 +147,7 @@
             0,
             0,
             0});
+            this.nudFontSize.ValueChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
             // label1
             // 
@@ -187,6 +189,7 @@
             this.radioButton2.TabIndex = 12;
             this.radioButton2.Text = "类别";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
             // radioButton1
             // 
@@ -199,6 +202,7 @@
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "语言";
             this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
             // chkTempGroup
             // 
@@ -225,6 +229,30 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "其他";
             // 
+            // cboLogLevel
+            // 
+            this.cboLogLevel.DropDownHeight = 400;
+            this.cboLogLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboLogLevel.FormattingEnabled = true;
+            this.cboLogLevel.IntegralHeight = false;
+            this.cboLogLevel.Items.AddRange(new object[] {
+            "Info",
+            "Error"});
+            this.cboLogLevel.Location = new System.Drawing.Point(288, 29);
+            this.cboLogLevel.Name = "cboLogLevel";
+            this.cboLogLevel.Size = new System.Drawing.Size(105, 27);
+            this.cboLogLevel.TabIndex = 3;
+            this.cboLogLevel.SelectedIndexChanged += new System.EventHandler(this.combobox_SelectedIndexChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(218, 34);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(61, 19);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "日志级别";
+            // 
             // chkCheckUpdate
             // 
             this.chkCheckUpdate.AutoSize = true;
@@ -234,6 +262,7 @@
             this.chkCheckUpdate.TabIndex = 0;
             this.chkCheckUpdate.Text = "启动时检测新版本";
             this.chkCheckUpdate.UseVisualStyleBackColor = true;
+            this.chkCheckUpdate.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
             // groupBox4
             // 
@@ -256,6 +285,7 @@
             this.chkOverFile.TabIndex = 0;
             this.chkOverFile.Text = "文件存在时不覆盖原文件";
             this.chkOverFile.UseVisualStyleBackColor = true;
+            this.chkOverFile.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -278,6 +308,7 @@
             this.chkView.TabIndex = 0;
             this.chkView.Text = "读取视图";
             this.chkView.UseVisualStyleBackColor = true;
+            this.chkView.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
             // groupBox2
             // 
@@ -302,6 +333,7 @@
             this.cboEncoding.Name = "cboEncoding";
             this.cboEncoding.Size = new System.Drawing.Size(240, 27);
             this.cboEncoding.TabIndex = 2;
+            this.cboEncoding.SelectedIndexChanged += new System.EventHandler(this.combobox_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -418,6 +450,7 @@
             this.lstPlugin.SortKey = null;
             this.lstPlugin.SortOrder = System.Windows.Forms.SortOrder.None;
             this.lstPlugin.TabIndex = 1;
+            this.lstPlugin.CellClick += new Fireasy.Windows.Forms.TreeListCellClickEventHandler(this.lstPlugin_CellClick);
             // 
             // treeListColumn1
             // 
@@ -446,6 +479,7 @@
             this.treeListColumn3.Formatter = null;
             this.treeListColumn3.Image = null;
             this.treeListColumn3.Text = "版本";
+            this.treeListColumn3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.treeListColumn3.Validator = null;
             this.treeListColumn3.Width = 80;
             // 
@@ -502,34 +536,24 @@
             this.btnCancel.Text = "取消(&C)";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // textBox1
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(218, 34);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(61, 19);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "日志级别";
-            // 
-            // cboLogLevel
-            // 
-            this.cboLogLevel.DropDownHeight = 400;
-            this.cboLogLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboLogLevel.FormattingEnabled = true;
-            this.cboLogLevel.IntegralHeight = false;
-            this.cboLogLevel.Items.AddRange(new object[] {
-            "Info",
-            "Error"});
-            this.cboLogLevel.Location = new System.Drawing.Point(288, 29);
-            this.cboLogLevel.Name = "cboLogLevel";
-            this.cboLogLevel.Size = new System.Drawing.Size(105, 27);
-            this.cboLogLevel.TabIndex = 3;
+            this.textBox1.BackColor = System.Drawing.SystemColors.Info;
+            this.textBox1.Font = new System.Drawing.Font("Microsoft YaHei UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox1.Location = new System.Drawing.Point(566, 379);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(441, 99);
+            this.textBox1.TabIndex = 3;
+            this.textBox1.WordWrap = false;
             // 
             // frmOption
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(578, 640);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.tabControl1);
@@ -566,6 +590,7 @@
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -608,5 +633,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cboLogLevel;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

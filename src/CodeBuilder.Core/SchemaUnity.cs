@@ -36,7 +36,7 @@ namespace CodeBuilder.Core
             foreach (var table in tables)
             {
                 var newTable = schemaExtManager.Build<Table>();
-                newTable.Refactoring(table, () => schemaExtManager.Build<Column>());
+                newTable.Refactoring(table, t => schemaExtManager.Build<Column>(t));
                 newTables.Add(table._Name, newTable);
                 host.Attach(newTable);
             }

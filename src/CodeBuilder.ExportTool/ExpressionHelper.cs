@@ -29,6 +29,10 @@ namespace CodeBuilder.ExportTool
 
                 var source = $@"
 using CodeBuilder.Core.Source;
+using System;
+using System.Text;
+using Fireasy.Common;
+using Fireasy.Common.Extensions;
 
 public class Main
 {{
@@ -78,6 +82,11 @@ public class Main
             }
 
             return expression;
+        }
+
+        public static bool IsTableTemplate(string expression)
+        {
+            return expression.Contains("{Table.");
         }
 
         public static bool IsColumnTemplate(string expression)

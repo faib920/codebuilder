@@ -22,6 +22,8 @@ namespace CodeBuilder
         private ToolStripMenuItem _mnuTableFields = new ToolStripMenuItem("Table");
         private ToolStripMenuItem _mnuColumnFields = new ToolStripMenuItem("Column");
         private ToolStripMenuItem _mnuReferFields = new ToolStripMenuItem("Reference");
+        private ToolStripMenuItem _mnuIndexFields = new ToolStripMenuItem("Index");
+        private ToolStripMenuItem _mnuIndexColumnFields = new ToolStripMenuItem("IndexColumn");
         private ToolStripMenuItem _mnuProfileFields = new ToolStripMenuItem("Profile");
         private readonly IDevHosting _hosting;
 
@@ -32,6 +34,8 @@ namespace CodeBuilder
             DropDownItems.Add(_mnuTableFields);
             DropDownItems.Add(_mnuColumnFields);
             DropDownItems.Add(_mnuReferFields);
+            DropDownItems.Add(_mnuIndexFields);
+            DropDownItems.Add(_mnuIndexColumnFields);
             DropDownItems.Add(_mnuProfileFields);
             _hosting = hosting;
             InitializeMenus();
@@ -45,6 +49,8 @@ namespace CodeBuilder
             InitMenuFields(_mnuTableFields, schemaExtManager.GetPropertyMaps<Table>());
             InitMenuFields(_mnuColumnFields, schemaExtManager.GetPropertyMaps<Column>());
             InitMenuFields(_mnuReferFields, schemaExtManager.GetPropertyMaps<Reference>());
+            InitMenuFields(_mnuIndexFields, schemaExtManager.GetPropertyMaps<Index>());
+            InitMenuFields(_mnuIndexColumnFields, schemaExtManager.GetPropertyMaps<IndexColumn>());
             InitMenuFields(_mnuProfileFields, profileExtManager.GetPropertyMaps());
         }
 
@@ -60,7 +66,7 @@ namespace CodeBuilder
             foreach (var p in properties)
             {
                 var item = new ToolStripMenuItem(string.Format("{0} ({1})", p.Name, p.TypeName));
-                item.ToolTipText = p.Description;
+                item.ToolTipText = p.Description?.Replace("。", string.Empty);
                 item.Tag = p.Name;
                 item.Name = "mnuInsert";
                 item.Click += (o, e) =>

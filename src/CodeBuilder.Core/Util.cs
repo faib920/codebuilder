@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace CodeBuilder.Core
@@ -58,7 +57,27 @@ namespace CodeBuilder.Core
         /// <returns></returns>
         public static string GetTempPath()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "temp", "codebuilder3");
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "codebuilder3");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
+        }
+
+        /// <summary>
+        /// 获取临时目录
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <returns></returns>
+        public static string GetTempPath(string directory)
+        {
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "codebuilder3", directory);
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return path;
         }
 
         /// <summary>
@@ -69,7 +88,20 @@ namespace CodeBuilder.Core
         public static string GenerateTempFileName(out string assemblyName)
         {
             var tempPath = GetTempPath();
-            Directory.CreateDirectory(tempPath);
+
+            assemblyName = RandomGenerator.Create();
+            return Path.Combine(tempPath, assemblyName + ".dll");
+        }
+
+        /// <summary>
+        /// 生成一个临时文件的路径。
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="assemblyName"></param>
+        /// <returns></returns>
+        public static string GenerateTempFileName(string directory, out string assemblyName)
+        {
+            var tempPath = GetTempPath(directory);
 
             assemblyName = RandomGenerator.Create();
             return Path.Combine(tempPath, assemblyName + ".dll");
@@ -80,7 +112,7 @@ namespace CodeBuilder.Core
         /// </summary>
         public static void ClearTempFiles()
         {
-            var tempPath = GetTempPath();
+            var tempPath = GetTempPath("dynamic_funcs");
             if (Directory.Exists(tempPath))
             {
                 Directory.Delete(tempPath, true);
@@ -165,6 +197,11 @@ namespace CodeBuilder.Core
         /// <returns></returns>
         public static ValidateResult Validate(IDevHosting hosting, IEnumerable<Table> tables)
         {
+            if (hosting.Profile == null)
+            {
+                return ValidateResult.Success;
+            }
+
             PropertyInfo[] tableProperties = null;
             PropertyInfo[] columnProperties = null;
             var result = new ValidateResult();
@@ -240,6 +277,16 @@ namespace CodeBuilder.Core
             }
         }
 
+        public static Encoding GetEncoding(string encoding)
+        {
+            if (encoding.Equals("utf-8", StringComparison.OrdinalIgnoreCase))
+            {
+                return new UTF8Encoding(false);
+            }
+
+            return Encoding.GetEncoding(encoding);
+        }
+
         internal static T AttachDevHosting<T>(T valiator, IDevHosting hosting)
         {
             var property = valiator.GetType().GetProperties().FirstOrDefault(s => s.PropertyType == typeof(IDevHosting));
@@ -249,6 +296,12 @@ namespace CodeBuilder.Core
                 if (value == null)
                 {
                     property.SetValue(valiator, hosting);
+
+                    var method = valiator.GetType().GetMethod("OnAttachHosting", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
+                    if (method != null)
+                    {
+                        method.Invoke(valiator, null);
+                    }
                 }
             }
 

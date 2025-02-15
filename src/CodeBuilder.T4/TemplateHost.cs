@@ -6,6 +6,7 @@
 //   (c) Copyright Fireasy. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using CodeBuilder.Core;
 using Microsoft.VisualStudio.TextTemplating;
 using System;
 using System.CodeDom.Compiler;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace CodeBuilder.T4
 {
@@ -22,13 +24,14 @@ namespace CodeBuilder.T4
         private CompilerErrorCollection _errorCollection;
         private string _path;
         private readonly List<string> _partitions;
+        private readonly Debugger _debugger;
         private string _fileExtention;
         private Encoding _fileEncoding;
         private readonly List<string> _assemblyLocationList = new List<string>();
         private readonly List<string> _namespaceList = new List<string>();
         private readonly List<string> _profileProperties = new List<string>();
 
-        public TemplateHost(string path, dynamic tables, dynamic references, List<string> assemblyList, List<string> partitions, GuidDispatcher guids)
+        public TemplateHost(string path, dynamic tables, dynamic references, List<string> assemblyList, List<string> partitions, GuidDispatcher guids, Debugger debugger)
         {
             _path = path;
             _partitions = partitions;
@@ -36,7 +39,7 @@ namespace CodeBuilder.T4
             Tables = tables;
             References = references;
             Guids = guids;
-
+            _debugger = debugger;
             Initialize();
 
             if (assemblyList != null)
@@ -45,6 +48,10 @@ namespace CodeBuilder.T4
             }
         }
 
+        public string DbType { get; set; }
+
+        public string ConnectionString { get; set; }
+
         public dynamic Tables { get; private set; }
 
         public dynamic References { get; private set; }
@@ -52,6 +59,8 @@ namespace CodeBuilder.T4
         public dynamic Current { get; set; }
 
         public dynamic Profile { get; set; }
+
+        public dynamic Debugger => _debugger;
 
         public bool HasPartition(string partName)
         {
@@ -200,6 +209,33 @@ namespace CodeBuilder.T4
             _namespaceList.Add("CodeBuilder.T4");
             _namespaceList.Add("Fireasy.Common");
             _namespaceList.Add("Fireasy.Common.Extensions");
+        }
+    }
+
+    [Serializable]
+    public class Debugger : MarshalByRefObject
+    {
+        private readonly ILogQueue _logQueue;
+
+        public Debugger(ILogQueue logQueue)
+        {
+            _logQueue = logQueue;
+        }
+
+        public void Write(object data)
+        {
+            if (_logQueue != null && data != null)
+            {
+                _logQueue.Push(2, data.ToString());
+            }
+        }
+
+        public void Alert(object data)
+        {
+            if (data != null)
+            {
+                MessageBox.Show(data.ToString(), "CodeBuilder", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

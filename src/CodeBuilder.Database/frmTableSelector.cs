@@ -24,7 +24,7 @@ namespace CodeBuilder.Database
         private List<Table> _tables;
         private List<Table> _saved;
         private readonly IDevHosting _hosting;
-        private readonly List<string> _selectedNames;
+        private HashSet<string> _selectedItems = new HashSet<string>();
         private string _customSQL;
 
         public frmTableSelector()
@@ -38,7 +38,12 @@ namespace CodeBuilder.Database
         {
             _tables = tables.ToList();
             _saved = new List<Table>();
-            _selectedNames = selectedNames;
+
+            if (selectedNames.Count > 0)
+            {
+                _selectedItems = new HashSet<string>(selectedNames);
+            }
+
             FillTables(string.Empty);
             _hosting = hosting;
         }
@@ -46,8 +51,6 @@ namespace CodeBuilder.Database
         public List<Table> Selected { get; private set; }
 
         public bool IsCustomSQL { get; private set; }
-
-        public bool Append { get; set; }
 
         protected override void OnClosing(CancelEventArgs e)
         {
@@ -78,18 +81,13 @@ namespace CodeBuilder.Database
                 item.Cells[0].Value = t.Name;
                 item.Cells[1].Value = t.Description;
 
-                if (_selectedNames.Contains(t.Name))
+                if (_selectedItems.Count > 0)
                 {
-                    item.Checked = true;
+                    item.Checked = _selectedItems.Contains(t.Name);
                 }
             }
 
             lstTable.EndUpdate();
-
-            if (lstTable.Items.Count == 1)
-            {
-                lstTable.Items[0].Checked = true;
-            }
         }
 
         private void txtKeyword_KeyDown(object sender, KeyEventArgs e)
@@ -106,11 +104,21 @@ namespace CodeBuilder.Database
             }
         }
 
+        private void txtKeyword_TextChanged(object sender, EventArgs e)
+        {
+            label3.Visible = txtKeyword.Text.Length > 0;
+        }
+
         private void btnAll_Click(object sender, EventArgs e)
         {
             foreach (var item in lstTable.Items)
             {
                 item.Checked = true;
+
+                if (!_selectedItems.Contains(item.Text))
+                {
+                    _selectedItems.Add(item.Text);
+                }
             }
         }
 
@@ -119,6 +127,15 @@ namespace CodeBuilder.Database
             foreach (var item in lstTable.Items)
             {
                 item.Checked = !item.Checked;
+
+                if (item.Checked && !_selectedItems.Contains(item.Text))
+                {
+                    _selectedItems.Add(item.Text);
+                }
+                else if (!item.Checked && _selectedItems.Contains(item.Text))
+                {
+                    _selectedItems.Remove(item.Text);
+                }
             }
         }
 
@@ -130,11 +147,6 @@ namespace CodeBuilder.Database
         private void btnOk_Click(object sender, EventArgs e)
         {
             Selected = new List<Table>();
-
-            if (_selectedNames.Count > 0)
-            {
-                Append = _hosting.ShowConfirm("是否已追加的方式添加表到对象列表中?") == ShowMsgButton.Yes;
-            }
 
             var items = lstSaved.Visible ? lstSaved.Items : lstTable.Items;
 
@@ -158,6 +170,8 @@ namespace CodeBuilder.Database
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            lstSaved.BeginUpdate();
+
             foreach (var item in lstTable.Items)
             {
                 var table = (Table)item.Tag;
@@ -175,6 +189,8 @@ namespace CodeBuilder.Database
                     _saved.Add(table);
                 }
             }
+
+            lstSaved.EndUpdate();
 
             if (lstSaved.Items.Count > 0 && !lstSaved.Visible)
             {
@@ -216,6 +232,24 @@ namespace CodeBuilder.Database
                     IsCustomSQL = true;
                 }
             }
+        }
+
+        private void lstTable_AfterItemCheckChange(object sender, TreeListItemEventArgs e)
+        {
+            if (e.Item.Checked && !_selectedItems.Contains(e.Item.Text))
+            {
+                _selectedItems.Add(e.Item.Text);
+            }
+            else if (!e.Item.Checked && _selectedItems.Contains(e.Item.Text))
+            {
+                _selectedItems.Remove(e.Item.Text);
+            }
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+            txtKeyword.Text = string.Empty;
+            FillTables(txtKeyword.Text);
         }
     }
 }

@@ -9,22 +9,32 @@
 using CodeBuilder.Core;
 using CodeBuilder.Core.Source;
 using CodeBuilder.Core.Template;
+using Fireasy.Common.Compiler;
+using Microsoft.CSharp;
+using RazorEngine.Compilation;
+using RazorEngine.Templating;
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Razor;
+using System.Web.Razor.Parser;
 using System.Windows.Forms;
 
 namespace CodeBuilder.Razor
 {
     [Export(typeof(ITemplateProvider))]
-    public class TemplateProvider : ITemplateProvider
+    public class TemplateProvider : ITemplateProvider, IConfigureSupported
     {
         private IDevHosting _hosting;
+        private static bool _hasReplaceService;
 
         static TemplateProvider()
         {
@@ -98,7 +108,7 @@ namespace CodeBuilder.Razor
 
         public UserControl GetOptionPanel()
         {
-            return null;
+            return new OptionPanel(_hosting);
         }
 
         private async Task<GenerateResult> GenerateInternalAsync(TemplateOption option, List<Table> tables, CodeGenerateHandler handler, CancellationToken cancellationToken = default)
@@ -122,6 +132,7 @@ namespace CodeBuilder.Razor
                     return (int)((i / (count * 1.0)) * 100);
                 });
 
+            ReplaceCompilerService();
             InitializeNamespaces();
 
             foreach (var table in tables)
@@ -218,6 +229,80 @@ namespace CodeBuilder.Razor
             RazorEngine.Razor.DefaultTemplateService.Namespaces.Add("Fireasy.Common");
             RazorEngine.Razor.DefaultTemplateService.Namespaces.Add("Fireasy.Common.Extensions");
             RazorEngine.Razor.DefaultTemplateService.Namespaces.Add("CodeBuilder.Core.Source");
+        }
+
+        private void ReplaceCompilerService()
+        {
+            if (!_hasReplaceService)
+            {
+                var compilerService = new DynamicCompilerService(_hosting, new RazorEngine.Compilation.CSharp.CSharpRazorCodeLanguage(false), new CSharpCodeProvider(), null);
+                var property = typeof(RazorEngine.Razor).GetProperty(nameof(RazorEngine.Razor.DefaultTemplateService), BindingFlags.Public | BindingFlags.Static);
+                if (property != null)
+                {
+                    var templateService = new TemplateService(compilerService);
+                    property.SetMethod.Invoke(null, new object[] { templateService });
+                }
+
+                _hasReplaceService = true;
+            }
+        }
+
+        private class DynamicCompilerService : DirectCompilerServiceBase
+        {
+            private readonly IDevHosting _hosting;
+            private readonly CodeDomProvider _codeDomProvider;
+
+            public DynamicCompilerService(IDevHosting hosting, RazorCodeLanguage codeLanguage, CodeDomProvider codeDomProvider, MarkupParser markupParser)
+                : base(codeLanguage, codeDomProvider, markupParser)
+            {
+                _hosting = hosting;
+                _codeDomProvider = codeDomProvider;
+            }
+
+            public override string BuildTypeNameInternal(Type type, bool isDynamic)
+            {
+                if (!type.IsGenericType)
+                {
+                    return type.FullName;
+                }
+
+                return type.Namespace + "." + type.Name.Substring(0, type.Name.IndexOf('`')) + "<" + (isDynamic ? "dynamic" : string.Join(", ", from t in type.GetGenericArguments()
+                                                                                                                                                select BuildTypeNameInternal(t, CompilerServices.IsDynamicType(t)))) + ">";
+            }
+
+            private CompilerResults Compile(TypeContext context)
+            {
+                var codeCompileUnit = GetCodeCompileUnit(context.ClassName, context.TemplateContent, context.Namespaces, context.TemplateType, context.ModelType);
+                var compilerParameters = new CompilerParameters();
+                compilerParameters.GenerateInMemory = true;
+                compilerParameters.GenerateExecutable = false;
+                compilerParameters.IncludeDebugInformation = false;
+                compilerParameters.CompilerOptions = "/target:library /optimize";
+                compilerParameters.ReferencedAssemblies.AddRange(AssemblyConfig.GlobalAssemblies.Union(AssemblyConfig.LoadConfig(_hosting)).Distinct(StringComparer.OrdinalIgnoreCase).ToArray());
+                return _codeDomProvider.CompileAssemblyFromDom(compilerParameters, codeCompileUnit);
+            }
+
+            public override Type CompileType(TypeContext context)
+            {
+                var compilerResults = Compile(context);
+                if (compilerResults.Errors != null && compilerResults.Errors.Count > 0)
+                {
+                    var sb = new StringBuilder();
+                    foreach (CompilerError error in compilerResults.Errors)
+                    {
+                        if (error.IsWarning)
+                        {
+                            continue;
+                        }
+
+                        sb.AppendLine($"({error.Line},{error.Column}) {error.ErrorText}");
+                    }
+
+                    throw new TemplateCompileException($"Razor 模板编译失败!", new CodeCompileException(sb.ToString()));
+                }
+
+                return compilerResults.CompiledAssembly.GetType("CompiledRazorTemplates.Dynamic." + context.ClassName);
+            }
         }
     }
 }
